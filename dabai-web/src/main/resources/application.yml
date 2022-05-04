@@ -1,0 +1,63 @@
+spring:
+  messages:
+    encoding: UTF-8
+  #环境
+  profiles:
+    active: test
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+#    default-property-inclusion: non_null
+  servlet:
+    multipart:
+      max-request-size: 50MB
+      max-file-size: 50MB
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://ip:port/*?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 100
+      auto-commit: true
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+# 配置启动端口
+server:
+  port: 8080
+  tomcat:
+    additional-tld-skip-patterns: jaxb1-impl.jar,jsr173_1.0_api.jar,jaxb-api.jar,activation.jar
+  servlet:
+    context-path: /dabai
+
+mybatis:
+  mapper-locations: classpath*:mappers/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+mapper:
+  identity: MYSQL
+
+#日志配置
+logging:
+  config: classpath:logback-spring.xml
+
+wx:
+  miniapp:
+    configs:
+      - appid: #微信小程序的appid
+        secret: #微信小程序的Secret
+        token: #微信小程序消息服务器配置的token
+        aesKey: #微信小程序消息服务器配置的EncodingAESKey
+        msgDataFormat: JSON
+
+
+
+
+
