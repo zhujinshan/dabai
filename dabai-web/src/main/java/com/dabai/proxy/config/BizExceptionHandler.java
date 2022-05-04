@@ -23,7 +23,6 @@ import java.util.List;
 public class BizExceptionHandler {
 
     public static final ThreadLocal<String> ERROR_MESSAGE = new ThreadLocal<>();
-
     /**
      * 用于处理通用异常
      */
