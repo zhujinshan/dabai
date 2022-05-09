@@ -17,6 +17,7 @@
         <module>dabai-dao</module>
         <module>dabai-service</module>
         <module>dabai-web</module>
+        <module>dabai-support</module>
     </modules>
 
     <properties>
@@ -31,6 +32,25 @@
         <mysql.version>5.1.47</mysql.version>
         <junit.version>4.12</junit.version>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -66,6 +86,11 @@
             <dependency>
                 <groupId>com.dabai.proxy</groupId>
                 <artifactId>dabai-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dabai.proxy</groupId>
+                <artifactId>dabai-support</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

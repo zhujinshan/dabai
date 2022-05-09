@@ -24,6 +24,10 @@
             <groupId>com.github.binarywang</groupId>
             <artifactId>weixin-java-miniapp</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.dabai.proxy</groupId>
+            <artifactId>dabai-support</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
