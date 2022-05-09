@@ -1,4 +1,4 @@
-package com.dabai.proxy.config;
+package com.dabai.proxy.config.result;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

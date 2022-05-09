@@ -1,15 +1,14 @@
-package com.dabai.proxy.config;
+package com.dabai.proxy.config.result;
 
 public enum ResultCode {
 
     SUCCESS(0, "成功"),
 
-    FAILURE(-1, "失败"),
+    FAILURE(-1, "系统异常"),
 
-    PARAMETER_EXCEPTION(-2, "参数校验失败"),
+    UN_LOGIN(-2, "鉴权失败，请重新登录"),
 
-    DATABASE_EXCEPTION(-3, "数据库异常"),
-
+    PARAMETER_EXCEPTION(-3, "参数异常"),
     ;
 
     private final Integer value;

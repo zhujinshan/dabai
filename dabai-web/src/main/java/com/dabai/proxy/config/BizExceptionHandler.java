@@ -1,5 +1,7 @@
 package com.dabai.proxy.config;
 
+import com.dabai.proxy.config.result.Result;
+import com.dabai.proxy.config.result.ResultCode;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -49,12 +50,6 @@ public class BizExceptionHandler {
         return Result.genResult(ResultCode.FAILURE.getValue(), getErrorMessage(e), null);
     }
 
-    @ExceptionHandler({SQLException.class})
-    public Result<String> databaseException(final Throwable e) {
-        log.error("dabai-web database exception", e);
-        return Result.genResult(ResultCode.DATABASE_EXCEPTION.getValue(),
-                ResultCode.DATABASE_EXCEPTION.getReason(), null);
-    }
 
     @ExceptionHandler(Exception.class)
     public Result<String> globalException(final HttpServletRequest request, final Throwable e) {
