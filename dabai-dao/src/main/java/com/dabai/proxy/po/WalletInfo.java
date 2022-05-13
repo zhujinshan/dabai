@@ -10,6 +10,9 @@ public class WalletInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 会员平台id
+     */
     @Column(name = "use_id")
     private Long useId;
 
@@ -56,14 +59,18 @@ public class WalletInfo {
     }
 
     /**
-     * @return use_id
+     * 获取会员平台id
+     *
+     * @return use_id - 会员平台id
      */
     public Long getUseId() {
         return useId;
     }
 
     /**
-     * @param useId
+     * 设置会员平台id
+     *
+     * @param useId 会员平台id
      */
     public void setUseId(Long useId) {
         this.useId = useId;

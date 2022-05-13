@@ -41,58 +41,58 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
-        <table tableName="cash_snapshot" enableSelectByExample="true" enableDeleteByExample="false"
-               enableDeleteByPrimaryKey="true"
-               enableCountByExample="true" enableUpdateByExample="true" domainObjectName="CashSnapshot">
+        <table tableName="cash_snapshot" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="CashSnapshot">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="status" javaType="Integer"/>
         </table>
 
-        <table tableName="policy_info" enableSelectByExample="true" enableDeleteByExample="false"
-               enableDeleteByPrimaryKey="true"
-               enableCountByExample="true" enableUpdateByExample="true" domainObjectName="PolicyInfo">
+        <table tableName="policy_info" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="PolicyInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="policy_status" javaType="Integer"/>
         </table>
 
 
-        <table tableName="user_plateform_info" enableSelectByExample="true" enableDeleteByExample="false"
-               enableDeleteByPrimaryKey="true"
-               enableCountByExample="true" enableUpdateByExample="true" domainObjectName="UserPlateformInfo">
+        <table tableName="user_plateform_info" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="UserPlateformInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
 
 
-        <table tableName="user_info" enableSelectByExample="true" enableDeleteByExample="false"
-               enableDeleteByPrimaryKey="true"
-               enableCountByExample="true" enableUpdateByExample="true" domainObjectName="UserInfo">
+        <table tableName="user_info" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="UserInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
 
 
-        <table tableName="user_sign_info" enableSelectByExample="true" enableDeleteByExample="false"
-               enableDeleteByPrimaryKey="true"
-               enableCountByExample="true" enableUpdateByExample="true" domainObjectName="UserSignInfo">
+        <table tableName="user_sign_info" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="UserSignInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="sign_status" javaType="Integer"/>
         </table>
 
-        <table tableName="user_sign_info" enableSelectByExample="true" enableDeleteByExample="false"
-               enableDeleteByPrimaryKey="true"
-               enableCountByExample="true" enableUpdateByExample="true" domainObjectName="UserSignInfo">
+        <table tableName="user_sign_info" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="UserSignInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="identity_tag" javaType="Integer"/>
         </table>
 
-        <table tableName="wallet_info" enableSelectByExample="true" enableDeleteByExample="false"
-               enableDeleteByPrimaryKey="true"
-               enableCountByExample="true" enableUpdateByExample="true" domainObjectName="WalletInfo">
+        <table tableName="wallet_info" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="WalletInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
 
-        <table tableName="wallet_flow" enableSelectByExample="true" enableDeleteByExample="false"
-               enableDeleteByPrimaryKey="true"
-               enableCountByExample="true" enableUpdateByExample="true" domainObjectName="WalletFlow">
+        <table tableName="wallet_flow" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="WalletFlow">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
 
