@@ -1,10 +1,10 @@
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://ip:port/*?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://bj-cdb-867r0ta8.sql.tencentcdb.com:60697/dabai-test?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: root
+    password: nanquan2021
     hikari:
       minimum-idle: 10
       maximum-pool-size: 100
@@ -26,6 +26,10 @@ http:
     rasKey: 12898884523b4dbab41114267ddb72d1
     transferCorpId: 28617
     agreementType: 28617
+  huanong:
+    host: https://hermes-apollo.chinahuanong.com.cn
+    appid: MINI_DB
+    appkey: 0741978a1f7aa842
 
 wx:
   miniapp:

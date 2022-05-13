@@ -1,6 +1,8 @@
 package com.dabai.proxy.httpclient.core;
 
 import com.dabai.proxy.httpclient.core.log.HttpMonitor;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -120,6 +122,8 @@ public class GlobalContext implements Closeable {
 		if (this.jsonMapper == null) {
 			this.jsonMapper = new ObjectMapper();
 			this.jsonMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
+            this.jsonMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            this.jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			this.jsonMapper.findAndRegisterModules();
 		}
 		return this.jsonMapper;

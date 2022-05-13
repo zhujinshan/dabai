@@ -5,6 +5,8 @@ import com.dabai.proxy.httpclient.core.HttpClientConfig;
 import com.dabai.proxy.httpclient.core.PropertyResolver;
 import com.dabai.proxy.httpclient.core.handler.ResultHandler;
 import com.dabai.proxy.httpclient.core.handler.ResultHandlerFactory;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -198,6 +200,8 @@ public class GlobalContextInitializer {
 	private void initJsonMapper() {
 		ObjectMapper jsonMapper = new ObjectMapper();
 		jsonMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
+        jsonMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		if (properties.getJson().getDateFormat() != null) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat(properties.getJson().getDateFormat());
 			jsonMapper.setDateFormat(dateFormat);

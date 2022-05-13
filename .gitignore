@@ -5,6 +5,7 @@ target/
 !**/src/main/**
 !**/src/test/**
 log/
+logs/
 .DS_STORE
 
 ### STS ###

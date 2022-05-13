@@ -11,7 +11,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @SpringBootApplication(scanBasePackages = "com.dabai.proxy")
 @MapperScan(basePackages = "com.dabai.proxy.dao")
-@EnableHttpClient(basePackages = "com.dabai.proxy.manager")
+@EnableHttpClient(basePackages = "com.dabai.proxy.httpclient")
 public class WebBootApplication {
 
     public static void main(String[] args) {

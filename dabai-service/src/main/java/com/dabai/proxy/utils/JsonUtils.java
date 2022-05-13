@@ -1,7 +1,9 @@
 package com.dabai.proxy.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +20,11 @@ public class JsonUtils {
 
     static {
         JSON.setSerializationInclusion(Include.NON_NULL);
-        JSON.configure(SerializationFeature.INDENT_OUTPUT, Boolean.TRUE);
+        JSON.configure(SerializationFeature.INDENT_OUTPUT, Boolean.TRUE)
+                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .configure(JsonParser.Feature.IGNORE_UNDEFINED, true);
+
     }
 
     public static String toJson(Object obj) {
