@@ -9,6 +9,9 @@ public class WalletFlow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 会员平台id
+     */
     @Column(name = "use_id")
     private Long useId;
 
@@ -18,6 +21,9 @@ public class WalletFlow {
     @Column(name = "wallet_id")
     private Long walletId;
 
+    /**
+     * 金额（收入/提现/退款）
+     */
     private Long amount;
 
     /**
@@ -57,14 +63,18 @@ public class WalletFlow {
     }
 
     /**
-     * @return use_id
+     * 获取会员平台id
+     *
+     * @return use_id - 会员平台id
      */
     public Long getUseId() {
         return useId;
     }
 
     /**
-     * @param useId
+     * 设置会员平台id
+     *
+     * @param useId 会员平台id
      */
     public void setUseId(Long useId) {
         this.useId = useId;
@@ -89,14 +99,18 @@ public class WalletFlow {
     }
 
     /**
-     * @return amount
+     * 获取金额（收入/提现/退款）
+     *
+     * @return amount - 金额（收入/提现/退款）
      */
     public Long getAmount() {
         return amount;
     }
 
     /**
-     * @param amount
+     * 设置金额（收入/提现/退款）
+     *
+     * @param amount 金额（收入/提现/退款）
      */
     public void setAmount(Long amount) {
         this.amount = amount;

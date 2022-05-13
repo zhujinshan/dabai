@@ -2,10 +2,9 @@ package com.dabai.proxy.dao;
 
 import com.dabai.proxy.po.WalletFlow;
 import com.dabai.proxy.po.WalletFlowExample;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
-
-import java.util.List;
 
 public interface WalletFlowMapper extends Mapper<WalletFlow> {
     long countByExample(WalletFlowExample example);

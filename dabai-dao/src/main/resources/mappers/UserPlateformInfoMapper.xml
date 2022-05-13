@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dabai.proxy.dao.UsePlateformInfoMapper">
-  <resultMap id="BaseResultMap" type="com.dabai.proxy.po.UsePlateformInfo">
+<mapper namespace="com.dabai.proxy.dao.UserPlateformInfoMapper">
+  <resultMap id="BaseResultMap" type="com.dabai.proxy.po.UserPlateformInfo">
     <!--
       WARNING - @mbg.generated
     -->
@@ -84,7 +84,7 @@
     -->
     id, user_id, code, plateform, identity_tag, organization_code, ctime, utime
   </sql>
-  <select id="selectByExample" parameterType="com.dabai.proxy.po.UsePlateformInfoExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.dabai.proxy.po.UserPlateformInfoExample" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
     -->
@@ -93,7 +93,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from use_plateform_info
+    from user_plateform_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -101,11 +101,11 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="countByExample" parameterType="com.dabai.proxy.po.UsePlateformInfoExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.dabai.proxy.po.UserPlateformInfoExample" resultType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
     -->
-    select count(*) from use_plateform_info
+    select count(*) from user_plateform_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -114,7 +114,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    update use_plateform_info
+    update user_plateform_info
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -149,7 +149,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    update use_plateform_info
+    update user_plateform_info
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
       code = #{record.code,jdbcType=VARCHAR},

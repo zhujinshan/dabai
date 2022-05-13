@@ -3,8 +3,8 @@ package com.dabai.proxy.po;
 import java.util.Date;
 import javax.persistence.*;
 
-@Table(name = "use_plateform_info")
-public class UsePlateformInfo {
+@Table(name = "user_plateform_info")
+public class UserPlateformInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

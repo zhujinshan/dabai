@@ -9,17 +9,20 @@ public class UserSignInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 会员平台id
+     */
     @Column(name = "user_id")
     private Long userId;
 
     /**
-     * 签约主体：FC、ZX
+     * 签约主体：FC/ZX
      */
     @Column(name = "sign_source")
     private String signSource;
 
     /**
-     * 下发公司：RFT XDB
+     * 下发公司：RFT/XDB
      */
     @Column(name = "business_source")
     private String businessSource;
@@ -65,50 +68,54 @@ public class UserSignInfo {
     }
 
     /**
-     * @return user_id
+     * 获取会员平台id
+     *
+     * @return user_id - 会员平台id
      */
     public Long getUserId() {
         return userId;
     }
 
     /**
-     * @param userId
+     * 设置会员平台id
+     *
+     * @param userId 会员平台id
      */
     public void setUserId(Long userId) {
         this.userId = userId;
     }
 
     /**
-     * 获取签约主体：FC、ZX
+     * 获取签约主体：FC/ZX
      *
-     * @return sign_source - 签约主体：FC、ZX
+     * @return sign_source - 签约主体：FC/ZX
      */
     public String getSignSource() {
         return signSource;
     }
 
     /**
-     * 设置签约主体：FC、ZX
+     * 设置签约主体：FC/ZX
      *
-     * @param signSource 签约主体：FC、ZX
+     * @param signSource 签约主体：FC/ZX
      */
     public void setSignSource(String signSource) {
         this.signSource = signSource == null ? null : signSource.trim();
     }
 
     /**
-     * 获取下发公司：RFT XDB
+     * 获取下发公司：RFT/XDB
      *
-     * @return business_source - 下发公司：RFT XDB
+     * @return business_source - 下发公司：RFT/XDB
      */
     public String getBusinessSource() {
         return businessSource;
     }
 
     /**
-     * 设置下发公司：RFT XDB
+     * 设置下发公司：RFT/XDB
      *
-     * @param businessSource 下发公司：RFT XDB
+     * @param businessSource 下发公司：RFT/XDB
      */
     public void setBusinessSource(String businessSource) {
         this.businessSource = businessSource == null ? null : businessSource.trim();

@@ -56,9 +56,9 @@
         </table>
 
 
-        <table tableName="use_plateform_info" enableSelectByExample="true" enableDeleteByExample="false"
+        <table tableName="user_plateform_info" enableSelectByExample="true" enableDeleteByExample="false"
                enableDeleteByPrimaryKey="true"
-               enableCountByExample="true" enableUpdateByExample="true" domainObjectName="UsePlateformInfo">
+               enableCountByExample="true" enableUpdateByExample="true" domainObjectName="UserPlateformInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
 
