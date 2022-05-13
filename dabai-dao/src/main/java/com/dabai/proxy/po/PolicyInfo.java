@@ -1,8 +1,12 @@
 package com.dabai.proxy.po;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "policy_info")
 public class PolicyInfo {
@@ -79,13 +83,13 @@ public class PolicyInfo {
      * 投保起期 yyyy-MM-dd
      */
     @Column(name = "start_date")
-    private Date startDate;
+    private String startDate;
 
     /**
      * 投保止期 yyyy-MM-dd
      */
     @Column(name = "end_date")
-    private Date endDate;
+    private String endDate;
 
     /**
      * 电子保单链接
@@ -320,7 +324,7 @@ public class PolicyInfo {
      *
      * @return start_date - 投保起期 yyyy-MM-dd
      */
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
@@ -329,8 +333,8 @@ public class PolicyInfo {
      *
      * @param startDate 投保起期 yyyy-MM-dd
      */
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate == null ? null : startDate.trim();
     }
 
     /**
@@ -338,7 +342,7 @@ public class PolicyInfo {
      *
      * @return end_date - 投保止期 yyyy-MM-dd
      */
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
@@ -347,8 +351,8 @@ public class PolicyInfo {
      *
      * @param endDate 投保止期 yyyy-MM-dd
      */
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate == null ? null : endDate.trim();
     }
 
     /**

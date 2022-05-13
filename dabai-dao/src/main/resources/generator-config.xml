@@ -41,12 +41,12 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
-        <table tableName="cash_snapshot" enableSelectByExample="false" enableDeleteByExample="false"
+        <!--<table tableName="cash_snapshot" enableSelectByExample="false" enableDeleteByExample="false"
                enableDeleteByPrimaryKey="false"
                enableCountByExample="false" enableUpdateByExample="false" domainObjectName="CashSnapshot">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="status" javaType="Integer"/>
-        </table>
+        </table>-->
 
         <table tableName="policy_info" enableSelectByExample="false" enableDeleteByExample="false"
                enableDeleteByPrimaryKey="false"
@@ -56,7 +56,7 @@
         </table>
 
 
-        <table tableName="user_plateform_info" enableSelectByExample="false" enableDeleteByExample="false"
+       <!-- <table tableName="user_plateform_info" enableSelectByExample="false" enableDeleteByExample="false"
                enableDeleteByPrimaryKey="false"
                enableCountByExample="false" enableUpdateByExample="false" domainObjectName="UserPlateformInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
@@ -94,7 +94,7 @@
                enableDeleteByPrimaryKey="false"
                enableCountByExample="false" enableUpdateByExample="false" domainObjectName="WalletFlow">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+        </table>-->
 
     </context>
 </generatorConfiguration>

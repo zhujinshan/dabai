@@ -36,6 +36,15 @@ public class JsonUtils {
         return StringUtils.EMPTY;
     }
 
+    public static <T> T parse(String json, Class<T> tClass) {
+        try {
+            return JSON.readValue(json, tClass);
+        } catch (JsonProcessingException e) {
+            log.error("json error", e);
+            return null;
+        }
+    }
+
     public static Map<String, Object> toMap(Object obj) {
         return JSON.convertValue(obj, Map.class);
     }

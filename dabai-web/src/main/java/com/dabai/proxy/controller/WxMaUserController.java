@@ -4,43 +4,54 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.dabai.proxy.config.UserSessionContext;
+import com.dabai.proxy.config.UserSessionInfo;
+import com.dabai.proxy.config.result.Result;
+import com.dabai.proxy.config.token.CheckToken;
+import com.dabai.proxy.config.token.JwtTools;
 import com.dabai.proxy.config.wx.WxMaConfiguration;
-import com.dabai.proxy.utils.JsonUtils;
+import com.dabai.proxy.config.wx.WxMaProperties;
+import com.dabai.proxy.facade.UserInfoFacade;
+import com.dabai.proxy.service.UserInfoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.util.Assert;
 
 @RestController
-@RequestMapping("/wx/user")
+@RequestMapping("/wxuser")
+@Api(tags = "微信会员接口")
+@Slf4j
 public class WxMaUserController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private WxMaProperties wxMaProperties;
+
+    @Autowired
+    private UserInfoService userInfoService;
+
+    @Autowired
+    private UserInfoFacade userInfoFacade;
 
     /**
      * 登陆接口
      */
     @GetMapping("/login")
-    public String login(@PathVariable String appid, String code) {
-        if (StringUtils.isBlank(code)) {
-            return "empty jscode";
-        }
-
+    @ApiOperation(value = "登录接口", httpMethod = "GET")
+    public Result<String> login(@ApiParam("code") @RequestParam(value = "code") String code) throws WxErrorException {
+        String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
-        try {
-            WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
-            this.logger.info(session.getSessionKey());
-            this.logger.info(session.getOpenid());
-            //TODO 增加自己的逻辑，关联业务相关数据
-            return JsonUtils.toJson(session);
-        } catch (WxErrorException e) {
-            this.logger.error(e.getMessage(), e);
-            return e.toString();
-        }
+        WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
+        log.info("sessionKey: {}, openid: {}", session.getSessionKey(), session.getOpenid());
+        return Result.success(JwtTools.generateToken(session.getSessionKey(), session.getOpenid()));
     }
 
     /**
@@ -49,19 +60,21 @@ public class WxMaUserController {
      * </pre>
      */
     @GetMapping("/info")
-    public String info(@PathVariable String appid, String sessionKey,
-                       String signature, String rawData, String encryptedData, String iv) {
+    @CheckToken
+    @ApiOperation(value = "获取用户信息接口", httpMethod = "GET")
+    public Result<Boolean> info(@ApiParam("signature") @RequestParam(value = "signature") String signature, @ApiParam("rawData") @RequestParam(value = "rawData") String rawData,
+                                @ApiParam("encryptedData") @RequestParam(value = "encryptedData") String encryptedData,
+                                @ApiParam("iv") @RequestParam(value = "iv") String iv) {
+        String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
+        UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
         // 用户信息校验
-        if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-            return "user check failed";
-        }
-
+        Assert.isTrue(wxService.getUserService().checkUserInfo(sessionInfo.getSessionKey(), rawData, signature), "签名验证失败");
         // 解密用户信息
-        WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
-
-        return JsonUtils.toJson(userInfo);
+        WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionInfo.getSessionKey(), encryptedData, iv);
+        userInfoService.saveUser(userInfo);
+        return Result.success(Boolean.TRUE);
     }
 
     /**
@@ -70,19 +83,21 @@ public class WxMaUserController {
      * </pre>
      */
     @GetMapping("/phone")
-    public String phone(@PathVariable String appid, String sessionKey, String signature,
-                        String rawData, String encryptedData, String iv) {
+    @CheckToken
+    @ApiOperation(value = "获取用户手机号", httpMethod = "GET")
+    public Result<Boolean> phone(@ApiParam("signature") @RequestParam(value = "signature") String signature,
+                                 @ApiParam("rawData") @RequestParam(value = "rawData") String rawData,
+                                 @ApiParam("encryptedData") @RequestParam(value = "encryptedData") String encryptedData,
+                                 @ApiParam("iv") @RequestParam(value = "iv") String iv) {
+        String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
-
+        UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
         // 用户信息校验
-        if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-            return "user check failed";
-        }
-
+        Assert.isTrue(wxService.getUserService().checkUserInfo(sessionInfo.getSessionKey(), rawData, signature), "签名验证失败");
         // 解密
-        WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
-
-        return JsonUtils.toJson(phoneNoInfo);
+        WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionInfo.getSessionKey(), encryptedData, iv);
+        userInfoFacade.saveUserPhone(sessionInfo.getOpenId(), phoneNoInfo.getPhoneNumber());
+        return Result.success(Boolean.TRUE);
     }
 
 }

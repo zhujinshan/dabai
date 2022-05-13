@@ -20,7 +20,7 @@ public class UserInfoMapperTest extends BaseTest {
     @Test
     public void testSelect() {
         Example example = new Example(UserInfo.class);
-        example.createCriteria().andEqualTo("id", 11);
+        example.createCriteria().andEqualTo("openId", 11);
         List<UserInfo> userInfos = userInfoMapper.selectByExample(example);
         System.out.println(userInfos);
     }

@@ -47,7 +47,7 @@ public class BizExceptionHandler {
     @ExceptionHandler({MissingServletRequestParameterException.class, NullPointerException.class, IllegalArgumentException.class})
     public Result<String> paramException(final Throwable e) {
         log.error("dabai-web param exception", e);
-        return Result.genResult(ResultCode.FAILURE.getValue(), getErrorMessage(e), null);
+        return Result.genResult(ResultCode.PARAMETER_EXCEPTION.getValue(), getErrorMessage(e), null);
     }
 
 

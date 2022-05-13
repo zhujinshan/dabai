@@ -17,8 +17,8 @@
     <result column="assured_name" jdbcType="VARCHAR" property="assuredName" />
     <result column="ensure_time" jdbcType="INTEGER" property="ensureTime" />
     <result column="premium" jdbcType="DECIMAL" property="premium" />
-    <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
-    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="start_date" jdbcType="VARCHAR" property="startDate" />
+    <result column="end_date" jdbcType="VARCHAR" property="endDate" />
     <result column="ele_policy_addr" jdbcType="VARCHAR" property="elePolicyAddr" />
     <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
     <result column="utime" jdbcType="TIMESTAMP" property="utime" />
