@@ -10,5 +10,11 @@ import java.math.BigDecimal;
  */
 public interface PolicyInfoService {
 
-    void savePolicyInfo(Integer userId, BigDecimal commision, PolicyInfoDto policyInfoDto);
+    /**
+     * 更新保单信息
+     * @param userId
+     * @param commision
+     * @param policyInfoDto
+     */
+    void savePolicyInfo(Long userId, BigDecimal commision, PolicyInfoDto policyInfoDto);
 }

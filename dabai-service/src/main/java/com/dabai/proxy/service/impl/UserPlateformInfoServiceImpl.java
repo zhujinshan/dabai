@@ -30,9 +30,7 @@ public class UserPlateformInfoServiceImpl implements UserPlateformInfoService {
     public void save(Long userId, MemberInfoResp memberInfoResp) {
         Assert.notNull(userId, "userId缺失");
         Assert.notNull(memberInfoResp, "memberInfoResp缺失");
-        Example example = new Example(UserPlateformInfo.class);
-        example.createCriteria().andEqualTo("userId", userId);
-        UserPlateformInfo userPlateformInfo = userPlateformInfoMapper.selectOneByExample(example);
+        UserPlateformInfo userPlateformInfo = getByUserId(userId);
 
         UserPlateformInfo currentInfo = new UserPlateformInfo();
         currentInfo.setPlateform(UserPlateformEnum.HBX.name());
@@ -48,5 +46,22 @@ public class UserPlateformInfoServiceImpl implements UserPlateformInfoService {
             currentInfo.setCtime(new Date());
             userPlateformInfoMapper.insertSelective(currentInfo);
         }
+    }
+
+    @Override
+    public UserPlateformInfo getByHbxMemberNo(String memberNo) {
+        Assert.notNull(memberNo, "memberNo缺失");
+        Example example = new Example(UserPlateformInfo.class);
+        example.createCriteria().andEqualTo("code", memberNo)
+                .andEqualTo("plateform", UserPlateformEnum.HBX.name());
+        return userPlateformInfoMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public UserPlateformInfo getByUserId(Long userId) {
+        Assert.notNull(userId, "userId缺失");
+        Example example = new Example(UserPlateformInfo.class);
+        example.createCriteria().andEqualTo("userId", userId);
+        return userPlateformInfoMapper.selectOneByExample(example);
     }
 }

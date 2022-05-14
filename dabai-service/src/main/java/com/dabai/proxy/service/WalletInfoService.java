@@ -1,5 +1,7 @@
 package com.dabai.proxy.service;
 
+import com.dabai.proxy.po.WalletInfo;
+
 import java.math.BigDecimal;
 
 /**
@@ -9,15 +11,29 @@ import java.math.BigDecimal;
 public interface WalletInfoService {
 
     /**
+     * 钱包开户
+     * @param userId
+     * @return
+     */
+    Long addWallet(Long userId);
+
+    /**
+     * 查询钱包
+     * @param userId
+     * @return
+     */
+    WalletInfo getWallet(Long userId);
+
+    /**
      * 增加佣金
      * @param commission
      */
-    void addCommission(Integer userId, BigDecimal commission);
+    void addCommission(Long userId, BigDecimal commission, String policyNo);
 
 
     /**
      * 减少佣金
      * @param commission
      */
-    void refundCommission(Integer userId, BigDecimal commission);
+    void refundCommission(Long userId, BigDecimal commission, String policyNo);
 }

@@ -12,6 +12,11 @@ import java.math.BigDecimal;
 public class PolicyInfoDto {
 
     /**
+     * 会员编码
+     */
+    private String memberNo;
+
+    /**
      * 产品编码
      */
     private String productCode;
@@ -54,7 +59,7 @@ public class PolicyInfoDto {
     /**
      * 订单状态 （0已退款1已完成2已失效)
      */
-    private String status;
+    private Integer status;
 
     /**
      * 电子保单链接

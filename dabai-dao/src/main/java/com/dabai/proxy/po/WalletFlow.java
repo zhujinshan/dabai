@@ -1,7 +1,12 @@
 package com.dabai.proxy.po;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "wallet_flow")
 public class WalletFlow {
@@ -24,13 +29,13 @@ public class WalletFlow {
     /**
      * 金额（收入/提现/退款）
      */
-    private Long amount;
+    private BigDecimal amount;
 
     /**
      * 类型：1：收入 2：提现 3: 退款
      */
     @Column(name = "flow_type")
-    private Byte flowType;
+    private Integer flowType;
 
     /**
      * 保单编号
@@ -103,7 +108,7 @@ public class WalletFlow {
      *
      * @return amount - 金额（收入/提现/退款）
      */
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
@@ -112,7 +117,7 @@ public class WalletFlow {
      *
      * @param amount 金额（收入/提现/退款）
      */
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -121,7 +126,7 @@ public class WalletFlow {
      *
      * @return flow_type - 类型：1：收入 2：提现 3: 退款
      */
-    public Byte getFlowType() {
+    public Integer getFlowType() {
         return flowType;
     }
 
@@ -130,7 +135,7 @@ public class WalletFlow {
      *
      * @param flowType 类型：1：收入 2：提现 3: 退款
      */
-    public void setFlowType(Byte flowType) {
+    public void setFlowType(Integer flowType) {
         this.flowType = flowType;
     }
 

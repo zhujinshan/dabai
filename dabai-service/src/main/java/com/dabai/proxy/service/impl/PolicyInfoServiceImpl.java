@@ -26,7 +26,7 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
     PolicyInfoMapper policyInfoMapper;
 
     @Override
-    public void savePolicyInfo(Integer userId, BigDecimal commision, PolicyInfoDto policyInfoDto) {
+    public void savePolicyInfo(Long userId, BigDecimal commision, PolicyInfoDto policyInfoDto) {
         Assert.notNull(userId, "userId缺失");
         Assert.notNull(policyInfoDto, "policyInfoDto信息缺失");
         Assert.notNull(policyInfoDto.getPolicyNo(), "保单号信息缺失");

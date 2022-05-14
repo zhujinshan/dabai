@@ -88,13 +88,14 @@
                enableDeleteByPrimaryKey="false"
                enableCountByExample="false" enableUpdateByExample="false" domainObjectName="WalletInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+        </table>-->
 
         <table tableName="wallet_flow" enableSelectByExample="false" enableDeleteByExample="false"
                enableDeleteByPrimaryKey="false"
                enableCountByExample="false" enableUpdateByExample="false" domainObjectName="WalletFlow">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>-->
+            <columnOverride column="flow_type" javaType="Integer"/>
+        </table>
 
     </context>
 </generatorConfiguration>

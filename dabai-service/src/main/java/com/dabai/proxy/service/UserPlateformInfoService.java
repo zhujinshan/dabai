@@ -1,6 +1,7 @@
 package com.dabai.proxy.service;
 
 import com.dabai.proxy.httpclient.huanong.resp.MemberInfoResp;
+import com.dabai.proxy.po.UserPlateformInfo;
 
 /**
  * @author: jinshan.zhu
@@ -9,4 +10,8 @@ import com.dabai.proxy.httpclient.huanong.resp.MemberInfoResp;
 public interface UserPlateformInfoService {
 
     void save(Long userId, MemberInfoResp memberInfoResp);
+
+    UserPlateformInfo getByHbxMemberNo(String memberNo);
+
+    UserPlateformInfo getByUserId(Long userId);
 }

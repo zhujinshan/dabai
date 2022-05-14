@@ -1,7 +1,9 @@
 package com.dabai.proxy.config;
 
 import com.dabai.proxy.config.token.TokenAuthInterceptor;
+import com.dabai.proxy.lock.JdkLockFunction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -21,4 +23,8 @@ public class WebInterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(tokenAuthInterceptor).addPathPatterns("/**");
     }
 
+    @Bean
+    public JdkLockFunction jdkLockFunction() {
+        return new JdkLockFunction();
+    }
 }

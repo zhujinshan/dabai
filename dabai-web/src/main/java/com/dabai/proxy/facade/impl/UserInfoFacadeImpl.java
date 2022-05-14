@@ -8,9 +8,11 @@ import com.dabai.proxy.httpclient.huanong.resp.HuanongResult;
 import com.dabai.proxy.httpclient.huanong.resp.MemberInfoResp;
 import com.dabai.proxy.service.UserInfoService;
 import com.dabai.proxy.service.UserPlateformInfoService;
+import com.dabai.proxy.service.WalletInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.util.Assert;
 
 import javax.annotation.Resource;
@@ -30,8 +32,11 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
     private HuanongHttpClient huanongHttpClient;
     @Autowired
     private UserPlateformInfoService userPlateformInfoService;
+    @Autowired
+    private WalletInfoService walletInfoService;
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public void saveUserPhone(String openId, String phone) {
         Assert.notNull(openId, "openId信息缺失");
         Assert.notNull(phone, "phoneNo信息缺失");
@@ -51,5 +56,9 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
             return;
         }
         userPlateformInfoService.save(userId, data);
+
+        // 钱包开户
+        walletInfoService.addWallet(userId);
+
     }
 }

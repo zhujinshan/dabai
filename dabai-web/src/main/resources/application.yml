@@ -33,7 +33,9 @@ mapper:
 logging:
   config: classpath:logback-spring.xml
 
-
+#佣金计算比例
+commission:
+  radio: 0.1
 
 
 
