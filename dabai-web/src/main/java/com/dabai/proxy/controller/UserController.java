@@ -28,7 +28,7 @@ import tk.mybatis.mapper.util.Assert;
 
 @RestController
 @RequestMapping("/user")
-@Api(tags = "微信会员接口")
+@Api(tags = "会员接口")
 @Slf4j
 public class UserController {
 
