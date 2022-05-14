@@ -6,10 +6,14 @@ import com.dabai.proxy.httpclient.huanong.HuanongHttpClient;
 import com.dabai.proxy.httpclient.huanong.param.MemberInfoParam;
 import com.dabai.proxy.httpclient.huanong.resp.HuanongResult;
 import com.dabai.proxy.httpclient.huanong.resp.MemberInfoResp;
+import com.dabai.proxy.po.UserInfo;
+import com.dabai.proxy.po.UserPlateformInfo;
+import com.dabai.proxy.resp.UserInfoResp;
 import com.dabai.proxy.service.UserInfoService;
 import com.dabai.proxy.service.UserPlateformInfoService;
 import com.dabai.proxy.service.WalletInfoService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +44,6 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
     public void saveUserPhone(String openId, String phone) {
         Assert.notNull(openId, "openId信息缺失");
         Assert.notNull(phone, "phoneNo信息缺失");
-
         Long userId = userInfoService.saveUserPhone(openId, phone);
 
         MemberInfoParam memberInfoParam = new MemberInfoParam();
@@ -56,9 +59,23 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
             return;
         }
         userPlateformInfoService.save(userId, data);
-
         // 钱包开户
         walletInfoService.addWallet(userId);
+    }
 
+    @Override
+    public UserInfoResp getUserInfo(String openId) {
+        Assert.notNull(openId, "openId信息缺失");
+        UserInfo userInfo = userInfoService.selectByOpenId(openId);
+        if (userInfo == null) {
+            return null;
+        }
+        UserInfoResp userInfoResp = new UserInfoResp();
+        BeanUtils.copyProperties(userInfo, userInfoResp);
+        UserPlateformInfo plateformInfo = userPlateformInfoService.getByUserId(userInfo.getId());
+        if (plateformInfo != null) {
+            userInfoResp.setMemberNo(plateformInfo.getCode());
+        }
+        return userInfoResp;
     }
 }

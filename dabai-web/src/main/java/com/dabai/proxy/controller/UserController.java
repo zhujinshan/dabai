@@ -12,6 +12,7 @@ import com.dabai.proxy.config.token.JwtTools;
 import com.dabai.proxy.config.wx.WxMaConfiguration;
 import com.dabai.proxy.config.wx.WxMaProperties;
 import com.dabai.proxy.facade.UserInfoFacade;
+import com.dabai.proxy.resp.UserInfoResp;
 import com.dabai.proxy.service.UserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,10 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.util.Assert;
 
 @RestController
-@RequestMapping("/wxuser")
+@RequestMapping("/user")
 @Api(tags = "微信会员接口")
 @Slf4j
-public class WxMaUserController {
+public class UserController {
 
     @Autowired
     private WxMaProperties wxMaProperties;
@@ -43,7 +44,7 @@ public class WxMaUserController {
     /**
      * 登陆接口
      */
-    @GetMapping("/login")
+    @GetMapping("/wxlogin")
     @ApiOperation(value = "登录接口", httpMethod = "GET")
     public Result<String> login(@ApiParam("code") @RequestParam(value = "code") String code) throws WxErrorException {
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
@@ -59,7 +60,7 @@ public class WxMaUserController {
      * 获取用户信息接口
      * </pre>
      */
-    @GetMapping("/info")
+    @GetMapping("/wxInfo")
     @CheckToken
     @ApiOperation(value = "获取用户信息接口", httpMethod = "GET")
     public Result<Boolean> info(@ApiParam("signature") @RequestParam(value = "signature") String signature, @ApiParam("rawData") @RequestParam(value = "rawData") String rawData,
@@ -82,7 +83,7 @@ public class WxMaUserController {
      * 获取用户绑定手机号信息
      * </pre>
      */
-    @GetMapping("/phone")
+    @GetMapping("/wxPhone")
     @CheckToken
     @ApiOperation(value = "获取用户手机号", httpMethod = "GET")
     public Result<Boolean> phone(@ApiParam("signature") @RequestParam(value = "signature") String signature,
@@ -99,5 +100,15 @@ public class WxMaUserController {
         userInfoFacade.saveUserPhone(sessionInfo.getOpenId(), phoneNoInfo.getPhoneNumber());
         return Result.success(Boolean.TRUE);
     }
+
+
+    @GetMapping("/getInfo")
+    @CheckToken
+    @ApiOperation(value = "获取用户信息", httpMethod = "GET")
+    public Result<UserInfoResp> userInfo() {
+        UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
+        return Result.success(userInfoFacade.getUserInfo(sessionInfo.getOpenId()));
+    }
+
 
 }
