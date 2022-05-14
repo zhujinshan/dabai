@@ -45,7 +45,7 @@ public class UserController {
      * 登陆接口
      */
     @GetMapping("/wxlogin")
-    @ApiOperation(value = "登录接口", httpMethod = "GET")
+    @ApiOperation(value = "微信授权登录", httpMethod = "GET")
     public Result<String> login(@ApiParam("code") @RequestParam(value = "code") String code) throws WxErrorException {
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
@@ -62,7 +62,7 @@ public class UserController {
      */
     @GetMapping("/wxInfo")
     @CheckToken
-    @ApiOperation(value = "获取用户信息接口", httpMethod = "GET")
+    @ApiOperation(value = "同步微信用户基本信息", httpMethod = "GET")
     public Result<Boolean> info(@ApiParam("signature") @RequestParam(value = "signature") String signature, @ApiParam("rawData") @RequestParam(value = "rawData") String rawData,
                                 @ApiParam("encryptedData") @RequestParam(value = "encryptedData") String encryptedData,
                                 @ApiParam("iv") @RequestParam(value = "iv") String iv) {
@@ -85,7 +85,7 @@ public class UserController {
      */
     @GetMapping("/wxPhone")
     @CheckToken
-    @ApiOperation(value = "获取用户手机号", httpMethod = "GET")
+    @ApiOperation(value = "同步微信手机号", httpMethod = "GET")
     public Result<Boolean> phone(@ApiParam("signature") @RequestParam(value = "signature") String signature,
                                  @ApiParam("rawData") @RequestParam(value = "rawData") String rawData,
                                  @ApiParam("encryptedData") @RequestParam(value = "encryptedData") String encryptedData,
