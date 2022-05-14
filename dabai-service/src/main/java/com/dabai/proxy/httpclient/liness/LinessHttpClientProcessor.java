@@ -25,11 +25,11 @@ import java.util.TreeMap;
 @Slf4j
 public class LinessHttpClientProcessor implements RequestProcessor {
 
-    private static final String MERCHANT_ID = "http.liness.merchantId";
+    private static final String MERCHANT_ID = "http.liness.zxMerchantId";
 
     private static final String PARTNER_ID = "http.liness.partnerId";
 
-    private static final String RAS_KEY = "http.liness.rasKey";
+    private static final String RAS_KEY = "http.liness.zxRasKey";
 
     private static final String SIGN_TYPE = "RSA";
 

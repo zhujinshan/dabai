@@ -1,6 +1,7 @@
 package com.dabai.proxy.httpclient.liness.param;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 /**
  * 增加商户下发收款者
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * mobile_no:“13426432455”
  * }
  */
+@Data
 public class AddMerchantParam extends LinessBaseParam{
     /**
      * 证件类型	当前固定上送ID

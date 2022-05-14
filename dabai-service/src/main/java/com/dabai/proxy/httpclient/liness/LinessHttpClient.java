@@ -17,6 +17,7 @@ import com.dabai.proxy.httpclient.liness.resp.FactorsVerifyResult;
 import com.dabai.proxy.httpclient.liness.resp.LinessBaseResult;
 import com.dabai.proxy.httpclient.liness.resp.QuerySignAgreementResult;
 import com.dabai.proxy.httpclient.liness.resp.QueryTransferResult;
+import com.dabai.proxy.httpclient.liness.resp.SignAgreementResult;
 import com.dabai.proxy.httpclient.liness.resp.TransferToBankCardResult;
 
 /**
@@ -27,6 +28,8 @@ import com.dabai.proxy.httpclient.liness.resp.TransferToBankCardResult;
 @HttpMapping("${http.liness.host}")
 @BeforeRequest(LinessHttpClientProcessor.class)
 public interface LinessHttpClient {
+
+    String SUCCESS_CODE = "0000";
 
     /**
      * 增加下发收款人
@@ -63,7 +66,7 @@ public interface LinessHttpClient {
      */
     @HttpMapping(path = "/api/contract/signagreement.do", method = RequestMethod.POST,
             dataType = DataType.JSON)
-    LinessBaseResult<FactorsVerifyResult> signAgreement(@HttpEntity SignAgreementParam signAgreementParam);
+    LinessBaseResult<SignAgreementResult> signAgreement(@HttpEntity SignAgreementParam signAgreementParam);
 
     /**
      * 下发银行卡

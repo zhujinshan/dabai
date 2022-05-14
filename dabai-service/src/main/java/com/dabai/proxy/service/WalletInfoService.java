@@ -1,5 +1,6 @@
 package com.dabai.proxy.service;
 
+import com.dabai.proxy.po.CashSnapshot;
 import com.dabai.proxy.po.WalletInfo;
 
 import java.math.BigDecimal;
@@ -36,4 +37,12 @@ public interface WalletInfoService {
      * @param commission
      */
     void refundCommission(Long userId, BigDecimal commission, String policyNo);
+
+
+    /**
+     * 提现中
+     * @param userId
+     * @param cashSnapshot
+     */
+    void cashing(Long userId, CashSnapshot cashSnapshot);
 }

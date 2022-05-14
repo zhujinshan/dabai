@@ -1,10 +1,12 @@
 package com.dabai.proxy.service.impl;
 
+import com.dabai.proxy.dao.CashSnapshotMapper;
 import com.dabai.proxy.dao.WalletFlowMapper;
 import com.dabai.proxy.dao.WalletInfoMapper;
 import com.dabai.proxy.enums.WalletFlowTypeEnum;
 import com.dabai.proxy.lock.JdkLockFunction;
 import com.dabai.proxy.lock.LockObject;
+import com.dabai.proxy.po.CashSnapshot;
 import com.dabai.proxy.po.WalletFlow;
 import com.dabai.proxy.po.WalletInfo;
 import com.dabai.proxy.service.WalletInfoService;
@@ -36,6 +38,8 @@ public class WalletInfoServiceImpl implements WalletInfoService {
     private JdkLockFunction jdkLockFunction;
     @Resource
     private WalletFlowMapper walletFlowMapper;
+    @Resource
+    private CashSnapshotMapper cashSnapshotMapper;
 
     @Override
     public Long addWallet(Long userId) {
@@ -73,8 +77,8 @@ public class WalletInfoServiceImpl implements WalletInfoService {
         if (commission == null || commission.compareTo(BigDecimal.ZERO) == 0) {
             return;
         }
-        WalletInfo walletInfo = getWallet(userId);
         jdkLockFunction.execute(LockObject.of(LOCK_KEY, userId), () -> {
+            WalletInfo walletInfo = getWallet(userId);
             Example example1 = new Example(WalletFlow.class);
             example1.createCriteria().andEqualTo("flowType", WalletFlowTypeEnum.ADD.getCode())
                     .andEqualTo("policyNo", policyNo)
@@ -126,12 +130,12 @@ public class WalletInfoServiceImpl implements WalletInfoService {
         if (commission == null || commission.compareTo(BigDecimal.ZERO) == 0) {
             return;
         }
-        WalletInfo walletInfo = getWallet(userId);
-        if (walletInfo == null) {
-            log.info("钱包不能存在跳过处理，userId:{}", userId);
-            return;
-        }
         jdkLockFunction.execute(LockObject.of(LOCK_KEY, userId), () -> {
+            WalletInfo walletInfo = getWallet(userId);
+            if (walletInfo == null) {
+                log.info("钱包不能存在跳过处理，userId:{}", userId);
+                return;
+            }
             Example example1 = new Example(WalletFlow.class);
             example1.createCriteria().andEqualTo("policyNo", policyNo)
                     .andEqualTo("userId", userId);
@@ -167,5 +171,30 @@ public class WalletInfoServiceImpl implements WalletInfoService {
             walletFlowNew.setUtime(new Date());
             walletFlowMapper.insertSelective(walletFlowNew);
         });
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void cashing(Long userId, CashSnapshot cashSnapshot) {
+        if (cashSnapshot.getId() != null) {
+            cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshot);
+        }
+
+        BigDecimal cashedAmount = cashSnapshot.getCashedAmount();
+        if (cashedAmount != null) {
+            jdkLockFunction.execute(LockObject.of(LOCK_KEY, userId), () -> {
+                WalletInfo walletInfo = getWallet(userId);
+                if (walletInfo == null) {
+                    log.info("钱包不能存在跳过处理，userId:{}", userId);
+                    return;
+                }
+                WalletInfo walletInfo2 = new WalletInfo();
+                walletInfo2.setId(walletInfo.getId());
+                walletInfo2.setAvailableAmount(walletInfo.getAvailableAmount().subtract(cashedAmount));
+                walletInfo2.setCashingAmount(cashedAmount);
+                walletInfo2.setUtime(new Date());
+                walletInfoMapper.updateByPrimaryKeySelective(walletInfo2);
+            });
+        }
     }
 }

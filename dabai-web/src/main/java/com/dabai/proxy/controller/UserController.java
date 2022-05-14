@@ -46,7 +46,7 @@ public class UserController {
      */
     @GetMapping("/wxlogin")
     @ApiOperation(value = "微信授权登录，返回自定义token，存入header头access_token", httpMethod = "GET")
-    public Result<String> login(@ApiParam("code") @RequestParam(value = "code") String code) throws WxErrorException {
+    public Result<String> login(@ApiParam(value = "code",required = true) @RequestParam(value = "code") String code) throws WxErrorException {
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
@@ -63,9 +63,9 @@ public class UserController {
     @GetMapping("/wxInfo")
     @CheckToken
     @ApiOperation(value = "同步微信用户基本信息", httpMethod = "GET")
-    public Result<Boolean> info(@ApiParam("signature") @RequestParam(value = "signature") String signature, @ApiParam("rawData") @RequestParam(value = "rawData") String rawData,
-                                @ApiParam("encryptedData") @RequestParam(value = "encryptedData") String encryptedData,
-                                @ApiParam("iv") @RequestParam(value = "iv") String iv) {
+    public Result<Boolean> info(@ApiParam("signature") @RequestParam(value = "signature",required = true) String signature, @ApiParam(value = "rawData", required = true) @RequestParam(value = "rawData") String rawData,
+                                @ApiParam(value = "encryptedData",required = true) @RequestParam(value = "encryptedData") String encryptedData,
+                                @ApiParam(value = "iv",required = true) @RequestParam(value = "iv") String iv) {
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
@@ -86,10 +86,10 @@ public class UserController {
     @GetMapping("/wxPhone")
     @CheckToken
     @ApiOperation(value = "同步微信手机号", httpMethod = "GET")
-    public Result<Boolean> phone(@ApiParam("signature") @RequestParam(value = "signature") String signature,
-                                 @ApiParam("rawData") @RequestParam(value = "rawData") String rawData,
-                                 @ApiParam("encryptedData") @RequestParam(value = "encryptedData") String encryptedData,
-                                 @ApiParam("iv") @RequestParam(value = "iv") String iv) {
+    public Result<Boolean> phone(@ApiParam(value = "signature",required = true) @RequestParam(value = "signature") String signature,
+                                 @ApiParam(value = "rawData",required = true) @RequestParam(value = "rawData") String rawData,
+                                 @ApiParam(value = "encryptedData",required = true) @RequestParam(value = "encryptedData") String encryptedData,
+                                 @ApiParam(value = "iv",required = true) @RequestParam(value = "iv") String iv) {
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
         UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();

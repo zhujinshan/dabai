@@ -3,6 +3,7 @@ package com.dabai.proxy;
 import com.dabai.proxy.httpclient.spring.EnableHttpClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -12,6 +13,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @SpringBootApplication(scanBasePackages = "com.dabai.proxy")
 @MapperScan(basePackages = "com.dabai.proxy.dao")
 @EnableHttpClient(basePackages = "com.dabai.proxy.httpclient")
+@EnableAspectJAutoProxy(exposeProxy = true, proxyTargetClass = true)
 public class WebBootApplication {
 
     public static void main(String[] args) {

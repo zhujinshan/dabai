@@ -18,6 +18,17 @@ spring:
 server:
   port: 8080
 
+tencentcloud:
+  secretId: AKIDSny1wgEgJrDaorlV6WkmeLSNFya4UtCK
+  secretKey: 2sW0Rn13reEbliSyGKCqKfniQuABxVpv
+  submitCodeTemplateId: 1040127
+  loginTemplateId: 1040125
+  registerTemplateId: 1040122
+  rePasswordTemplateId: 1049348
+  notifyTemplateId: 1066246
+  sdkAppId: 1400548038
+  signName: 大白科技
+
 wx:
   miniapp:
     configs:

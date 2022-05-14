@@ -75,6 +75,25 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoMapper.selectOneByExample(example);
     }
 
+    @Override
+    public UserInfo selectById(Long id) {
+        Assert.notNull(id, "id缺失");
+        return userInfoMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public long saveSignInfo(Long id, String bankName, String bankCard,
+                             String idCard, String name, String mobile) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(id);
+        userInfo.setName(name);
+        userInfo.setBankCard(bankCard);
+        userInfo.setBankName(bankName);
+        userInfo.setIdCard(idCard);
+        userInfo.setMobile(mobile);
+        return userInfoMapper.updateByPrimaryKeySelective(userInfo);
+    }
+
 
     private UserInfo buildFormWxUser(WxMaUserInfo wxMaUserInfo) {
         UserInfo userInfo = new UserInfo();
