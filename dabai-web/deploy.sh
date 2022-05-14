@@ -7,7 +7,7 @@ PROG_NAME=$0
 ACTION=$1
 ACTIVE=$2
 APP_HOME=/data/springboot/${APP_NAME} # 从package.tgz中解压出来的jar包放到这个目录下
-JAR_NAME=${APP_HOME}/target/${APP_NAME}.jar # jar包的名字
+JAR_NAME=${APP_HOME}/${APP_NAME}.jar # jar包的名字
 LOG_DIR=/data/logs/${APP_NAME}
 
 if [ ${ACTIVE} == "prod" ]; then

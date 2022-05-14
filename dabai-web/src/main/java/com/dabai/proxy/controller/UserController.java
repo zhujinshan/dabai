@@ -45,7 +45,7 @@ public class UserController {
      * 登陆接口
      */
     @GetMapping("/wxlogin")
-    @ApiOperation(value = "微信授权登录", httpMethod = "GET")
+    @ApiOperation(value = "微信授权登录，返回自定义token，存入header头access_token", httpMethod = "GET")
     public Result<String> login(@ApiParam("code") @RequestParam(value = "code") String code) throws WxErrorException {
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
