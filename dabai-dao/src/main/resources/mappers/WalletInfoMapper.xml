@@ -13,12 +13,13 @@
     <result column="last_cash_time" jdbcType="TIMESTAMP" property="lastCashTime" />
     <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
     <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+    <result column="cashing_amount" jdbcType="DECIMAL" property="cashingAmount" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
     id, use_id, available_amount, cashed_amount, total_amount, last_cash_time, ctime, 
-    utime
+    utime, cashing_amount
   </sql>
 </mapper>

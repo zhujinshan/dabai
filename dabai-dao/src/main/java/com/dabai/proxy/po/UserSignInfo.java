@@ -1,7 +1,11 @@
 package com.dabai.proxy.po;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "user_sign_info")
 public class UserSignInfo {
@@ -31,7 +35,7 @@ public class UserSignInfo {
      * 签约状态 1 成功 2失败 3 签约中
      */
     @Column(name = "sign_status")
-    private Byte signStatus;
+    private Integer signStatus;
 
     /**
      * 签约流水号
@@ -126,7 +130,7 @@ public class UserSignInfo {
      *
      * @return sign_status - 签约状态 1 成功 2失败 3 签约中
      */
-    public Byte getSignStatus() {
+    public Integer getSignStatus() {
         return signStatus;
     }
 
@@ -135,7 +139,7 @@ public class UserSignInfo {
      *
      * @param signStatus 签约状态 1 成功 2失败 3 签约中
      */
-    public void setSignStatus(Byte signStatus) {
+    public void setSignStatus(Integer signStatus) {
         this.signStatus = signStatus;
     }
 

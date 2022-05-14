@@ -45,6 +45,12 @@ public class WalletInfo {
     private Date utime;
 
     /**
+     * 提现中金额
+     */
+    @Column(name = "cashing_amount")
+    private BigDecimal cashingAmount;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -174,5 +180,23 @@ public class WalletInfo {
      */
     public void setUtime(Date utime) {
         this.utime = utime;
+    }
+
+    /**
+     * 获取提现中金额
+     *
+     * @return cashing_amount - 提现中金额
+     */
+    public BigDecimal getCashingAmount() {
+        return cashingAmount;
+    }
+
+    /**
+     * 设置提现中金额
+     *
+     * @param cashingAmount 提现中金额
+     */
+    public void setCashingAmount(BigDecimal cashingAmount) {
+        this.cashingAmount = cashingAmount;
     }
 }

@@ -1,7 +1,12 @@
 package com.dabai.proxy.po;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "cash_snapshot")
 public class CashSnapshot {
@@ -70,13 +75,7 @@ public class CashSnapshot {
      * 提现金额
      */
     @Column(name = "cashed_amount")
-    private Long cashedAmount;
-
-    /**
-     * 三方接口返回结果
-     */
-    @Column(name = "third_response")
-    private String thirdResponse;
+    private BigDecimal cashedAmount;
 
     /**
      * 备注，失败原因等
@@ -86,6 +85,12 @@ public class CashSnapshot {
     private Date ctime;
 
     private Date utime;
+
+    /**
+     * 三方接口返回结果
+     */
+    @Column(name = "third_response")
+    private String thirdResponse;
 
     /**
      * @return id
@@ -286,7 +291,7 @@ public class CashSnapshot {
      *
      * @return cashed_amount - 提现金额
      */
-    public Long getCashedAmount() {
+    public BigDecimal getCashedAmount() {
         return cashedAmount;
     }
 
@@ -295,26 +300,8 @@ public class CashSnapshot {
      *
      * @param cashedAmount 提现金额
      */
-    public void setCashedAmount(Long cashedAmount) {
+    public void setCashedAmount(BigDecimal cashedAmount) {
         this.cashedAmount = cashedAmount;
-    }
-
-    /**
-     * 获取三方接口返回结果
-     *
-     * @return third_response - 三方接口返回结果
-     */
-    public String getThirdResponse() {
-        return thirdResponse;
-    }
-
-    /**
-     * 设置三方接口返回结果
-     *
-     * @param thirdResponse 三方接口返回结果
-     */
-    public void setThirdResponse(String thirdResponse) {
-        this.thirdResponse = thirdResponse == null ? null : thirdResponse.trim();
     }
 
     /**
@@ -361,5 +348,23 @@ public class CashSnapshot {
      */
     public void setUtime(Date utime) {
         this.utime = utime;
+    }
+
+    /**
+     * 获取三方接口返回结果
+     *
+     * @return third_response - 三方接口返回结果
+     */
+    public String getThirdResponse() {
+        return thirdResponse;
+    }
+
+    /**
+     * 设置三方接口返回结果
+     *
+     * @param thirdResponse 三方接口返回结果
+     */
+    public void setThirdResponse(String thirdResponse) {
+        this.thirdResponse = thirdResponse == null ? null : thirdResponse.trim();
     }
 }

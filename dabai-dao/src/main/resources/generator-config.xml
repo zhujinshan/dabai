@@ -48,12 +48,12 @@
             <columnOverride column="status" javaType="Integer"/>
         </table>-->
 
-        <table tableName="policy_info" enableSelectByExample="false" enableDeleteByExample="false"
+        <!--<table tableName="policy_info" enableSelectByExample="false" enableDeleteByExample="false"
                enableDeleteByPrimaryKey="false"
                enableCountByExample="false" enableUpdateByExample="false" domainObjectName="PolicyInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="policy_status" javaType="Integer"/>
-        </table>
+        </table>-->
 
 
        <!-- <table tableName="user_plateform_info" enableSelectByExample="false" enableDeleteByExample="false"
@@ -77,25 +77,26 @@
             <columnOverride column="sign_status" javaType="Integer"/>
         </table>
 
-        <table tableName="user_sign_info" enableSelectByExample="false" enableDeleteByExample="false"
-               enableDeleteByPrimaryKey="false"
-               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="UserSignInfo">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="identity_tag" javaType="Integer"/>
-        </table>
-
-        <table tableName="wallet_info" enableSelectByExample="false" enableDeleteByExample="false"
-               enableDeleteByPrimaryKey="false"
-               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="WalletInfo">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>-->
-
         <table tableName="wallet_flow" enableSelectByExample="false" enableDeleteByExample="false"
                enableDeleteByPrimaryKey="false"
                enableCountByExample="false" enableUpdateByExample="false" domainObjectName="WalletFlow">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="flow_type" javaType="Integer"/>
+        </table>-->
+
+        <!--<table tableName="user_sign_info" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="UserSignInfo">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="sign_status" javaType="Integer"/>
+        </table>-->
+
+        <table tableName="wallet_info" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="WalletInfo">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
+
 
     </context>
 </generatorConfiguration>

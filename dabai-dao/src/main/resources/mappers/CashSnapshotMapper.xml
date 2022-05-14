@@ -17,16 +17,27 @@
     <result column="business_source" jdbcType="VARCHAR" property="businessSource" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="cashed_amount" jdbcType="DECIMAL" property="cashedAmount" />
-    <result column="third_response" jdbcType="VARCHAR" property="thirdResponse" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
     <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.dabai.proxy.po.CashSnapshot">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="third_response" jdbcType="LONGVARCHAR" property="thirdResponse" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
     id, user_id, request_no, deal_no, name, id_card, mobile, bank_card, sign_source, 
-    business_source, status, cashed_amount, third_response, remark, ctime, utime
+    business_source, status, cashed_amount, remark, ctime, utime
+  </sql>
+  <sql id="Blob_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    third_response
   </sql>
 </mapper>
