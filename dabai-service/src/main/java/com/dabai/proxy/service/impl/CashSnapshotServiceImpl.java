@@ -51,6 +51,7 @@ public class CashSnapshotServiceImpl implements CashSnapshotService {
         CashSnapshot cashSnapshot = new CashSnapshot();
         cashSnapshot.setId(id);
         cashSnapshot.setRemark(msg);
+        cashSnapshot.setStatus(CashStatusEnum.FAILED.getCode());
         cashSnapshot.setThirdResponse(thirdResp);
         cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshot);
     }
