@@ -8,7 +8,9 @@ import com.dabai.proxy.httpclient.liness.param.TransferToBankCardParam;
 import com.dabai.proxy.po.CashSnapshot;
 import com.dabai.proxy.service.CashSnapshotService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Assert;
 
 import javax.annotation.Resource;
@@ -54,5 +56,13 @@ public class CashSnapshotServiceImpl implements CashSnapshotService {
         cashSnapshot.setStatus(CashStatusEnum.FAILED.getCode());
         cashSnapshot.setThirdResponse(thirdResp);
         cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshot);
+    }
+
+    @Override
+    public CashSnapshot getByRequestNo(String requestNo) {
+        Assert.isTrue(StringUtils.isNotEmpty(requestNo), "requestNo缺失");
+        Example example = new Example(CashSnapshot.class);
+        example.createCriteria().andEqualTo("requestNo", requestNo);
+        return cashSnapshotMapper.selectOneByExample(example);
     }
 }

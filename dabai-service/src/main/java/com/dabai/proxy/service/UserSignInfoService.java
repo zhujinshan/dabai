@@ -17,4 +17,8 @@ public interface UserSignInfoService {
      * @return
      */
     UserSignInfo signing(Long userId, String signDealNo);
+
+    UserSignInfo getByDealNo(String dealNo);
+
+    void updateSignInfo(UserSignInfo userSignInfo);
 }

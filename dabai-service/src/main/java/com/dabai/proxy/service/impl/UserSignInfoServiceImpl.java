@@ -36,6 +36,7 @@ public class UserSignInfoServiceImpl implements UserSignInfoService {
     @Override
     public UserSignInfo signing(Long userId, String signDealNo) {
         Assert.notNull(userId, "userId缺失");
+        Assert.notNull(signDealNo, "signDealNo缺失");
         UserSignInfo userSignInfo = getByUserId(userId);
         UserSignInfo newUserSignInfo = new UserSignInfo();
         newUserSignInfo.setUserId(userId);
@@ -52,5 +53,21 @@ public class UserSignInfoServiceImpl implements UserSignInfoService {
             userSignInfoMapper.insertSelective(newUserSignInfo);
         }
         return newUserSignInfo;
+    }
+
+    @Override
+    public UserSignInfo getByDealNo(String dealNo) {
+        Assert.notNull(dealNo, "dealNo缺失");
+        Example example = new Example(UserSignInfo.class);
+        example.createCriteria().andEqualTo("signDealNo", dealNo);
+        return userSignInfoMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public void updateSignInfo(UserSignInfo userSignInfo) {
+        if (userSignInfo.getId() != null) {
+            userSignInfo.setUtime(new Date());
+            userSignInfoMapper.updateByPrimaryKeySelective(userSignInfo);
+        }
     }
 }

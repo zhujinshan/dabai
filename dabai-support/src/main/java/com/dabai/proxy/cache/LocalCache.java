@@ -33,4 +33,9 @@ public class LocalCache {
         log.error("无效code mobile：{},real:{},value:{}", phone, existCode, code);
         return false;
     }
+
+    public static boolean contains(String phone) {
+        String existCode = codeCache.get(phone);
+        return StringUtils.isNotEmpty(existCode);
+    }
 }

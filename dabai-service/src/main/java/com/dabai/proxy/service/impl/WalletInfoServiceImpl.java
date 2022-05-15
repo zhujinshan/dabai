@@ -31,6 +31,7 @@ import java.util.Objects;
 @Slf4j
 @Service
 public class WalletInfoServiceImpl implements WalletInfoService {
+
     private static final String LOCK_KEY = "wallet";
     @Resource
     private WalletInfoMapper walletInfoMapper;
@@ -176,7 +177,9 @@ public class WalletInfoServiceImpl implements WalletInfoService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public void cashing(Long userId, CashSnapshot cashSnapshot) {
+        Assert.notNull(userId, "userId缺失");
         if (cashSnapshot.getId() != null) {
+            cashSnapshot.setUtime(new Date());
             cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshot);
         }
 
@@ -191,7 +194,79 @@ public class WalletInfoServiceImpl implements WalletInfoService {
                 WalletInfo walletInfo2 = new WalletInfo();
                 walletInfo2.setId(walletInfo.getId());
                 walletInfo2.setAvailableAmount(walletInfo.getAvailableAmount().subtract(cashedAmount));
-                walletInfo2.setCashingAmount(cashedAmount);
+                walletInfo2.setCashingAmount(walletInfo.getCashingAmount().add(cashedAmount));
+                walletInfo2.setUtime(new Date());
+                walletInfoMapper.updateByPrimaryKeySelective(walletInfo2);
+            });
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void cashSuccess(Long userId, CashSnapshot cashSnapshot) {
+        Assert.notNull(userId, "userId缺失");
+        if (cashSnapshot.getId() != null) {
+            cashSnapshot.setUtime(new Date());
+            cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshot);
+        }
+
+        BigDecimal cashedAmount = cashSnapshot.getCashedAmount();
+        if (cashedAmount != null) {
+            jdkLockFunction.execute(LockObject.of(LOCK_KEY, userId), () -> {
+                WalletInfo walletInfo = getWallet(userId);
+                if (walletInfo == null) {
+                    log.info("钱包不能存在跳过处理，userId:{}", userId);
+                    return;
+                }
+                BigDecimal cashingAmount = walletInfo.getCashingAmount();
+                WalletInfo walletInfo2 = new WalletInfo();
+                walletInfo2.setId(walletInfo.getId());
+                // 判断当前冻结金额是否大于该笔提现成功金额 避免异常请求变为负值
+                if (cashingAmount.compareTo(cashedAmount) > 0) {
+                    walletInfo2.setCashingAmount(cashingAmount.subtract(cashedAmount));
+                }
+                walletInfo2.setUtime(new Date());
+                walletInfo2.setCashedAmount(walletInfo.getCashedAmount().add(cashedAmount));
+                walletInfoMapper.updateByPrimaryKeySelective(walletInfo2);
+
+                // 流水表
+                WalletFlow walletFlowNew = new WalletFlow();
+                walletFlowNew.setWalletId(walletInfo.getId());
+                walletFlowNew.setAmount(cashedAmount);
+                walletFlowNew.setFlowType(WalletFlowTypeEnum.WITHDRAWAL.getCode());
+                walletFlowNew.setCtime(new Date());
+                walletFlowNew.setCashRequestNo(cashSnapshot.getRequestNo());
+                walletFlowNew.setUseId(userId);
+                walletFlowNew.setUtime(new Date());
+                walletFlowMapper.insertSelective(walletFlowNew);
+            });
+        }
+    }
+
+    @Override
+    public void cashFailed(Long userId, CashSnapshot cashSnapshot) {
+        Assert.notNull(userId, "userId缺失");
+        if (cashSnapshot.getId() != null) {
+            cashSnapshot.setUtime(new Date());
+            cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshot);
+        }
+
+        BigDecimal cashedAmount = cashSnapshot.getCashedAmount();
+        if (cashedAmount != null) {
+            jdkLockFunction.execute(LockObject.of(LOCK_KEY, userId), () -> {
+                WalletInfo walletInfo = getWallet(userId);
+                if (walletInfo == null) {
+                    log.info("钱包不能存在跳过处理，userId:{}", userId);
+                    return;
+                }
+                WalletInfo walletInfo2 = new WalletInfo();
+                walletInfo2.setId(walletInfo.getId());
+                walletInfo2.setAvailableAmount(walletInfo.getAvailableAmount().add(cashedAmount));
+                // 判断当前冻结金额是否大于该笔提现成功金额
+                BigDecimal cashingAmount = walletInfo.getCashingAmount();
+                if (cashingAmount.compareTo(cashedAmount) > 0) {
+                    walletInfo2.setCashingAmount(cashingAmount.subtract(cashedAmount));
+                }
                 walletInfo2.setUtime(new Date());
                 walletInfoMapper.updateByPrimaryKeySelective(walletInfo2);
             });

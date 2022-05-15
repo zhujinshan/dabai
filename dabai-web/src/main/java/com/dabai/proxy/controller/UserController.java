@@ -4,6 +4,7 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.dabai.proxy.cache.LocalCache;
 import com.dabai.proxy.config.UserSessionContext;
 import com.dabai.proxy.config.UserSessionInfo;
 import com.dabai.proxy.config.result.Result;
@@ -12,6 +13,7 @@ import com.dabai.proxy.config.token.JwtTools;
 import com.dabai.proxy.config.wx.WxMaConfiguration;
 import com.dabai.proxy.config.wx.WxMaProperties;
 import com.dabai.proxy.facade.UserInfoFacade;
+import com.dabai.proxy.httpclient.tencentcloud.TencentSmsClient;
 import com.dabai.proxy.resp.UserInfoResp;
 import com.dabai.proxy.service.UserInfoService;
 import io.swagger.annotations.Api;
@@ -41,12 +43,15 @@ public class UserController {
     @Autowired
     private UserInfoFacade userInfoFacade;
 
+    @Autowired
+    private TencentSmsClient tencentSmsClient;
+
     /**
      * 登陆接口
      */
     @GetMapping("/wxlogin")
     @ApiOperation(value = "微信授权登录，返回自定义token，存入header头access_token", httpMethod = "GET")
-    public Result<String> login(@ApiParam(value = "code",required = true) @RequestParam(value = "code") String code) throws WxErrorException {
+    public Result<String> login(@ApiParam(value = "code", required = true) @RequestParam(value = "code") String code) throws WxErrorException {
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
@@ -63,9 +68,9 @@ public class UserController {
     @GetMapping("/wxInfo")
     @CheckToken
     @ApiOperation(value = "同步微信用户基本信息", httpMethod = "GET")
-    public Result<Boolean> info(@ApiParam("signature") @RequestParam(value = "signature",required = true) String signature, @ApiParam(value = "rawData", required = true) @RequestParam(value = "rawData") String rawData,
-                                @ApiParam(value = "encryptedData",required = true) @RequestParam(value = "encryptedData") String encryptedData,
-                                @ApiParam(value = "iv",required = true) @RequestParam(value = "iv") String iv) {
+    public Result<Boolean> info(@ApiParam("signature") @RequestParam(value = "signature", required = true) String signature, @ApiParam(value = "rawData", required = true) @RequestParam(value = "rawData") String rawData,
+                                @ApiParam(value = "encryptedData", required = true) @RequestParam(value = "encryptedData") String encryptedData,
+                                @ApiParam(value = "iv", required = true) @RequestParam(value = "iv") String iv) {
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
@@ -86,10 +91,10 @@ public class UserController {
     @GetMapping("/wxPhone")
     @CheckToken
     @ApiOperation(value = "同步微信手机号", httpMethod = "GET")
-    public Result<Boolean> phone(@ApiParam(value = "signature",required = true) @RequestParam(value = "signature") String signature,
-                                 @ApiParam(value = "rawData",required = true) @RequestParam(value = "rawData") String rawData,
-                                 @ApiParam(value = "encryptedData",required = true) @RequestParam(value = "encryptedData") String encryptedData,
-                                 @ApiParam(value = "iv",required = true) @RequestParam(value = "iv") String iv) {
+    public Result<Boolean> phone(@ApiParam(value = "signature", required = true) @RequestParam(value = "signature") String signature,
+                                 @ApiParam(value = "rawData", required = true) @RequestParam(value = "rawData") String rawData,
+                                 @ApiParam(value = "encryptedData", required = true) @RequestParam(value = "encryptedData") String encryptedData,
+                                 @ApiParam(value = "iv", required = true) @RequestParam(value = "iv") String iv) {
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
         UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
@@ -110,5 +115,17 @@ public class UserController {
         return Result.success(userInfoFacade.getUserInfo(sessionInfo.getOpenId()));
     }
 
+
+    @GetMapping(value = "/sendSubmitCode")
+    @CheckToken
+    @ApiOperation(value = "提现发送短信验证码", httpMethod = "GET")
+    public Result<Boolean> sendSubmitCode(@RequestParam @ApiParam(value = "手机号", required = true) String mobile) {
+        log.info("下发短信验证码：mobile：{}", mobile);
+        if (LocalCache.contains(mobile)) {
+            return Result.genResult(-1, "验证码还在有效期，请不要频繁请求", false);
+        }
+        tencentSmsClient.sendSubmitVerificationCode(mobile);
+        return Result.success(true);
+    }
 
 }

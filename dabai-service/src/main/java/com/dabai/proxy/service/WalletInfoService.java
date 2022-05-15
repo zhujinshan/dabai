@@ -45,4 +45,18 @@ public interface WalletInfoService {
      * @param cashSnapshot
      */
     void cashing(Long userId, CashSnapshot cashSnapshot);
+
+    /**
+     * 提现成功
+     * @param userId
+     * @param cashSnapshot
+     */
+    void cashSuccess(Long userId, CashSnapshot cashSnapshot);
+
+    /**
+     * 提现失败
+     * @param userId
+     * @param cashSnapshot
+     */
+    void cashFailed(Long userId, CashSnapshot cashSnapshot);
 }

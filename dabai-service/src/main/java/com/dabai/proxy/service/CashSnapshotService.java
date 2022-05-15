@@ -28,4 +28,12 @@ public interface CashSnapshotService {
      * @param thirdResp 三方报文
      */
     void cashFailed(Long id, String msg, String thirdResp);
+
+    /**
+     * 通过请求查找提现记录
+     *
+     * @param requestNo requestNo
+     * @return res
+     */
+    CashSnapshot getByRequestNo(String requestNo);
 }
