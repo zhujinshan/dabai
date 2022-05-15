@@ -68,7 +68,7 @@ public class UserController {
     @GetMapping("/wxInfo")
     @CheckToken
     @ApiOperation(value = "同步微信用户基本信息", httpMethod = "GET")
-    public Result<Boolean> info(@ApiParam("signature") @RequestParam(value = "signature", required = true) String signature, @ApiParam(value = "rawData", required = true) @RequestParam(value = "rawData") String rawData,
+    public Result<Boolean> info(@ApiParam(value = "signature",required = true) @RequestParam(value = "signature", required = true) String signature, @ApiParam(value = "rawData", required = true) @RequestParam(value = "rawData") String rawData,
                                 @ApiParam(value = "encryptedData", required = true) @RequestParam(value = "encryptedData") String encryptedData,
                                 @ApiParam(value = "iv", required = true) @RequestParam(value = "iv") String iv) {
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
