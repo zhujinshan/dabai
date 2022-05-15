@@ -17,8 +17,8 @@ public class PolicyInfo {
     /**
      * 会员平台id
      */
-    @Column(name = "use_id")
-    private Long useId;
+    @Column(name = "user_id")
+    private Long userId;
 
     /**
      * 订单id
@@ -124,19 +124,19 @@ public class PolicyInfo {
     /**
      * 获取会员平台id
      *
-     * @return use_id - 会员平台id
+     * @return user_id - 会员平台id
      */
-    public Long getUseId() {
-        return useId;
+    public Long getUserId() {
+        return userId;
     }
 
     /**
      * 设置会员平台id
      *
-     * @param useId 会员平台id
+     * @param userId 会员平台id
      */
-    public void setUseId(Long useId) {
-        this.useId = useId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     /**

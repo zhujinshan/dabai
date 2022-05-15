@@ -38,6 +38,7 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
 
         PolicyInfo newPolicyInfo = new PolicyInfo();
         BeanUtils.copyProperties(policyInfoDto, newPolicyInfo);
+        newPolicyInfo.setUserId(userId);
         newPolicyInfo.setCommissionAmount(commision);
         if (policyInfo != null) {
             newPolicyInfo.setUtime(new Date());

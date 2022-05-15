@@ -6,7 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="use_id" jdbcType="BIGINT" property="useId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="order_id" jdbcType="VARCHAR" property="orderId" />
     <result column="policy_status" jdbcType="TINYINT" property="policyStatus" />
     <result column="commission_amount" jdbcType="DECIMAL" property="commissionAmount" />
@@ -27,7 +27,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    id, use_id, order_id, policy_status, commission_amount, policy_no, product_code, 
+    id, user_id, order_id, policy_status, commission_amount, policy_no, product_code, 
     product_name, insure_name, assured_name, ensure_time, premium, start_date, end_date, 
     ele_policy_addr, ctime, utime
   </sql>
