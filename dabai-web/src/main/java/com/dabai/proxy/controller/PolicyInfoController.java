@@ -24,7 +24,7 @@ public class PolicyInfoController {
 
     @PostMapping("/pageQuery")
     @CheckToken
-    @ApiOperation(value = "同步微信用户基本信息", httpMethod = "POST")
+    @ApiOperation(value = "保单列表", httpMethod = "POST")
     public Result<PolicyInfoResp> pageQuery(@RequestBody PolicyInfoPageReq policyInfoPageReq) {
         return null;
     }
