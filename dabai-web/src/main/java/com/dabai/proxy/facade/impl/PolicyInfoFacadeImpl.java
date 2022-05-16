@@ -37,11 +37,11 @@ public class PolicyInfoFacadeImpl implements PolicyInfoFacade {
     @Transactional(rollbackFor = Throwable.class)
     public void policyComplete(PolicyInfoDto policyInfoDto) {
         Assert.notNull(policyInfoDto, "保单信息缺失");
-        Assert.notNull(policyInfoDto.getMemberNo(), "保单会员编码缺失");
+        Assert.notNull(policyInfoDto.getChannelNo(), "保单会员编码缺失");
         Assert.notNull(policyInfoDto.getPolicyNo(), "保单号缺失");
         BigDecimal premium = policyInfoDto.getPremium();
         Assert.notNull(premium, "保单保费缺失");
-        UserPlateformInfo hbxMemberInfo = userPlateformInfoService.getByHbxMemberNo(policyInfoDto.getMemberNo());
+        UserPlateformInfo hbxMemberInfo = userPlateformInfoService.getByHbxMemberNo(policyInfoDto.getChannelNo());
         if (hbxMemberInfo == null) {
             log.info("未找到平台用户，policyInfoDto：{}", policyInfoDto);
             return;
@@ -58,11 +58,11 @@ public class PolicyInfoFacadeImpl implements PolicyInfoFacade {
     @Transactional(rollbackFor = Throwable.class)
     public void policyRefund(PolicyInfoDto policyInfoDto) {
         Assert.notNull(policyInfoDto, "保单信息缺失");
-        Assert.notNull(policyInfoDto.getMemberNo(), "保单会员编码缺失");
+        Assert.notNull(policyInfoDto.getChannelNo(), "保单会员编码缺失");
         Assert.notNull(policyInfoDto.getPolicyNo(), "保单号缺失");
         BigDecimal premium = policyInfoDto.getPremium();
         Assert.notNull(premium, "保单保费缺失");
-        UserPlateformInfo hbxMemberInfo = userPlateformInfoService.getByHbxMemberNo(policyInfoDto.getMemberNo());
+        UserPlateformInfo hbxMemberInfo = userPlateformInfoService.getByHbxMemberNo(policyInfoDto.getChannelNo());
         if (hbxMemberInfo == null) {
             log.info("未找到平台用户，policyInfoDto：{}", policyInfoDto);
             return;

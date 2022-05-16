@@ -14,7 +14,7 @@ public class PolicyInfoDto {
     /**
      * 会员编码
      */
-    private String memberNo;
+    private String channelNo;
 
     /**
      * 产品编码
