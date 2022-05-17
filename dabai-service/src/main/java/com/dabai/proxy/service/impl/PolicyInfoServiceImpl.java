@@ -2,6 +2,7 @@ package com.dabai.proxy.service.impl;
 
 import com.dabai.proxy.dao.PolicyInfoMapper;
 import com.dabai.proxy.dto.PolicyInfoDto;
+import com.dabai.proxy.enums.PolicyStatus;
 import com.dabai.proxy.po.PolicyInfo;
 import com.dabai.proxy.service.PolicyInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +29,11 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
     PolicyInfoMapper policyInfoMapper;
 
     @Override
-    public void savePolicyInfo(Long userId, BigDecimal commision, PolicyInfoDto policyInfoDto) {
+    public void savePolicyInfo(Long userId, BigDecimal commision, PolicyStatus status, PolicyInfoDto policyInfoDto) {
         Assert.notNull(userId, "userId缺失");
         Assert.notNull(policyInfoDto, "policyInfoDto信息缺失");
         Assert.notNull(policyInfoDto.getPolicyNo(), "保单号信息缺失");
+        Assert.notNull(status, "保单状态缺失");
 
         String policyNo = policyInfoDto.getPolicyNo();
         Example example = new Example(PolicyInfo.class);
@@ -42,6 +44,7 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
         BeanUtils.copyProperties(policyInfoDto, newPolicyInfo);
         newPolicyInfo.setUserId(userId);
         newPolicyInfo.setCommissionAmount(commision);
+        newPolicyInfo.setPolicyStatus(status.getCode());
         if (policyInfo != null) {
             newPolicyInfo.setUtime(new Date());
             newPolicyInfo.setId(policyInfo.getId());

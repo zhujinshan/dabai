@@ -1,6 +1,7 @@
 package com.dabai.proxy.service;
 
 import com.dabai.proxy.dto.PolicyInfoDto;
+import com.dabai.proxy.enums.PolicyStatus;
 import com.dabai.proxy.po.PolicyInfo;
 
 import java.math.BigDecimal;
@@ -14,12 +15,12 @@ public interface PolicyInfoService {
 
     /**
      * 更新保单信息
-     *
-     * @param userId
+     *  @param userId
      * @param commision
+     * @param complete
      * @param policyInfoDto
      */
-    void savePolicyInfo(Long userId, BigDecimal commision, PolicyInfoDto policyInfoDto);
+    void savePolicyInfo(Long userId, BigDecimal commision, PolicyStatus complete, PolicyInfoDto policyInfoDto);
 
     /**
      * 查询保单列表

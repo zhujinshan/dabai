@@ -1,6 +1,7 @@
 package com.dabai.proxy.facade.impl;
 
 import com.dabai.proxy.dto.PolicyInfoDto;
+import com.dabai.proxy.enums.PolicyStatus;
 import com.dabai.proxy.facade.PolicyInfoFacade;
 import com.dabai.proxy.po.UserPlateformInfo;
 import com.dabai.proxy.service.PolicyInfoService;
@@ -49,7 +50,7 @@ public class PolicyInfoFacadeImpl implements PolicyInfoFacade {
         BigDecimal commission = premium.multiply(commissionRadio).setScale(2, BigDecimal.ROUND_FLOOR);
         log.info("保单佣金，premium：{}, commissionRadio:{}, commission:{}", premium, commissionRadio, commission);
         // 更新保单信息
-        policyInfoService.savePolicyInfo(hbxMemberInfo.getUserId(), commission, policyInfoDto);
+        policyInfoService.savePolicyInfo(hbxMemberInfo.getUserId(), commission, PolicyStatus.COMPLETE, policyInfoDto);
         // 计算佣金
         walletInfoService.addCommission(hbxMemberInfo.getUserId(), commission, policyInfoDto.getPolicyNo());
     }
@@ -70,7 +71,7 @@ public class PolicyInfoFacadeImpl implements PolicyInfoFacade {
         BigDecimal commission = premium.multiply(commissionRadio).setScale(2, BigDecimal.ROUND_FLOOR);
         log.info("保单佣金，premium：{}, commissionRadio:{}, commission:{}", premium, commissionRadio, commission);
         // 更新保单信息
-        policyInfoService.savePolicyInfo(hbxMemberInfo.getUserId(), commission, policyInfoDto);
+        policyInfoService.savePolicyInfo(hbxMemberInfo.getUserId(), commission, PolicyStatus.REFUND, policyInfoDto);
         // 计算佣金
         walletInfoService.refundCommission(hbxMemberInfo.getUserId(), commission, policyInfoDto.getPolicyNo());
     }
