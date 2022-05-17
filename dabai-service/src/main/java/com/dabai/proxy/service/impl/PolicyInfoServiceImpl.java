@@ -48,6 +48,7 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
             policyInfoMapper.updateByPrimaryKeySelective(newPolicyInfo);
         } else {
             newPolicyInfo.setCtime(new Date());
+            newPolicyInfo.setUtime(new Date());
             policyInfoMapper.insertSelective(newPolicyInfo);
         }
     }
