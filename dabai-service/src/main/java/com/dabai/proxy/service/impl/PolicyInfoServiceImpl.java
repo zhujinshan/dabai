@@ -13,6 +13,8 @@ import tk.mybatis.mapper.util.Assert;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author: jinshan.zhu
@@ -48,5 +50,17 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
             newPolicyInfo.setCtime(new Date());
             policyInfoMapper.insertSelective(newPolicyInfo);
         }
+    }
+
+    @Override
+    public List<PolicyInfo> pageQuery(Long userId, Integer status) {
+        Assert.notNull(userId, "userId is required");
+        Example example = new Example(PolicyInfo.class);
+        example.setOrderByClause("id desc");
+        Example.Criteria criteria = example.createCriteria().andEqualTo("userId", userId);
+        if (Objects.nonNull(status)) {
+            criteria.andEqualTo("policyStatus", status);
+        }
+        return policyInfoMapper.selectByExample(example);
     }
 }

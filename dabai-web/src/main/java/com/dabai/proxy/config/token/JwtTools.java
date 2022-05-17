@@ -45,8 +45,8 @@ public class JwtTools {
 
     }
     public static void main(String[] args) {
-        String token = "sasaswedaefeff";
-        String sessionKey = "fffffsacasf";
+        String token = "test";
+        String sessionKey = "test";
 
         System.out.println(generateToken(sessionKey, token));
         String key = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJzYXNhc3dlZGFlZmVmZiIsInNlc3Npb25LZXkiOiJmZmZmZnNhY2FzZiJ9.Vut7Tu9u908gVR1nqVc_h1HyCOXqeUJRZJvbNRe2QIE";
