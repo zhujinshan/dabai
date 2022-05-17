@@ -10,6 +10,7 @@ import com.dabai.proxy.utils.RSAUtil;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * 保单
@@ -52,18 +54,22 @@ public class PolicyCallbackController {
 
         PolicyCallBackDto policyCallBack = JsonUtils.parse(content, PolicyCallBackDto.class);
         if (policyCallBack != null) {
-            PolicyInfoDto data = policyCallBack.getData();
-            if (data != null && data.getStatus() != null) {
-                Integer status = data.getStatus();
-                switch (status) {
-                    case 0:
-                        policyInfoFacade.policyRefund(data);
-                        break;
-                    case 1:
-                        policyInfoFacade.policyComplete(data);
-                        break;
-                    default:
-                        break;
+            List<PolicyInfoDto> data = policyCallBack.getData();
+            if (!CollectionUtils.isEmpty(data)) {
+                for (PolicyInfoDto policyInfoDto : data) {
+                    if (policyInfoDto != null && policyInfoDto.getStatus() != null) {
+                        Integer status = policyInfoDto.getStatus();
+                        switch (status) {
+                            case 0:
+                                policyInfoFacade.policyRefund(policyInfoDto);
+                                break;
+                            case 1:
+                                policyInfoFacade.policyComplete(policyInfoDto);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
             }
         }
