@@ -6,7 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="use_id" jdbcType="BIGINT" property="useId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="wallet_id" jdbcType="BIGINT" property="walletId" />
     <result column="amount" jdbcType="DECIMAL" property="amount" />
     <result column="flow_type" jdbcType="TINYINT" property="flowType" />
@@ -19,6 +19,6 @@
     <!--
       WARNING - @mbg.generated
     -->
-    id, use_id, wallet_id, amount, flow_type, policy_no, cash_request_no, ctime, utime
+    id, user_id, wallet_id, amount, flow_type, policy_no, cash_request_no, ctime, utime
   </sql>
 </mapper>

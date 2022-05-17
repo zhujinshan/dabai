@@ -118,7 +118,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
             walletFlowNew.setFlowType(WalletFlowTypeEnum.ADD.getCode());
             walletFlowNew.setCtime(new Date());
             walletFlowNew.setPolicyNo(policyNo);
-            walletFlowNew.setUseId(userId);
+            walletFlowNew.setUserId(userId);
             walletFlowNew.setUtime(new Date());
             walletFlowMapper.insertSelective(walletFlowNew);
         });
@@ -168,7 +168,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
             walletFlowNew.setFlowType(WalletFlowTypeEnum.REFUND.getCode());
             walletFlowNew.setCtime(new Date());
             walletFlowNew.setPolicyNo(policyNo);
-            walletFlowNew.setUseId(userId);
+            walletFlowNew.setUserId(userId);
             walletFlowNew.setUtime(new Date());
             walletFlowMapper.insertSelective(walletFlowNew);
         });
@@ -236,7 +236,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
                 walletFlowNew.setFlowType(WalletFlowTypeEnum.WITHDRAWAL.getCode());
                 walletFlowNew.setCtime(new Date());
                 walletFlowNew.setCashRequestNo(cashSnapshot.getRequestNo());
-                walletFlowNew.setUseId(userId);
+                walletFlowNew.setUserId(userId);
                 walletFlowNew.setUtime(new Date());
                 walletFlowMapper.insertSelective(walletFlowNew);
             });
