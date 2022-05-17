@@ -32,8 +32,8 @@ tencentcloud:
 wx:
   miniapp:
     configs:
-      - appid: #微信小程序的appid
-        secret: #微信小程序的Secret
+      - appid: wxeeff2ac6fe1b54bc
+        secret: cde90612edd0fbe17b4fa9368ba6b04e
         token: #微信小程序消息服务器配置的token
         aesKey: #微信小程序消息服务器配置的EncodingAESKey
         msgDataFormat: JSON
