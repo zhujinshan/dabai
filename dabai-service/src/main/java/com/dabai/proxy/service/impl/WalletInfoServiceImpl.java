@@ -53,7 +53,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
             walletInfo1.setAvailableAmount(BigDecimal.ZERO);
             walletInfo1.setCashedAmount(BigDecimal.ZERO);
             walletInfo1.setCtime(new Date());
-            walletInfo1.setUseId(userId);
+            walletInfo1.setUserId(userId);
             walletInfo1.setTotalAmount(BigDecimal.ZERO);
             walletInfo1.setCashedAmount(BigDecimal.ZERO);
             walletInfo1.setUtime(new Date());
@@ -96,7 +96,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
                 walletInfo1.setAvailableAmount(commission);
                 walletInfo1.setCashedAmount(BigDecimal.ZERO);
                 walletInfo1.setCtime(new Date());
-                walletInfo1.setUseId(userId);
+                walletInfo1.setUserId(userId);
                 walletInfo1.setTotalAmount(commission);
                 walletInfo1.setCashedAmount(BigDecimal.ZERO);
                 walletInfo1.setUtime(new Date());

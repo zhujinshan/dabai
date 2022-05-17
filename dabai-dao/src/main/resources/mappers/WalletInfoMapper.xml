@@ -6,7 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="use_id" jdbcType="BIGINT" property="useId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="available_amount" jdbcType="DECIMAL" property="availableAmount" />
     <result column="cashed_amount" jdbcType="DECIMAL" property="cashedAmount" />
     <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
@@ -19,7 +19,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    id, use_id, available_amount, cashed_amount, total_amount, last_cash_time, ctime, 
+    id, user_id, available_amount, cashed_amount, total_amount, last_cash_time, ctime, 
     utime, cashing_amount
   </sql>
 </mapper>
