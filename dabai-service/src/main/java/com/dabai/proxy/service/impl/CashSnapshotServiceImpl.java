@@ -6,6 +6,7 @@ import com.dabai.proxy.enums.SignBusinessSourceEnum;
 import com.dabai.proxy.enums.UserSignSourceEnum;
 import com.dabai.proxy.httpclient.liness.param.TransferToBankCardParam;
 import com.dabai.proxy.po.CashSnapshot;
+import com.dabai.proxy.po.PolicyInfo;
 import com.dabai.proxy.service.CashSnapshotService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +17,8 @@ import tk.mybatis.mapper.util.Assert;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author: jinshan.zhu
@@ -64,5 +67,14 @@ public class CashSnapshotServiceImpl implements CashSnapshotService {
         Example example = new Example(CashSnapshot.class);
         example.createCriteria().andEqualTo("requestNo", requestNo);
         return cashSnapshotMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public List<CashSnapshot> pageQuery(Long userId) {
+        Assert.notNull(userId, "userId is required");
+        Example example = new Example(CashSnapshot.class);
+        example.setOrderByClause("id desc");
+        example.createCriteria().andEqualTo("userId", userId);
+        return cashSnapshotMapper.selectByExample(example);
     }
 }

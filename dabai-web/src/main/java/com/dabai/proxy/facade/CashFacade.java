@@ -1,8 +1,10 @@
 package com.dabai.proxy.facade;
 
 import com.dabai.proxy.config.result.Result;
+import com.dabai.proxy.req.Paging;
 import com.dabai.proxy.req.UserCashSubmitReq;
 import com.dabai.proxy.req.UserSignReq;
+import com.dabai.proxy.resp.CashInfoPageResult;
 import com.dabai.proxy.resp.UserCashSignInfoResp;
 
 /**
@@ -31,4 +33,11 @@ public interface CashFacade {
      * @param cashSubmitReq
      */
     Result<String> cashSubmit(String openId, UserCashSubmitReq cashSubmitReq);
+
+    /**
+     * 提现记录列表查询
+     * @param paging
+     * @return
+     */
+    CashInfoPageResult pageQuery(Paging paging);
 }
