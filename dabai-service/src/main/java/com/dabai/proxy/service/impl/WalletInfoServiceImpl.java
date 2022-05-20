@@ -56,6 +56,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
             walletInfo1.setUserId(userId);
             walletInfo1.setTotalAmount(BigDecimal.ZERO);
             walletInfo1.setCashedAmount(BigDecimal.ZERO);
+            walletInfo1.setCashingAmount(BigDecimal.ZERO);
             walletInfo1.setUtime(new Date());
             walletInfoMapper.insertSelective(walletInfo1);
             return walletInfo1.getId();
@@ -99,6 +100,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
                 walletInfo1.setUserId(userId);
                 walletInfo1.setTotalAmount(commission);
                 walletInfo1.setCashedAmount(BigDecimal.ZERO);
+                walletInfo1.setCashingAmount(BigDecimal.ZERO);
                 walletInfo1.setUtime(new Date());
                 walletInfoMapper.insertSelective(walletInfo1);
                 walletId = walletInfo1.getId();
@@ -193,8 +195,10 @@ public class WalletInfoServiceImpl implements WalletInfoService {
                 }
                 WalletInfo walletInfo2 = new WalletInfo();
                 walletInfo2.setId(walletInfo.getId());
-                walletInfo2.setAvailableAmount(walletInfo.getAvailableAmount().subtract(cashedAmount));
-                walletInfo2.setCashingAmount(walletInfo.getCashingAmount().add(cashedAmount));
+                BigDecimal currentAvailable = walletInfo.getAvailableAmount() == null ? BigDecimal.ZERO : walletInfo.getAvailableAmount();
+                walletInfo2.setAvailableAmount(currentAvailable.subtract(cashedAmount));
+                BigDecimal currentCashing = walletInfo.getCashingAmount() == null ? BigDecimal.ZERO : walletInfo.getCashingAmount();
+                walletInfo2.setCashingAmount(currentCashing.add(cashedAmount));
                 walletInfo2.setUtime(new Date());
                 walletInfoMapper.updateByPrimaryKeySelective(walletInfo2);
             });
@@ -222,7 +226,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
                 WalletInfo walletInfo2 = new WalletInfo();
                 walletInfo2.setId(walletInfo.getId());
                 // 判断当前冻结金额是否大于该笔提现成功金额 避免异常请求变为负值
-                if (cashingAmount.compareTo(cashedAmount) > 0) {
+                if (Objects.nonNull(cashingAmount) && cashingAmount.compareTo(cashedAmount) > 0) {
                     walletInfo2.setCashingAmount(cashingAmount.subtract(cashedAmount));
                 }
                 walletInfo2.setUtime(new Date());
