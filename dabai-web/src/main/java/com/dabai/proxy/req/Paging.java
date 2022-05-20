@@ -8,7 +8,7 @@ import lombok.Data;
  * @date: 2022/5/15 14:09
  */
 @Data
-@ApiModel(value = "用户签约")
+@ApiModel(value = "分页信息")
 public class Paging {
 
     private int offset = 0;

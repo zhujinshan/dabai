@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * @date: 2022/5/14 17:32
  */
 @Data
-@ApiModel(value = "用户签约")
+@ApiModel(value = "用户提现")
 public class UserCashSubmitReq {
 
     @ApiModelProperty(value = "用户id", required = true)
