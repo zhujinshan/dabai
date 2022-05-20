@@ -151,6 +151,7 @@ public class CashFacadeImpl implements CashFacade {
         transferToBankCardParam.setAmount(cashSubmitReq.getAmount().toString());
         transferToBankCardParam.setCertificateNo(cashSubmitReq.getIdCard());
         transferToBankCardParam.setNotifyUrl(domain + DabaiContants.ZX_CASH_CALL_BACK_URL);
+        transferToBankCardParam.setRemark("用户佣金提现");
 
         CashSnapshot cashSnapshot = cashSnapshotService.init(userInfo.getId(), cashSubmitReq.getMobile(), transferToBankCardParam);
         LinessBaseResult<TransferToBankCardResult> transferToBankcard = linessHttpClient.transferToBankcard(transferToBankCardParam);
