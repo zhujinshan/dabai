@@ -3,6 +3,8 @@ package com.dabai.proxy.service;
 import com.dabai.proxy.httpclient.liness.param.TransferToBankCardParam;
 import com.dabai.proxy.po.CashSnapshot;
 
+import java.util.List;
+
 /**
  * @author: jinshan.zhu
  * @date: 2022/5/14 23:00
@@ -36,4 +38,12 @@ public interface CashSnapshotService {
      * @return res
      */
     CashSnapshot getByRequestNo(String requestNo);
+
+    /**
+     * 查询提现列表
+     *
+     * @param userId 用户id
+     * @return resut
+     */
+    List<CashSnapshot> pageQuery(Long userId);
 }

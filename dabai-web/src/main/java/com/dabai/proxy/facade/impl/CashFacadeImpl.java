@@ -1,5 +1,7 @@
 package com.dabai.proxy.facade.impl;
 
+import com.dabai.proxy.config.UserSessionContext;
+import com.dabai.proxy.config.UserSessionInfo;
 import com.dabai.proxy.config.result.Result;
 import com.dabai.proxy.contants.DabaiContants;
 import com.dabai.proxy.enums.CashStatusEnum;
@@ -14,18 +16,18 @@ import com.dabai.proxy.httpclient.liness.resp.AddMerchantResult;
 import com.dabai.proxy.httpclient.liness.resp.LinessBaseResult;
 import com.dabai.proxy.httpclient.liness.resp.SignAgreementResult;
 import com.dabai.proxy.httpclient.liness.resp.TransferToBankCardResult;
-import com.dabai.proxy.po.CashSnapshot;
-import com.dabai.proxy.po.UserInfo;
-import com.dabai.proxy.po.UserSignInfo;
-import com.dabai.proxy.po.WalletInfo;
+import com.dabai.proxy.po.*;
+import com.dabai.proxy.req.Paging;
 import com.dabai.proxy.req.UserCashSubmitReq;
 import com.dabai.proxy.req.UserSignReq;
-import com.dabai.proxy.resp.UserCashSignInfoResp;
+import com.dabai.proxy.resp.*;
 import com.dabai.proxy.service.CashSnapshotService;
 import com.dabai.proxy.service.UserInfoService;
 import com.dabai.proxy.service.UserSignInfoService;
 import com.dabai.proxy.service.WalletInfoService;
 import com.dabai.proxy.utils.JsonUtils;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.framework.AopContext;
@@ -38,7 +40,9 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author: jinshan.zhu
@@ -64,6 +68,9 @@ public class CashFacadeImpl implements CashFacade {
 
     @Value("${http.liness.transferCorpId}")
     private String transferCorpId;
+
+    @Value("${http.liness.agreementType}")
+    private String agreementType;
 
     @Override
     public UserCashSignInfoResp cashInfo(String openId) {
@@ -113,6 +120,9 @@ public class CashFacadeImpl implements CashFacade {
         signAgreementParam.setNotifyUrl(domain + DabaiContants.ZX_SIGN_CALL_BACK_URL);
         signAgreementParam.setSerialNo(String.valueOf(System.currentTimeMillis()));
         signAgreementParam.setMobileNo(userSignReq.getMobile());
+        signAgreementParam.setTransferCorpId(transferCorpId);
+        signAgreementParam.setSignAgreementType(agreementType);
+
         LinessBaseResult<SignAgreementResult> signAgreement = linessHttpClient.signAgreement(signAgreementParam);
         log.info("签约 [signAgreementParam:{}, result={}]", signAgreementParam, signAgreement);
 
@@ -171,6 +181,25 @@ public class CashFacadeImpl implements CashFacade {
         }
         cashSnapshotService.cashFailed(cashSnapshot.getId(), remark, thirdResp);
         return Result.genResult(-1, remark, null);
+    }
+
+    @Override
+    public CashInfoPageResult pageQuery(Paging paging) {
+        UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
+        UserInfo userInfo = userInfoService.selectByOpenId(sessionInfo.getOpenId());
+        tk.mybatis.mapper.util.Assert.notNull(userInfo, "用户无效，请重新登录");
+
+        Page<CashSnapshot> pageResult = PageHelper.offsetPage(paging.getOffset(), paging.getLimit()).doSelectPage(() -> cashSnapshotService.pageQuery(userInfo.getId()));
+        CashInfoPageResult resp = new CashInfoPageResult();
+        resp.setTotal(pageResult.getTotal());
+        List<CashSnapshot> result = pageResult.getResult();
+        List<CashInfoResp> cashInfoRespList = result.stream().map(e -> {
+            CashInfoResp cashInfoResp = new CashInfoResp();
+            BeanUtils.copyProperties(e, cashInfoResp);
+            return cashInfoResp;
+        }).collect(Collectors.toList());
+        resp.setList(cashInfoRespList);
+        return resp;
     }
 
     @Transactional(rollbackFor = Throwable.class)

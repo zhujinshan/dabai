@@ -14,4 +14,14 @@ public class MemberInfoParam extends HuanongCommonParam{
     private String idCardNo;
 
     private String name;
+
+    /**
+     * 邀请人会员编码
+     */
+    private String inviterNo;
+
+    /**
+     * 邀请人归属机构
+     */
+    private String inviterComCode;
 }
