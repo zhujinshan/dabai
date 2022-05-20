@@ -37,5 +37,16 @@ logging:
 commission:
   radio: 0.1
 
-
+http:
+  client:
+    log-request: true
+    log-header: true
+    log-response: true
+    request:
+      connect-timeout: 5000
+      socket-timeout: 5000
+      connection-request-timeout: 5000
+      max-conn-total: 100
+    json:
+      date-format: yyyy-MM-dd HH:mm:ss
 
