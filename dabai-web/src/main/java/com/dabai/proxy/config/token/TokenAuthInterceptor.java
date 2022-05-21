@@ -60,7 +60,7 @@ public class TokenAuthInterceptor extends HandlerInterceptorAdapter implements E
 
         String sessionKey = JwtTools.getSessionKey(token);
         String openId = JwtTools.getOpenId(token);
-        log.info("userSession: sessionKey={}, openId;{}", sessionKey, openId);
+        log.info("userSession: sessionKey={}, openId={}", sessionKey, openId);
 
         if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(openId)) {
             authFailed(response);
