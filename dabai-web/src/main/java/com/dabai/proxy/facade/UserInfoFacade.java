@@ -11,11 +11,11 @@ public interface UserInfoFacade {
     /**
      * 保存用户手机号聚合接口
      * 同步华宝兴
-     *
-     * @param openId
+     *  @param openId
      * @param phone
+     * @param parentId
      */
-    void saveUserPhone(String openId, String phone);
+    void saveUserPhone(String openId, String phone, Long parentId);
 
     /**
      * 获取会员信息

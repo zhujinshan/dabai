@@ -117,7 +117,7 @@ public class UserController {
         // 解密
         WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionInfo.getSessionKey(), wxUserInfoReq.getEncryptedData(), wxUserInfoReq.getIv());
         log.info("同步微信手机号, phoneNoInfo:{}", phoneNoInfo);
-        userInfoFacade.saveUserPhone(sessionInfo.getOpenId(), phoneNoInfo.getPhoneNumber());
+        userInfoFacade.saveUserPhone(sessionInfo.getOpenId(), phoneNoInfo.getPhoneNumber(), wxUserInfoReq.getParentId());
         return Result.success(Boolean.TRUE);
     }
 

@@ -41,13 +41,23 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public void saveUserPhone(String openId, String phone) {
+    public void saveUserPhone(String openId, String phone, Long parentId) {
         Assert.notNull(openId, "openId信息缺失");
         Assert.notNull(phone, "phoneNo信息缺失");
-        Long userId = userInfoService.saveUserPhone(openId, phone);
+        Long userId = userInfoService.saveUserPhone(openId, phone, parentId);
 
+        UserInfo userInfo = userInfoService.selectById(userId);
+
+        UserPlateformInfo parentPlateform = null;
+        if (userInfo.getParentUserId() != null) {
+            parentPlateform = userPlateformInfoService.getByUserId(userId);
+        }
         MemberInfoParam memberInfoParam = new MemberInfoParam();
         memberInfoParam.setPhone(phone);
+        if (Objects.nonNull(parentPlateform)) {
+            memberInfoParam.setInviterNo(parentPlateform.getCode());
+            memberInfoParam.setInviterComCode(parentPlateform.getOrganizationCode());
+        }
         HuanongResult<MemberInfoResp> result = huanongHttpClient.memberInfo(memberInfoParam);
         if (result == null || !Objects.equals(result.getState(), "200")) {
             log.error("华农会员信息交互异常, result:{}", result);

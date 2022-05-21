@@ -14,6 +14,7 @@ import tk.mybatis.mapper.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author: jinshan.zhu
@@ -44,16 +45,19 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public Long saveUserPhone(String openId, String phoneNo) {
+    public Long saveUserPhone(String openId, String phoneNo, Long parentId) {
         Assert.notNull(openId, "openId信息缺失");
         Assert.notNull(phoneNo, "phoneNo信息缺失");
         UserInfo userInfo = selectByOpenId(openId);
 
         if (userInfo != null) {
-            if (!userInfo.getMobile().equals(phoneNo)) {
+            if (StringUtils.isEmpty(userInfo.getMobile())) {
                 UserInfo updateUser = new UserInfo();
                 updateUser.setMobile(phoneNo);
                 updateUser.setId(userInfo.getId());
+                if (Objects.isNull(userInfo.getParentUserId()) && Objects.nonNull(parentId)) {
+                    updateUser.setParentUserId(parentId);
+                }
                 userInfoMapper.updateByPrimaryKeySelective(updateUser);
             }
             return userInfo.getId();
@@ -63,6 +67,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         newUser.setMobile(phoneNo);
         newUser.setCtime(new Date());
         newUser.setUtime(new Date());
+        if (Objects.nonNull(parentId)) {
+            newUser.setParentUserId(parentId);
+        }
         userInfoMapper.insertSelective(newUser);
         return newUser.getId();
     }

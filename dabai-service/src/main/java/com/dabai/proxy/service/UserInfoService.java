@@ -18,11 +18,11 @@ public interface UserInfoService {
 
     /**
      * 保存微信手机
-     *
-     * @param openId  openId
+     *  @param openId  openId
      * @param phoneNo 手机信息
+     * @param parentId
      */
-    Long saveUserPhone(String openId, String phoneNo);
+    Long saveUserPhone(String openId, String phoneNo, Long parentId);
 
 
     /**
