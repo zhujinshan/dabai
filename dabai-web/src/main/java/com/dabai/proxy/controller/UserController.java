@@ -71,6 +71,7 @@ public class UserController {
     public Result<Boolean> info(@ApiParam(value = "signature",required = true) @RequestParam(value = "signature", required = true) String signature, @ApiParam(value = "rawData", required = true) @RequestParam(value = "rawData") String rawData,
                                 @ApiParam(value = "encryptedData", required = true) @RequestParam(value = "encryptedData") String encryptedData,
                                 @ApiParam(value = "iv", required = true) @RequestParam(value = "iv") String iv) {
+        log.info("同步微信用户基本信息, signature:{}, rawData:{}, rawencryptedData:{}, iv:{}", signature, rawData, encryptedData, iv);
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
@@ -79,6 +80,7 @@ public class UserController {
         Assert.isTrue(wxService.getUserService().checkUserInfo(sessionInfo.getSessionKey(), rawData, signature), "签名验证失败");
         // 解密用户信息
         WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionInfo.getSessionKey(), encryptedData, iv);
+        log.info("同步微信用户基本信息, userInfo:{}", userInfo);
         userInfoService.saveUser(userInfo);
         return Result.success(Boolean.TRUE);
     }
@@ -95,6 +97,7 @@ public class UserController {
                                  @ApiParam(value = "rawData", required = true) @RequestParam(value = "rawData") String rawData,
                                  @ApiParam(value = "encryptedData", required = true) @RequestParam(value = "encryptedData") String encryptedData,
                                  @ApiParam(value = "iv", required = true) @RequestParam(value = "iv") String iv) {
+        log.info("同步微信手机号, signature:{}, rawData:{}, rawencryptedData:{}, iv:{}", signature, rawData, encryptedData, iv);
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
         UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
@@ -102,6 +105,7 @@ public class UserController {
         Assert.isTrue(wxService.getUserService().checkUserInfo(sessionInfo.getSessionKey(), rawData, signature), "签名验证失败");
         // 解密
         WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionInfo.getSessionKey(), encryptedData, iv);
+        log.info("同步微信手机号, phoneNoInfo:{}", phoneNoInfo);
         userInfoFacade.saveUserPhone(sessionInfo.getOpenId(), phoneNoInfo.getPhoneNumber());
         return Result.success(Boolean.TRUE);
     }
