@@ -156,7 +156,7 @@ public class UserController {
 
     @GetMapping(value = "/getBanner")
     @CheckToken
-    @ApiOperation(value = "获取banner列表", httpMethod = "GET")
+    @ApiOperation(value = "获取banner", httpMethod = "GET")
     public Result<MemberForwardStarResp> getBanner() {
         UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
         UserInfo userInfo = userInfoService.selectByOpenId(sessionInfo.getOpenId());
