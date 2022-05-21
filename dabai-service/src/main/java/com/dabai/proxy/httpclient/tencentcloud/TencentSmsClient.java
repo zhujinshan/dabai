@@ -29,6 +29,7 @@ public class TencentSmsClient {
     public void sendSubmitVerificationCode(String mobile) {
         String code = RandomStringUtils.randomNumeric(6);
         LocalCache.putCode(mobile, code);
+        log.info("发送短信验证码：mobile:{}, code:{}", mobile, code);
         String[] templateParamSet = {code};
         this.sendMsg(cloudConfig.getSubmitCodeTemplateId(), mobile, templateParamSet);
     }

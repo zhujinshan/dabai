@@ -13,6 +13,6 @@ public class MemberForwardStarResp {
 
     private String path;
 
-    private Integer envVersion;
+    private String envVersion;
 
 }

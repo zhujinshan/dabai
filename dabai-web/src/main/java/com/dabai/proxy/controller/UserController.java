@@ -12,8 +12,14 @@ import com.dabai.proxy.config.token.CheckToken;
 import com.dabai.proxy.config.token.JwtTools;
 import com.dabai.proxy.config.wx.WxMaConfiguration;
 import com.dabai.proxy.config.wx.WxMaProperties;
+import com.dabai.proxy.exception.HttpClientBusinessException;
 import com.dabai.proxy.facade.UserInfoFacade;
+import com.dabai.proxy.httpclient.huanong.HuanongHttpClient;
+import com.dabai.proxy.httpclient.huanong.param.MemberInfoParam;
+import com.dabai.proxy.httpclient.huanong.resp.HuanongResult;
+import com.dabai.proxy.httpclient.huanong.resp.MemberForwardStarResp;
 import com.dabai.proxy.httpclient.tencentcloud.TencentSmsClient;
+import com.dabai.proxy.po.UserInfo;
 import com.dabai.proxy.req.WxPhoneInfoReq;
 import com.dabai.proxy.req.WxUserInfoReq;
 import com.dabai.proxy.resp.UserInfoResp;
@@ -33,6 +39,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/user")
 @Api(tags = "会员接口")
@@ -50,6 +59,9 @@ public class UserController {
 
     @Autowired
     private TencentSmsClient tencentSmsClient;
+
+    @Resource
+    private HuanongHttpClient huanongHttpClient;
 
     /**
      * 登陆接口
@@ -140,6 +152,26 @@ public class UserController {
         }
         tencentSmsClient.sendSubmitVerificationCode(mobile);
         return Result.success(true);
+    }
+
+    @GetMapping(value = "/getBanner")
+    @CheckToken
+    @ApiOperation(value = "获取banner列表", httpMethod = "GET")
+    public Result<MemberForwardStarResp> getBanner() {
+        UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
+        UserInfo userInfo = userInfoService.selectByOpenId(sessionInfo.getOpenId());
+        Assert.notNull(userInfo, "未知用户");
+
+        MemberInfoParam memberInfoParam = new MemberInfoParam();
+        memberInfoParam.setPhone(userInfo.getMobile());
+
+        HuanongResult<MemberForwardStarResp> result = huanongHttpClient.forwardStarMini(memberInfoParam);
+        if (result == null || !Objects.equals(result.getState(), "200")) {
+            log.error("华农banner交互异常, result:{}", result);
+            throw new HttpClientBusinessException("华农会员信息交互异常");
+        }
+
+        return Result.success(result.getData());
     }
 
 }
