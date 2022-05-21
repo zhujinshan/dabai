@@ -14,6 +14,8 @@ import com.dabai.proxy.config.wx.WxMaConfiguration;
 import com.dabai.proxy.config.wx.WxMaProperties;
 import com.dabai.proxy.facade.UserInfoFacade;
 import com.dabai.proxy.httpclient.tencentcloud.TencentSmsClient;
+import com.dabai.proxy.req.WxPhoneInfoReq;
+import com.dabai.proxy.req.WxUserInfoReq;
 import com.dabai.proxy.resp.UserInfoResp;
 import com.dabai.proxy.service.UserInfoService;
 import io.swagger.annotations.Api;
@@ -23,11 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import tk.mybatis.mapper.util.Assert;
 
 @RestController
 @RequestMapping("/user")
@@ -66,21 +70,24 @@ public class UserController {
      * 获取用户信息接口
      * </pre>
      */
-    @GetMapping("/wxInfo")
+    @PostMapping("/wxInfo")
     @CheckToken
-    @ApiOperation(value = "同步微信用户基本信息", httpMethod = "GET")
-    public Result<Boolean> info(@ApiParam(value = "signature",required = true) @RequestParam(value = "signature", required = true) String signature, @ApiParam(value = "rawData", required = true) @RequestParam(value = "rawData") String rawData,
-                                @ApiParam(value = "encryptedData", required = true) @RequestParam(value = "encryptedData") String encryptedData,
-                                @ApiParam(value = "iv", required = true) @RequestParam(value = "iv") String iv) {
-        log.info("同步微信用户基本信息, signature:{}, rawData:{}, rawencryptedData:{}, iv:{}", signature, rawData, encryptedData, iv);
+    @ApiOperation(value = "同步微信用户基本信息", httpMethod = "POST")
+    public Result<Boolean> info(@RequestBody WxUserInfoReq wxUserInfoReq) {
+        log.info("同步微信用户基本信息, wxUserInfoReq: {}", wxUserInfoReq);
+        Assert.isTrue(StringUtils.isNotEmpty(wxUserInfoReq.getSignature()), "signature is required");
+        Assert.isTrue(StringUtils.isNotEmpty(wxUserInfoReq.getRawData()), "rawData is required");
+        Assert.isTrue(StringUtils.isNotEmpty(wxUserInfoReq.getEncryptedData()), "encryptedData is required");
+        Assert.isTrue(StringUtils.isNotEmpty(wxUserInfoReq.getIv()), "iv is required");
+
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
         UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
         // 用户信息校验
-        Assert.isTrue(wxService.getUserService().checkUserInfo(sessionInfo.getSessionKey(), rawData, signature), "签名验证失败");
+        Assert.isTrue(wxService.getUserService().checkUserInfo(sessionInfo.getSessionKey(), wxUserInfoReq.getRawData(), wxUserInfoReq.getSignature()), "签名验证失败");
         // 解密用户信息
-        WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionInfo.getSessionKey(), encryptedData, iv);
+        WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionInfo.getSessionKey(), wxUserInfoReq.getEncryptedData(), wxUserInfoReq.getIv());
         if (StringUtils.isEmpty(userInfo.getOpenId())) {
             userInfo.setOpenId(sessionInfo.getOpenId());
         }
@@ -94,21 +101,21 @@ public class UserController {
      * 获取用户绑定手机号信息
      * </pre>
      */
-    @GetMapping("/wxPhone")
+    @PostMapping("/wxPhone")
     @CheckToken
-    @ApiOperation(value = "同步微信手机号", httpMethod = "GET")
-    public Result<Boolean> phone(@ApiParam(value = "signature", required = true) @RequestParam(value = "signature") String signature,
-                                 @ApiParam(value = "rawData", required = true) @RequestParam(value = "rawData") String rawData,
-                                 @ApiParam(value = "encryptedData", required = true) @RequestParam(value = "encryptedData") String encryptedData,
-                                 @ApiParam(value = "iv", required = true) @RequestParam(value = "iv") String iv) {
-        log.info("同步微信手机号, signature:{}, rawData:{}, rawencryptedData:{}, iv:{}", signature, rawData, encryptedData, iv);
+    @ApiOperation(value = "同步微信手机号", httpMethod = "POST")
+    public Result<Boolean> phone(@RequestBody WxPhoneInfoReq wxUserInfoReq) {
+        log.info("同步微信手机号, wxUserInfoReq: {}", wxUserInfoReq);
+        Assert.isTrue(StringUtils.isNotEmpty(wxUserInfoReq.getEncryptedData()), "encryptedData is required");
+        Assert.isTrue(StringUtils.isNotEmpty(wxUserInfoReq.getIv()), "iv is required");
+
         String appid = wxMaProperties.getConfigs().get(0).getAppid();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
         UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
         // 用户信息校验
-        Assert.isTrue(wxService.getUserService().checkUserInfo(sessionInfo.getSessionKey(), rawData, signature), "签名验证失败");
+        // Assert.isTrue(wxService.getUserService().checkUserInfo(sessionInfo.getSessionKey(), rawData, signature), "签名验证失败");
         // 解密
-        WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionInfo.getSessionKey(), encryptedData, iv);
+        WxMaPhoneNumberInfo phoneNoInfo = wxService.getUserService().getPhoneNoInfo(sessionInfo.getSessionKey(), wxUserInfoReq.getEncryptedData(), wxUserInfoReq.getIv());
         log.info("同步微信手机号, phoneNoInfo:{}", phoneNoInfo);
         userInfoFacade.saveUserPhone(sessionInfo.getOpenId(), phoneNoInfo.getPhoneNumber());
         return Result.success(Boolean.TRUE);

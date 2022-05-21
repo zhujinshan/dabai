@@ -56,5 +56,9 @@ public class JwtTools {
         String kss = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJEYUJhaUF1dGhXaXRoSldUIiwic2Vzc2lvbktleSI6ImZmZmZmc2FjYXNmIiwib3BlbklkIjoic2FzYXN3ZWRhZWZlZmYifQ.YjgFTriBWFkd3PjlZCZFIvXJA079mXqZ3kgOd3qzSv4";
         System.out.println(checkToken(kss));
 
+        String sss = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJEYUJhaUF1dGhXaXRoSldUIiwic2Vzc2lvbktleSI6InQwRURXUEY5b3NaYlNhWThBOEo2TkE9PSIsIm9wZW5JZCI6Im83M28xNWV3Q3FLeGxta1loMEptNXY1Z200RGsifQ.JMQ2v6KOmh9JfXn4nJ-B_XkArTnGkZvXBAi6xhkj590";
+
+        System.out.println(getOpenId(sss));
+
     }
 }
