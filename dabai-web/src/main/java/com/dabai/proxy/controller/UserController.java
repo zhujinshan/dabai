@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,6 +81,9 @@ public class UserController {
         Assert.isTrue(wxService.getUserService().checkUserInfo(sessionInfo.getSessionKey(), rawData, signature), "签名验证失败");
         // 解密用户信息
         WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionInfo.getSessionKey(), encryptedData, iv);
+        if (StringUtils.isEmpty(userInfo.getOpenId())) {
+            userInfo.setOpenId(sessionInfo.getOpenId());
+        }
         log.info("同步微信用户基本信息, userInfo:{}", userInfo);
         userInfoService.saveUser(userInfo);
         return Result.success(Boolean.TRUE);
