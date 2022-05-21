@@ -15,4 +15,11 @@ public interface ProductInfoService {
      * @return
      */
     List<ProductInfo> pageQuery();
+
+    /**
+     * 根据产品编码获取产品
+     * @param productCode
+     * @return
+     */
+    ProductInfo getByProductCode(String productCode);
 }
