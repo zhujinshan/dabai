@@ -99,7 +99,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserInfo userInfo = new UserInfo();
         BeanUtils.copyProperties(wxMaUserInfo, userInfo);
         userInfo.setUtime(new Date());
-        userInfo.setValid(0);
+        userInfo.setValid(1);
         return userInfo;
     }
 }
