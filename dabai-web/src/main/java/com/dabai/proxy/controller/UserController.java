@@ -168,7 +168,7 @@ public class UserController {
         HuanongResult<MemberForwardStarResp> result = huanongHttpClient.forwardStarMini(memberInfoParam);
         if (result == null || !Objects.equals(result.getState(), "200")) {
             log.error("华农banner交互异常, result:{}", result);
-            throw new HttpClientBusinessException("华农会员信息交互异常");
+            throw new HttpClientBusinessException("华农banner接口交互异常");
         }
 
         return Result.success(result.getData());
