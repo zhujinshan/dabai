@@ -34,7 +34,7 @@ public class UserPlateformInfoServiceImpl implements UserPlateformInfoService {
 
         UserPlateformInfo currentInfo = new UserPlateformInfo();
         currentInfo.setPlateform(UserPlateformEnum.HBX.name());
-        currentInfo.setIdentityTag(memberInfoResp.getIsAgent() == 1 ? HbxUserTag.AGENT.getCode().byteValue() : HbxUserTag.MEMBER.getCode().byteValue());
+        currentInfo.setIdentityTag(Objects.equals(memberInfoResp.getIsAgent(), "1") ? HbxUserTag.AGENT.getCode().byteValue() : HbxUserTag.MEMBER.getCode().byteValue());
         currentInfo.setCode(memberInfoResp.getMemberNo());
         currentInfo.setOrganizationCode(memberInfoResp.getComCode());
         currentInfo.setUserId(userId);

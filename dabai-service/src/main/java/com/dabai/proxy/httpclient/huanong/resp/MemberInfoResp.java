@@ -16,7 +16,7 @@ public class MemberInfoResp {
 
     @JsonProperty("IsAgent")
     //1：是 0否
-    private Integer isAgent;
+    private String isAgent;
 
     private String comCode;
 }

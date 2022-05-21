@@ -24,7 +24,7 @@ public class HuanongHttpClientTest extends BaseTest {
     @Test
     public void testMemberInfo() {
         MemberInfoParam memberInfoParam = new MemberInfoParam();
-        memberInfoParam.setPhone("15701299213");
+        memberInfoParam.setPhone("18220193483");
         HuanongResult<MemberInfoResp> memerInfoRespHuanongResult = huanongHttpClient.memberInfo(memberInfoParam);
         log.info("memerInfoRespHuanongResult: {}", memerInfoRespHuanongResult);
     }
