@@ -39,8 +39,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             return;
         }
         currentUserInfo.setCtime(new Date());
-        log.info("insert user:{}", userInfo);
-        userInfoMapper.insertSelective(userInfo);
+        userInfoMapper.insertSelective(currentUserInfo);
     }
 
     @Override
