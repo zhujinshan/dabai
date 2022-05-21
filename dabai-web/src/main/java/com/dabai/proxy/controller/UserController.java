@@ -106,7 +106,6 @@ public class UserController {
         return Result.success(Boolean.TRUE);
     }
 
-
     @GetMapping("/getInfo")
     @CheckToken
     @ApiOperation(value = "获取用户信息", httpMethod = "GET")

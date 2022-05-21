@@ -3,8 +3,10 @@ package com.dabai.proxy.facade.impl;
 import com.dabai.proxy.dto.PolicyInfoDto;
 import com.dabai.proxy.enums.PolicyStatus;
 import com.dabai.proxy.facade.PolicyInfoFacade;
+import com.dabai.proxy.po.ProductInfo;
 import com.dabai.proxy.po.UserPlateformInfo;
 import com.dabai.proxy.service.PolicyInfoService;
+import com.dabai.proxy.service.ProductInfoService;
 import com.dabai.proxy.service.UserPlateformInfoService;
 import com.dabai.proxy.service.WalletInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.util.Assert;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * @author: jinshan.zhu
@@ -30,6 +33,8 @@ public class PolicyInfoFacadeImpl implements PolicyInfoFacade {
     private WalletInfoService walletInfoService;
     @Autowired
     private UserPlateformInfoService userPlateformInfoService;
+    @Autowired
+    private ProductInfoService productInfoService;
 
     @Value("${commission.radio}")
     private BigDecimal commissionRadio;
@@ -46,6 +51,10 @@ public class PolicyInfoFacadeImpl implements PolicyInfoFacade {
         if (hbxMemberInfo == null) {
             log.info("未找到平台用户，policyInfoDto：{}", policyInfoDto);
             return;
+        }
+        ProductInfo productInfo = productInfoService.getByProductCode(policyInfoDto.getProductCode());
+        if (!Objects.isNull(productInfo)){
+            commissionRadio = new BigDecimal(Double.toString(productInfo.getCommissionRadio()*0.01));
         }
         BigDecimal commission = premium.multiply(commissionRadio).setScale(2, BigDecimal.ROUND_FLOOR);
         log.info("保单佣金，premium：{}, commissionRadio:{}, commission:{}", premium, commissionRadio, commission);

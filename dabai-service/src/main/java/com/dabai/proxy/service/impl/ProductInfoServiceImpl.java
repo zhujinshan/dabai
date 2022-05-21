@@ -29,4 +29,12 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         List<ProductInfo> productInfos = productInfoMapper.selectByExample(example);
         return productInfos;
     }
+
+    @Override
+    public ProductInfo getByProductCode(String productCode) {
+        Example example = new Example(ProductInfo.class);
+        example.createCriteria().andEqualTo("code", productCode);
+        ProductInfo productInfo = productInfoMapper.selectOneByExample(example);
+        return productInfo;
+    }
 }
