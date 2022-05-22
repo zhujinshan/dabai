@@ -8,6 +8,7 @@ import com.dabai.proxy.httpclient.huanong.resp.HuanongResult;
 import com.dabai.proxy.httpclient.huanong.resp.MemberInfoResp;
 import com.dabai.proxy.po.UserInfo;
 import com.dabai.proxy.po.UserPlateformInfo;
+import com.dabai.proxy.po.WalletInfo;
 import com.dabai.proxy.resp.UserInfoResp;
 import com.dabai.proxy.service.UserInfoService;
 import com.dabai.proxy.service.UserPlateformInfoService;
@@ -85,6 +86,12 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
         UserPlateformInfo plateformInfo = userPlateformInfoService.getByUserId(userInfo.getId());
         if (plateformInfo != null) {
             userInfoResp.setMemberNo(plateformInfo.getCode());
+        }
+        WalletInfo walletInfo = walletInfoService.getWallet(userInfo.getId());
+        if (walletInfo != null){
+            userInfoResp.setAvailableAmount(walletInfo.getAvailableAmount());
+            userInfoResp.setCashedAmount(walletInfo.getCashedAmount());
+            userInfoResp.setTotalAmount(walletInfo.getTotalAmount());
         }
         return userInfoResp;
     }
