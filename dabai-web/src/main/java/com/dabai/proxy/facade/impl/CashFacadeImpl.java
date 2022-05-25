@@ -8,6 +8,10 @@ import com.dabai.proxy.enums.CashStatusEnum;
 import com.dabai.proxy.enums.UserSignStatusEnum;
 import com.dabai.proxy.exception.HttpClientBusinessException;
 import com.dabai.proxy.facade.CashFacade;
+import com.dabai.proxy.httpclient.huanong.HuanongHttpClient;
+import com.dabai.proxy.httpclient.huanong.param.MemberInfoParam;
+import com.dabai.proxy.httpclient.huanong.resp.HuanongResult;
+import com.dabai.proxy.httpclient.huanong.resp.MemberInfoResp;
 import com.dabai.proxy.httpclient.liness.LinessHttpClient;
 import com.dabai.proxy.httpclient.liness.param.AddMerchantParam;
 import com.dabai.proxy.httpclient.liness.param.SignAgreementParam;
@@ -62,6 +66,8 @@ public class CashFacadeImpl implements CashFacade {
     private LinessHttpClient linessHttpClient;
     @Resource
     private CashSnapshotService cashSnapshotService;
+    @Resource
+    private HuanongHttpClient huanongHttpClient;
 
     @Value("${domain}")
     private String domain;
@@ -101,6 +107,15 @@ public class CashFacadeImpl implements CashFacade {
             }
         }
         log.info("信息变化 需二次签约。[userSignReq:{}]", userSignReq);
+        //同步华保星身份证号等数据
+        MemberInfoParam memberInfoParam = new MemberInfoParam();
+        memberInfoParam.setPhone(userSignReq.getMobile());
+        memberInfoParam.setIdCardNo(userSignReq.getIdCard());
+        memberInfoParam.setName(userSignReq.getName());
+        HuanongResult<MemberInfoResp> result = huanongHttpClient.memberInfo(memberInfoParam);
+        if (result == null || !Objects.equals(result.getState(), "200")) {
+            log.error("华农会员信息交互异常, result:{}", result);
+        }
         // 增加账户
         AddMerchantParam addMerchantParam = new AddMerchantParam();
         addMerchantParam.setCertificateType("ID");
