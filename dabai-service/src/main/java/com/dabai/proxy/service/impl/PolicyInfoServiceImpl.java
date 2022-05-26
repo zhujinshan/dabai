@@ -6,6 +6,7 @@ import com.dabai.proxy.enums.PolicyStatus;
 import com.dabai.proxy.po.PolicyInfo;
 import com.dabai.proxy.service.PolicyInfoService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -56,14 +57,18 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
         }
     }
 
+
     @Override
-    public List<PolicyInfo> pageQuery(Long userId, Integer status) {
+    public List<PolicyInfo> pageQuery(Long userId, Integer status, String policyNo) {
         Assert.notNull(userId, "userId is required");
         Example example = new Example(PolicyInfo.class);
         example.setOrderByClause("id desc");
         Example.Criteria criteria = example.createCriteria().andEqualTo("userId", userId);
         if (Objects.nonNull(status)) {
             criteria.andEqualTo("policyStatus", status);
+        }
+        if (!StringUtils.isBlank(policyNo)){
+            criteria.andEqualTo("policyNo",policyNo);
         }
         return policyInfoMapper.selectByExample(example);
     }
