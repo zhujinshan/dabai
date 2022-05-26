@@ -18,6 +18,6 @@ public class PolicyInfoPageReq {
     @ApiModelProperty(value = "分页", required = true)
     private Paging paging;
 
-    @ApiModelProperty(value = "保单号", required = false)
-    private String policyNo;
+    @ApiModelProperty(value = "保单Id", required = false)
+    private Long policyId;
 }

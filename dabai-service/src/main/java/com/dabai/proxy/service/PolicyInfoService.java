@@ -29,5 +29,5 @@ public interface PolicyInfoService {
      * @param status 状态
      * @return resut
      */
-    List<PolicyInfo> pageQuery(Long userId, Integer status, String policyNo);
+    List<PolicyInfo> pageQuery(Long userId, Integer status, Long policyId);
 }

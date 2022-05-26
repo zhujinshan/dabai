@@ -59,7 +59,7 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
 
 
     @Override
-    public List<PolicyInfo> pageQuery(Long userId, Integer status, String policyNo) {
+    public List<PolicyInfo> pageQuery(Long userId, Integer status, Long policyId) {
         Assert.notNull(userId, "userId is required");
         Example example = new Example(PolicyInfo.class);
         example.setOrderByClause("id desc");
@@ -67,8 +67,8 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
         if (Objects.nonNull(status)) {
             criteria.andEqualTo("policyStatus", status);
         }
-        if (!StringUtils.isBlank(policyNo)){
-            criteria.andEqualTo("policyNo",policyNo);
+        if (Objects.nonNull(policyId) && 0 != policyId){
+            criteria.andEqualTo("id",policyId);
         }
         return policyInfoMapper.selectByExample(example);
     }

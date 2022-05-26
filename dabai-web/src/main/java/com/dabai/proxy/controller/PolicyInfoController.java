@@ -57,7 +57,7 @@ public class PolicyInfoController {
             paging = new Paging();
         }
 
-        Page<PolicyInfo> pageResult = PageHelper.offsetPage(paging.getOffset(), paging.getLimit()).doSelectPage(() -> policyInfoService.pageQuery(userInfo.getId(), policyInfoPageReq.getStatus(), policyInfoPageReq.getPolicyNo()));
+        Page<PolicyInfo> pageResult = PageHelper.offsetPage(paging.getOffset(), paging.getLimit()).doSelectPage(() -> policyInfoService.pageQuery(userInfo.getId(), policyInfoPageReq.getStatus(), policyInfoPageReq.getPolicyId()));
         PolicyInfoPageResult resp = new PolicyInfoPageResult();
         resp.setTotal(pageResult.getTotal());
         List<PolicyInfo> result = pageResult.getResult();
