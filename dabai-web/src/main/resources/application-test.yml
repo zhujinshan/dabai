@@ -44,7 +44,7 @@ tencentcloud:
   rePasswordTemplateId: 1049348
   notifyTemplateId: 1066246
   sdkAppId: 1400548038
-  signName: 大白科技
+  signName: 南泉未来
 
 wx:
   miniapp:
