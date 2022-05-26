@@ -1,5 +1,6 @@
 package com.dabai.proxy.facade.impl;
 
+import cn.hutool.core.util.DesensitizedUtil;
 import com.dabai.proxy.config.UserSessionContext;
 import com.dabai.proxy.config.UserSessionInfo;
 import com.dabai.proxy.config.result.Result;
@@ -169,16 +170,16 @@ public class CashFacadeImpl implements CashFacade {
         String requestNo = String.valueOf(System.currentTimeMillis());
 
         TransferToBankCardParam transferToBankCardParam = new TransferToBankCardParam();
-        transferToBankCardParam.setBankCardNo(cashSubmitReq.getBankCard());
-        transferToBankCardParam.setName(cashSubmitReq.getName());
+        transferToBankCardParam.setBankCardNo(userInfo.getBankCard());
+        transferToBankCardParam.setName(userInfo.getName());
         transferToBankCardParam.setTransferCorpId(transferCorpId);
         transferToBankCardParam.setRequestNo(requestNo);
         transferToBankCardParam.setAmount(cashSubmitReq.getAmount().toString());
-        transferToBankCardParam.setCertificateNo(cashSubmitReq.getIdCard());
+        transferToBankCardParam.setCertificateNo(userInfo.getIdCard());
         transferToBankCardParam.setNotifyUrl(domain + DabaiContants.ZX_CASH_CALL_BACK_URL);
         transferToBankCardParam.setRemark("用户佣金提现");
 
-        CashSnapshot cashSnapshot = cashSnapshotService.init(userInfo.getId(), cashSubmitReq.getMobile(), transferToBankCardParam);
+        CashSnapshot cashSnapshot = cashSnapshotService.init(userInfo.getId(), userInfo.getMobile(), transferToBankCardParam);
         LinessBaseResult<TransferToBankCardResult> transferToBankcard = linessHttpClient.transferToBankcard(transferToBankCardParam);
         log.info("提现 [transferToBankCardParam:{}, result={}]", transferToBankCardParam, transferToBankcard);
 
@@ -251,6 +252,8 @@ public class CashFacadeImpl implements CashFacade {
             }
 
         }
+        userCashSignInfoResp.setIdCard(DesensitizedUtil.idCardNum(userInfo.getIdCard(),3,4));
+        userCashSignInfoResp.setBankCard(DesensitizedUtil.bankCard(userInfo.getBankCard()));
         if (Objects.nonNull(signStatus)) {
             userCashSignInfoResp.setSignStatus(signStatus.getCode());
         }
@@ -280,11 +283,11 @@ public class CashFacadeImpl implements CashFacade {
 
     private void checkSubmitReq(UserCashSubmitReq cashSubmitReq, UserInfo userInfo) {
         Assert.notNull(cashSubmitReq.getUserId(), "userId缺失");
-        Assert.isTrue(StringUtils.isNotEmpty(cashSubmitReq.getBankCard()), "银行卡信息缺失");
-        Assert.isTrue(StringUtils.isNotEmpty(cashSubmitReq.getBankName()), "开户行缺失");
-        Assert.isTrue(StringUtils.isNotEmpty(cashSubmitReq.getIdCard()), "身份证信息缺失");
-        Assert.isTrue(StringUtils.isNotEmpty(cashSubmitReq.getMobile()), "手机号缺失");
-        Assert.isTrue(StringUtils.isNotEmpty(cashSubmitReq.getName()), "用户名缺失");
+        Assert.isTrue(StringUtils.isNotEmpty(userInfo.getBankCard()), "银行卡信息缺失");
+        Assert.isTrue(StringUtils.isNotEmpty(userInfo.getBankName()), "开户行缺失");
+        Assert.isTrue(StringUtils.isNotEmpty(userInfo.getIdCard()), "身份证信息缺失");
+        Assert.isTrue(StringUtils.isNotEmpty(userInfo.getMobile()), "手机号缺失");
+        Assert.isTrue(StringUtils.isNotEmpty(userInfo.getName()), "用户名缺失");
         Assert.isTrue(cashSubmitReq.getAmount() != null && cashSubmitReq.getAmount().compareTo(BigDecimal.ZERO) > 0, "无效提现金额");
         Assert.isTrue(Objects.equals(userInfo.getId(), cashSubmitReq.getUserId()), "用户信息不匹配，请重新登录");
         Assert.isTrue(Objects.equals(userInfo.getMobile(), cashSubmitReq.getMobile()), "手机号跟微信账号不一致，提现失败");
@@ -292,6 +295,10 @@ public class CashFacadeImpl implements CashFacade {
         WalletInfo walletInfo = walletInfoService.getWallet(userInfo.getId());
         BigDecimal availableAmount = walletInfo.getAvailableAmount();
         Assert.isTrue(availableAmount.compareTo(cashSubmitReq.getAmount()) > -1, "提现金额超过全部可提现金额");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(DesensitizedUtil.idCardNum("51343620000320711X", 1, 2));
     }
 
 }

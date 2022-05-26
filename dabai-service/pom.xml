@@ -33,6 +33,10 @@
             <artifactId>tencentcloud-sdk-java</artifactId>
             <version>3.1.270</version>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
