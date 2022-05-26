@@ -45,5 +45,5 @@ public interface CashSnapshotService {
      * @param userId 用户id
      * @return resut
      */
-    List<CashSnapshot> pageQuery(Long userId);
+    List<CashSnapshot> pageQuery(Long userId, Long cashInfoId);
 }

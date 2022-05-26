@@ -21,6 +21,7 @@ import com.dabai.proxy.httpclient.liness.resp.LinessBaseResult;
 import com.dabai.proxy.httpclient.liness.resp.SignAgreementResult;
 import com.dabai.proxy.httpclient.liness.resp.TransferToBankCardResult;
 import com.dabai.proxy.po.*;
+import com.dabai.proxy.req.CashInfoPageReq;
 import com.dabai.proxy.req.Paging;
 import com.dabai.proxy.req.UserCashSubmitReq;
 import com.dabai.proxy.req.UserSignReq;
@@ -200,12 +201,13 @@ public class CashFacadeImpl implements CashFacade {
     }
 
     @Override
-    public CashInfoPageResult pageQuery(Paging paging) {
+    public CashInfoPageResult pageQuery(CashInfoPageReq cashInfoPageReq) {
         UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
         UserInfo userInfo = userInfoService.selectByOpenId(sessionInfo.getOpenId());
         tk.mybatis.mapper.util.Assert.notNull(userInfo, "用户无效，请重新登录");
 
-        Page<CashSnapshot> pageResult = PageHelper.offsetPage(paging.getOffset(), paging.getLimit()).doSelectPage(() -> cashSnapshotService.pageQuery(userInfo.getId()));
+        Page<CashSnapshot> pageResult = PageHelper.offsetPage(cashInfoPageReq.getPaging().getOffset(), cashInfoPageReq.getPaging().getLimit())
+                .doSelectPage(() -> cashSnapshotService.pageQuery(userInfo.getId(), cashInfoPageReq.getCashInfoId()));
         CashInfoPageResult resp = new CashInfoPageResult();
         resp.setTotal(pageResult.getTotal());
         List<CashSnapshot> result = pageResult.getResult();

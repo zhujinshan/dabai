@@ -12,8 +12,8 @@ import lombok.Data;
 @ApiModel(value = "提现记录查询")
 public class CashInfoPageReq {
 
-    @ApiModelProperty(value = "用户id", required = true)
-    private String userId;
+    @ApiModelProperty(value = "提现快照id", required = false)
+    private Long cashInfoId;
 
     @ApiModelProperty(value = "分页", required = true)
     private Paging paging;

@@ -8,10 +8,7 @@ import com.dabai.proxy.config.token.CheckToken;
 import com.dabai.proxy.facade.CashFacade;
 import com.dabai.proxy.po.PolicyInfo;
 import com.dabai.proxy.po.UserInfo;
-import com.dabai.proxy.req.Paging;
-import com.dabai.proxy.req.PolicyInfoPageReq;
-import com.dabai.proxy.req.UserCashSubmitReq;
-import com.dabai.proxy.req.UserSignReq;
+import com.dabai.proxy.req.*;
 import com.dabai.proxy.resp.CashInfoPageResult;
 import com.dabai.proxy.resp.PolicyInfoPageResult;
 import com.dabai.proxy.resp.PolicyInfoResp;
@@ -81,10 +78,12 @@ public class CashController {
     @PostMapping("/pageQuery")
     @CheckToken
     @ApiOperation(value = "提现列表", httpMethod = "POST")
-    public Result<CashInfoPageResult> pageQuery(@RequestBody Paging paging) {
+    public Result<CashInfoPageResult> pageQuery(@RequestBody CashInfoPageReq cashInfoPageReq) {
+        Paging paging = cashInfoPageReq.getPaging();
         if (paging == null) {
             paging = new Paging();
+            cashInfoPageReq.setPaging(paging);
         }
-        return Result.success(cashFacade.pageQuery(paging));
+        return Result.success(cashFacade.pageQuery(cashInfoPageReq));
     }
 }

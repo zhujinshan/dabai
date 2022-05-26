@@ -70,11 +70,13 @@ public class CashSnapshotServiceImpl implements CashSnapshotService {
     }
 
     @Override
-    public List<CashSnapshot> pageQuery(Long userId) {
+    public List<CashSnapshot> pageQuery(Long userId, Long cashInfoId) {
         Assert.notNull(userId, "userId is required");
         Example example = new Example(CashSnapshot.class);
         example.setOrderByClause("id desc");
-        example.createCriteria().andEqualTo("userId", userId);
+        Example.Criteria criteria = example.createCriteria().andEqualTo("userId", userId);
+        if (Objects.nonNull(cashInfoId) && 0 != cashInfoId)
+            criteria.andEqualTo("id", cashInfoId);
         return cashSnapshotMapper.selectByExample(example);
     }
 }
