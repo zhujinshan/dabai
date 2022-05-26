@@ -20,12 +20,16 @@ import com.dabai.proxy.httpclient.liness.resp.AddMerchantResult;
 import com.dabai.proxy.httpclient.liness.resp.LinessBaseResult;
 import com.dabai.proxy.httpclient.liness.resp.SignAgreementResult;
 import com.dabai.proxy.httpclient.liness.resp.TransferToBankCardResult;
-import com.dabai.proxy.po.*;
+import com.dabai.proxy.po.CashSnapshot;
+import com.dabai.proxy.po.UserInfo;
+import com.dabai.proxy.po.UserSignInfo;
+import com.dabai.proxy.po.WalletInfo;
 import com.dabai.proxy.req.CashInfoPageReq;
-import com.dabai.proxy.req.Paging;
 import com.dabai.proxy.req.UserCashSubmitReq;
 import com.dabai.proxy.req.UserSignReq;
-import com.dabai.proxy.resp.*;
+import com.dabai.proxy.resp.CashInfoPageResult;
+import com.dabai.proxy.resp.CashInfoResp;
+import com.dabai.proxy.resp.UserCashSignInfoResp;
 import com.dabai.proxy.service.CashSnapshotService;
 import com.dabai.proxy.service.UserInfoService;
 import com.dabai.proxy.service.UserSignInfoService;
@@ -108,15 +112,6 @@ public class CashFacadeImpl implements CashFacade {
             }
         }
         log.info("信息变化 需二次签约。[userSignReq:{}]", userSignReq);
-        //同步华保星身份证号等数据
-        MemberInfoParam memberInfoParam = new MemberInfoParam();
-        memberInfoParam.setPhone(userSignReq.getMobile());
-        memberInfoParam.setIdCardNo(userSignReq.getIdCard());
-        memberInfoParam.setName(userSignReq.getName());
-        HuanongResult<MemberInfoResp> result = huanongHttpClient.memberInfo(memberInfoParam);
-        if (result == null || !Objects.equals(result.getState(), "200")) {
-            log.error("华农会员信息交互异常, result:{}", result);
-        }
         // 增加账户
         AddMerchantParam addMerchantParam = new AddMerchantParam();
         addMerchantParam.setCertificateType("ID");
@@ -144,6 +139,20 @@ public class CashFacadeImpl implements CashFacade {
 
         if (Objects.isNull(signAgreement) || !LinessHttpClient.SUCCESS_CODE.equals(signAgreement.getRetCode())) {
             throw new HttpClientBusinessException("签约失败，请稍后重试");
+        }
+
+        //同步华保星身份证号等数据
+        MemberInfoParam memberInfoParam = new MemberInfoParam();
+        memberInfoParam.setPhone(userSignReq.getMobile());
+        memberInfoParam.setIdCardNo(userSignReq.getIdCard());
+        memberInfoParam.setName(userSignReq.getName());
+        try {
+            HuanongResult<MemberInfoResp> result = huanongHttpClient.memberInfo(memberInfoParam);
+            if (result == null || !Objects.equals(result.getState(), "200")) {
+                log.error("华农会员信息交互异常, memberInfoParam:{}, result:{}", memberInfoParam, result);
+            }
+        } catch (Exception e) {
+            log.error("华农会员信息交互异常, memberInfoParam:" + memberInfoParam, e);
         }
 
         SignAgreementResult retData = signAgreement.getRetData();

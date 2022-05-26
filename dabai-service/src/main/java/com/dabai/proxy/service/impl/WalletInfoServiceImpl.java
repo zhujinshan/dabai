@@ -3,6 +3,7 @@ package com.dabai.proxy.service.impl;
 import com.dabai.proxy.dao.CashSnapshotMapper;
 import com.dabai.proxy.dao.WalletFlowMapper;
 import com.dabai.proxy.dao.WalletInfoMapper;
+import com.dabai.proxy.enums.CashStatusEnum;
 import com.dabai.proxy.enums.WalletFlowTypeEnum;
 import com.dabai.proxy.lock.JdkLockFunction;
 import com.dabai.proxy.lock.LockObject;
@@ -180,14 +181,19 @@ public class WalletInfoServiceImpl implements WalletInfoService {
     @Transactional(rollbackFor = Throwable.class)
     public void cashing(Long userId, CashSnapshot cashSnapshot) {
         Assert.notNull(userId, "userId缺失");
-        if (cashSnapshot.getId() != null) {
-            cashSnapshot.setUtime(new Date());
-            cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshot);
-        }
-
         BigDecimal cashedAmount = cashSnapshot.getCashedAmount();
         if (cashedAmount != null) {
             jdkLockFunction.execute(LockObject.of(LOCK_KEY, userId), () -> {
+                if (cashSnapshot.getId() != null) {
+                    CashSnapshot cashSnapshotUpdate = new CashSnapshot();
+                    cashSnapshotUpdate.setId(cashSnapshot.getId());
+                    cashSnapshotUpdate.setStatus(CashStatusEnum.CASHING.getCode());
+                    cashSnapshotUpdate.setDealNo(cashSnapshot.getDealNo());
+                    cashSnapshotUpdate.setRemark(cashSnapshot.getRemark());
+                    cashSnapshotUpdate.setUtime(new Date());
+                    cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshotUpdate);
+                }
+
                 WalletInfo walletInfo = getWallet(userId);
                 if (walletInfo == null) {
                     log.info("钱包不能存在跳过处理，userId:{}", userId);
@@ -209,14 +215,17 @@ public class WalletInfoServiceImpl implements WalletInfoService {
     @Transactional(rollbackFor = Throwable.class)
     public void cashSuccess(Long userId, CashSnapshot cashSnapshot) {
         Assert.notNull(userId, "userId缺失");
-        if (cashSnapshot.getId() != null) {
-            cashSnapshot.setUtime(new Date());
-            cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshot);
-        }
 
         BigDecimal cashedAmount = cashSnapshot.getCashedAmount();
         if (cashedAmount != null) {
             jdkLockFunction.execute(LockObject.of(LOCK_KEY, userId), () -> {
+                if (cashSnapshot.getId() != null) {
+                    CashSnapshot cashSnapshotUpdate = new CashSnapshot();
+                    cashSnapshotUpdate.setId(cashSnapshot.getId());
+                    cashSnapshotUpdate.setStatus(CashStatusEnum.SUCCESS.getCode());
+                    cashSnapshotUpdate.setUtime(new Date());
+                    cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshotUpdate);
+                }
                 WalletInfo walletInfo = getWallet(userId);
                 if (walletInfo == null) {
                     log.info("钱包不能存在跳过处理，userId:{}", userId);
@@ -250,14 +259,19 @@ public class WalletInfoServiceImpl implements WalletInfoService {
     @Override
     public void cashFailed(Long userId, CashSnapshot cashSnapshot) {
         Assert.notNull(userId, "userId缺失");
-        if (cashSnapshot.getId() != null) {
-            cashSnapshot.setUtime(new Date());
-            cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshot);
-        }
 
         BigDecimal cashedAmount = cashSnapshot.getCashedAmount();
         if (cashedAmount != null) {
             jdkLockFunction.execute(LockObject.of(LOCK_KEY, userId), () -> {
+                if (cashSnapshot.getId() != null) {
+                    CashSnapshot cashSnapshotUpdate = new CashSnapshot();
+                    cashSnapshotUpdate.setId(cashSnapshot.getId());
+                    cashSnapshotUpdate.setStatus(CashStatusEnum.FAILED.getCode());
+                    cashSnapshotUpdate.setUtime(new Date());
+                    cashSnapshotUpdate.setRemark(cashSnapshot.getRemark());
+                    cashSnapshotUpdate.setThirdResponse(cashSnapshot.getThirdResponse());
+                    cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshotUpdate);
+                }
                 WalletInfo walletInfo = getWallet(userId);
                 if (walletInfo == null) {
                     log.info("钱包不能存在跳过处理，userId:{}", userId);

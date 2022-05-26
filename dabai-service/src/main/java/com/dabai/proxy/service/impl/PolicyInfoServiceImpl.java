@@ -6,7 +6,6 @@ import com.dabai.proxy.enums.PolicyStatus;
 import com.dabai.proxy.po.PolicyInfo;
 import com.dabai.proxy.service.PolicyInfoService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -67,8 +66,8 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
         if (Objects.nonNull(status)) {
             criteria.andEqualTo("policyStatus", status);
         }
-        if (Objects.nonNull(policyId) && 0 != policyId){
-            criteria.andEqualTo("id",policyId);
+        if (Objects.nonNull(policyId) && policyId > 0) {
+            criteria.andEqualTo("id", policyId);
         }
         return policyInfoMapper.selectByExample(example);
     }

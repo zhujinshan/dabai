@@ -99,8 +99,12 @@ public class LinessCallbackController {
             return "FAILED";
         }
 
+        if (cashSnapshot.getStatus().equals(CashStatusEnum.SUCCESS.getCode())) {
+            log.warn("重复处理单据 不再处理");
+            return "SUCCESS";
+        }
+
         if ("C1".equals(sucNotifyParam.getDealStatus())) {
-            cashSnapshot.setStatus(CashStatusEnum.SUCCESS.getCode());
             walletInfoService.cashSuccess(cashSnapshot.getUserId(), cashSnapshot);
         } else {
             cashSnapshot.setRemark(sucNotifyParam.getDealStatusMsg());
