@@ -180,6 +180,7 @@ public class CashFacadeImpl implements CashFacade {
         // 提现提交成功
         if (LinessHttpClient.SUCCESS_CODE.equals(transferToBankcard.getRetCode())) {
             TransferToBankCardResult retData = transferToBankcard.getRetData();
+            log.info("retData:{}",retData);
             cashSnapshot.setStatus(CashStatusEnum.CASHING.getCode());
             cashSnapshot.setDealNo(retData.getDealNo());
             cashSnapshot.setRemark(retData.getDealStatusMsg());

@@ -182,6 +182,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
         Assert.notNull(userId, "userId缺失");
         if (cashSnapshot.getId() != null) {
             cashSnapshot.setUtime(new Date());
+            log.info("cashSnapshot:{},{}",cashSnapshot.getDealNo(),cashSnapshot.getRemark());
             cashSnapshotMapper.updateByPrimaryKeySelective(cashSnapshot);
         }
 
