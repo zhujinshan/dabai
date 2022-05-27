@@ -34,6 +34,10 @@ public class LocalCache {
         return false;
     }
 
+    public static void invalidateCode(String phone) {
+        codeCache.invalidate(phone);
+    }
+
     public static boolean contains(String phone) {
         String existCode = codeCache.get(phone);
         return StringUtils.isNotEmpty(existCode);

@@ -1,6 +1,7 @@
 package com.dabai.proxy.facade.impl;
 
 import cn.hutool.core.util.DesensitizedUtil;
+import com.dabai.proxy.cache.LocalCache;
 import com.dabai.proxy.config.UserSessionContext;
 import com.dabai.proxy.config.UserSessionInfo;
 import com.dabai.proxy.config.result.Result;
@@ -195,6 +196,8 @@ public class CashFacadeImpl implements CashFacade {
             cashSnapshot.setDealNo(retData.getDealNo());
             cashSnapshot.setRemark(retData.getDealStatusMsg());
             walletInfoService.cashing(userInfo.getId(), cashSnapshot);
+            // 验证码失效掉
+            LocalCache.invalidateCode(userInfo.getMobile());
             return Result.success(retData.getDealNo());
         }
         // 提现提交异常
