@@ -15,7 +15,7 @@ public interface PolicyInfoService {
 
     /**
      * 更新保单信息
-     *  @param userId
+     * @param userId
      * @param commision
      * @param complete
      * @param policyInfoDto
@@ -30,4 +30,7 @@ public interface PolicyInfoService {
      * @return resut
      */
     List<PolicyInfo> pageQuery(Long userId, Integer status, Long policyId);
+
+
+    PolicyInfo queryByUserIdAndPolicyNo(Long userId, String policyNo);
 }

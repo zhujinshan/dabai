@@ -17,7 +17,7 @@
     <result column="commission_radio" jdbcType="DECIMAL" property="commissionRadio" />
     <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
     <result column="utime" jdbcType="TIMESTAMP" property="utime" />
-    <result column="valid" jdbcType="INTEGER" property="valid" />
+    <result column="valid" jdbcType="TINYINT" property="valid" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--

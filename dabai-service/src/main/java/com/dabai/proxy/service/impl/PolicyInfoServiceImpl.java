@@ -29,7 +29,7 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
     PolicyInfoMapper policyInfoMapper;
 
     @Override
-    public void savePolicyInfo(Long userId, BigDecimal commision, PolicyStatus status, PolicyInfoDto policyInfoDto) {
+    public void savePolicyInfo(Long userId, BigDecimal commission, PolicyStatus status, PolicyInfoDto policyInfoDto) {
         Assert.notNull(userId, "userId缺失");
         Assert.notNull(policyInfoDto, "policyInfoDto信息缺失");
         Assert.notNull(policyInfoDto.getPolicyNo(), "保单号信息缺失");
@@ -43,7 +43,7 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
         PolicyInfo newPolicyInfo = new PolicyInfo();
         BeanUtils.copyProperties(policyInfoDto, newPolicyInfo);
         newPolicyInfo.setUserId(userId);
-        newPolicyInfo.setCommissionAmount(commision);
+        newPolicyInfo.setCommissionAmount(commission);
         newPolicyInfo.setPolicyStatus(status.getCode());
         if (policyInfo != null) {
             newPolicyInfo.setUtime(new Date());
@@ -70,5 +70,16 @@ public class PolicyInfoServiceImpl implements PolicyInfoService {
             criteria.andEqualTo("id", policyId);
         }
         return policyInfoMapper.selectByExample(example);
+    }
+
+    @Override
+    public PolicyInfo queryByUserIdAndPolicyNo(Long userId, String policyNo) {
+        Assert.notNull(userId, "userId is required");
+        Assert.notNull(policyNo, "policyNo is required");
+        Example example = new Example(PolicyInfo.class);
+        example.createCriteria().andEqualTo("policyNo", policyNo)
+                .andEqualTo("userId", userId);
+
+        return policyInfoMapper.selectOneByExample(example);
     }
 }

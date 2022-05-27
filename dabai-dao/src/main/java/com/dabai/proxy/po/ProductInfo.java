@@ -1,7 +1,12 @@
 package com.dabai.proxy.po;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "product_info")
 public class ProductInfo {
@@ -40,7 +45,7 @@ public class ProductInfo {
      * 最小起订金额(元)
      */
     @Column(name = "min_amount")
-    private Long minAmount;
+    private BigDecimal minAmount;
 
     /**
      * 产品简介
@@ -57,7 +62,7 @@ public class ProductInfo {
      * 推广费比例
      */
     @Column(name = "commission_radio")
-    private Long commissionRadio;
+    private BigDecimal commissionRadio;
 
     private Date ctime;
 
@@ -66,7 +71,6 @@ public class ProductInfo {
     /**
      * 0:废弃；1：可用
      */
-    @Column(name = "valid")
     private Integer valid;
 
     /**
@@ -178,7 +182,7 @@ public class ProductInfo {
      *
      * @return min_amount - 最小起订金额(元)
      */
-    public Long getMinAmount() {
+    public BigDecimal getMinAmount() {
         return minAmount;
     }
 
@@ -187,7 +191,7 @@ public class ProductInfo {
      *
      * @param minAmount 最小起订金额(元)
      */
-    public void setMinAmount(Long minAmount) {
+    public void setMinAmount(BigDecimal minAmount) {
         this.minAmount = minAmount;
     }
 
@@ -232,7 +236,7 @@ public class ProductInfo {
      *
      * @return commission_radio - 推广费比例
      */
-    public Long getCommissionRadio() {
+    public BigDecimal getCommissionRadio() {
         return commissionRadio;
     }
 
@@ -241,7 +245,7 @@ public class ProductInfo {
      *
      * @param commissionRadio 推广费比例
      */
-    public void setCommissionRadio(Long commissionRadio) {
+    public void setCommissionRadio(BigDecimal commissionRadio) {
         this.commissionRadio = commissionRadio;
     }
 

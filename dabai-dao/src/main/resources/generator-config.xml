@@ -91,12 +91,18 @@
             <columnOverride column="sign_status" javaType="Integer"/>
         </table>-->
 
-        <table tableName="wallet_info" enableSelectByExample="false" enableDeleteByExample="false"
+        <!--<table tableName="wallet_info" enableSelectByExample="false" enableDeleteByExample="false"
                enableDeleteByPrimaryKey="false"
                enableCountByExample="false" enableUpdateByExample="false" domainObjectName="WalletInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+        </table>-->
 
+        <table tableName="product_info" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="ProductInfo">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="valid" javaType="Integer"/>
+        </table>
 
     </context>
 </generatorConfiguration>

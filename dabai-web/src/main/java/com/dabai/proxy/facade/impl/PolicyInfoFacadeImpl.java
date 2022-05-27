@@ -3,6 +3,7 @@ package com.dabai.proxy.facade.impl;
 import com.dabai.proxy.dto.PolicyInfoDto;
 import com.dabai.proxy.enums.PolicyStatus;
 import com.dabai.proxy.facade.PolicyInfoFacade;
+import com.dabai.proxy.po.PolicyInfo;
 import com.dabai.proxy.po.ProductInfo;
 import com.dabai.proxy.po.UserPlateformInfo;
 import com.dabai.proxy.service.PolicyInfoService;
@@ -52,12 +53,15 @@ public class PolicyInfoFacadeImpl implements PolicyInfoFacade {
             log.info("未找到平台用户，policyInfoDto：{}", policyInfoDto);
             return;
         }
+        BigDecimal currentRadio = commissionRadio;
         ProductInfo productInfo = productInfoService.getByProductCode(policyInfoDto.getProductCode());
-        if (!Objects.isNull(productInfo)){
-            commissionRadio = new BigDecimal(Double.toString(productInfo.getCommissionRadio()*0.01));
+        if (Objects.nonNull(productInfo) && Objects.nonNull(productInfo.getCommissionRadio()) &&
+                productInfo.getCommissionRadio().compareTo(BigDecimal.ZERO) > 0) {
+            currentRadio = productInfo.getCommissionRadio().divide(BigDecimal.valueOf(100), 4, BigDecimal.ROUND_FLOOR);
         }
-        BigDecimal commission = premium.multiply(commissionRadio).setScale(2, BigDecimal.ROUND_FLOOR);
-        log.info("保单佣金，premium：{}, commissionRadio:{}, commission:{}", premium, commissionRadio, commission);
+
+        BigDecimal commission = premium.multiply(currentRadio).setScale(2, BigDecimal.ROUND_FLOOR);
+        log.info("保单佣金，premium：{}, currentRadio:{}, commission:{}", premium, currentRadio, commission);
         // 更新保单信息
         policyInfoService.savePolicyInfo(hbxMemberInfo.getUserId(), commission, PolicyStatus.COMPLETE, policyInfoDto);
         // 计算佣金
@@ -70,19 +74,18 @@ public class PolicyInfoFacadeImpl implements PolicyInfoFacade {
         Assert.notNull(policyInfoDto, "保单信息缺失");
         Assert.notNull(policyInfoDto.getChannelNo(), "保单会员编码缺失");
         Assert.notNull(policyInfoDto.getPolicyNo(), "保单号缺失");
-        BigDecimal premium = policyInfoDto.getPremium();
-        Assert.notNull(premium, "保单保费缺失");
         UserPlateformInfo hbxMemberInfo = userPlateformInfoService.getByHbxMemberNo(policyInfoDto.getChannelNo());
         if (hbxMemberInfo == null) {
             log.info("未找到平台用户，policyInfoDto：{}", policyInfoDto);
             return;
         }
-        BigDecimal commission = premium.multiply(commissionRadio).setScale(2, BigDecimal.ROUND_FLOOR);
-        log.info("保单佣金，premium：{}, commissionRadio:{}, commission:{}", premium, commissionRadio, commission);
+        PolicyInfo policyInfo = policyInfoService.queryByUserIdAndPolicyNo(hbxMemberInfo.getUserId(), policyInfoDto.getPolicyNo());
+        log.info("保单信息退款，policyInfo:{}", policyInfo);
+
         // 更新保单信息
-        policyInfoService.savePolicyInfo(hbxMemberInfo.getUserId(), commission, PolicyStatus.REFUND, policyInfoDto);
+        policyInfoService.savePolicyInfo(hbxMemberInfo.getUserId(), policyInfo.getCommissionAmount(), PolicyStatus.REFUND, policyInfoDto);
         // 计算佣金
-        walletInfoService.refundCommission(hbxMemberInfo.getUserId(), commission, policyInfoDto.getPolicyNo());
+        walletInfoService.refundCommission(hbxMemberInfo.getUserId(), policyInfo.getCommissionAmount(), policyInfoDto.getPolicyNo());
     }
 
     @Override
