@@ -235,7 +235,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
                 WalletInfo walletInfo2 = new WalletInfo();
                 walletInfo2.setId(walletInfo.getId());
                 // 判断当前冻结金额是否大于该笔提现成功金额 避免异常请求变为负值
-                if (Objects.nonNull(cashingAmount) && cashingAmount.compareTo(cashedAmount) > 0) {
+                if (cashingAmount.compareTo(cashedAmount) > -1) {
                     walletInfo2.setCashingAmount(cashingAmount.subtract(cashedAmount));
                 }
                 walletInfo2.setUtime(new Date());
@@ -283,7 +283,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
                 walletInfo2.setAvailableAmount(walletInfo.getAvailableAmount().add(cashedAmount));
                 // 判断当前冻结金额是否大于该笔提现成功金额
                 BigDecimal cashingAmount = walletInfo.getCashingAmount();
-                if (cashingAmount.compareTo(cashedAmount) > 0) {
+                if (cashingAmount.compareTo(cashedAmount) > -1) {
                     walletInfo2.setCashingAmount(cashingAmount.subtract(cashedAmount));
                 }
                 walletInfo2.setUtime(new Date());
