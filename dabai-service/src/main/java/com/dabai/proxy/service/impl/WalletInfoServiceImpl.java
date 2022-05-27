@@ -239,6 +239,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
                     walletInfo2.setCashingAmount(cashingAmount.subtract(cashedAmount));
                 }
                 walletInfo2.setUtime(new Date());
+                walletInfo2.setLastCashTime(new Date());
                 walletInfo2.setCashedAmount(walletInfo.getCashedAmount().add(cashedAmount));
                 walletInfoMapper.updateByPrimaryKeySelective(walletInfo2);
 

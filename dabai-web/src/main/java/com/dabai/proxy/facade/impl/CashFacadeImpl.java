@@ -297,8 +297,4 @@ public class CashFacadeImpl implements CashFacade {
         Assert.isTrue(availableAmount.compareTo(cashSubmitReq.getAmount()) > -1, "提现金额超过全部可提现金额");
     }
 
-    public static void main(String[] args) {
-        System.out.println(DesensitizedUtil.idCardNum("51343620000320711X", 1, 2));
-    }
-
 }
