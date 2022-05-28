@@ -50,8 +50,13 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
         UserInfo userInfo = userInfoService.selectById(userId);
 
         UserPlateformInfo parentPlateform = null;
+
         if (userInfo.getParentUserId() != null) {
-            parentPlateform = userPlateformInfoService.getByUserId(parentId);
+            parentPlateform = userPlateformInfoService.getByUserId(userInfo.getParentUserId());
+        } else {
+            if (Objects.nonNull(parentId) && parentId > 0) {
+                parentPlateform = userPlateformInfoService.getByUserId(userInfo.getParentUserId());
+            }
         }
         MemberInfoParam memberInfoParam = new MemberInfoParam();
         memberInfoParam.setPhone(phone);
