@@ -55,7 +55,7 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
             parentPlateform = userPlateformInfoService.getByUserId(userInfo.getParentUserId());
         } else {
             if (Objects.nonNull(parentId) && parentId > 0) {
-                parentPlateform = userPlateformInfoService.getByUserId(userInfo.getParentUserId());
+                parentPlateform = userPlateformInfoService.getByUserId(parentId);
             }
         }
 
