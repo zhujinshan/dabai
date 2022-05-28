@@ -253,7 +253,6 @@ public class CashFacadeImpl implements CashFacade {
             } else {
                 signStatus = UserSignStatusEnum.getByCode(userSignInfo.getSignStatus());
             }
-
         }
         userCashSignInfoResp.setIdCard(DesensitizedUtil.idCardNum(userInfo.getIdCard(),3,4));
         userCashSignInfoResp.setBankCard(DesensitizedUtil.bankCard(userInfo.getBankCard()));
@@ -298,6 +297,21 @@ public class CashFacadeImpl implements CashFacade {
         WalletInfo walletInfo = walletInfoService.getWallet(userInfo.getId());
         BigDecimal availableAmount = walletInfo.getAvailableAmount();
         Assert.isTrue(availableAmount.compareTo(cashSubmitReq.getAmount()) > -1, "提现金额超过全部可提现金额");
+
+        UserSignInfo userSignInfo = userSignInfoService.getByUserId(userInfo.getId());
+        Assert.notNull(userSignInfo, "尚未签约，请前往个人设置完善信息。");
+        Integer signStatus = userSignInfo.getSignStatus();
+        UserSignStatusEnum userSignStatusEnum = UserSignStatusEnum.getByCode(signStatus);
+        switch (userSignStatusEnum) {
+            case NOT_SIGN:
+                throw new IllegalArgumentException("尚未签约，请前往个人设置完善信息。");
+            case SIGNING:
+                throw new IllegalArgumentException("实名认证中，请稍后重试。");
+            case FAILED:
+                throw new IllegalArgumentException("实名认证失败，请前往“个人设置”修改。");
+            default:
+                break;
+        }
     }
 
 }
