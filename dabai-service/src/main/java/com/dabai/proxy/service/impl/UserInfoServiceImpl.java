@@ -45,33 +45,16 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public Long saveUserPhone(String openId, String phoneNo, Long parentId) {
-        Assert.notNull(openId, "openId信息缺失");
+    public void saveUserPhone(Long userId, String phoneNo, Long parentId) {
+        Assert.notNull(userId, "openId信息缺失");
         Assert.notNull(phoneNo, "phoneNo信息缺失");
-        UserInfo userInfo = selectByOpenId(openId);
-
-        if (userInfo != null) {
-            if (StringUtils.isEmpty(userInfo.getMobile())) {
-                UserInfo updateUser = new UserInfo();
-                updateUser.setMobile(phoneNo);
-                updateUser.setId(userInfo.getId());
-                if (Objects.isNull(userInfo.getParentUserId()) && Objects.nonNull(parentId)) {
-                    updateUser.setParentUserId(parentId);
-                }
-                userInfoMapper.updateByPrimaryKeySelective(updateUser);
-            }
-            return userInfo.getId();
+        UserInfo updateUser = new UserInfo();
+        updateUser.setMobile(phoneNo);
+        updateUser.setId(userId);
+        if (Objects.nonNull(parentId) && parentId > 0) {
+            updateUser.setParentUserId(parentId);
         }
-
-        UserInfo newUser = new UserInfo();
-        newUser.setMobile(phoneNo);
-        newUser.setCtime(new Date());
-        newUser.setUtime(new Date());
-        if (Objects.nonNull(parentId)) {
-            newUser.setParentUserId(parentId);
-        }
-        userInfoMapper.insertSelective(newUser);
-        return newUser.getId();
+        userInfoMapper.updateByPrimaryKeySelective(updateUser);
     }
 
     @Override

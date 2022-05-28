@@ -14,6 +14,7 @@ import com.dabai.proxy.service.UserInfoService;
 import com.dabai.proxy.service.UserPlateformInfoService;
 import com.dabai.proxy.service.WalletInfoService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,18 +46,20 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
     public void saveUserPhone(String openId, String phone, Long parentId) {
         Assert.notNull(openId, "openId信息缺失");
         Assert.notNull(phone, "phoneNo信息缺失");
-        Long userId = userInfoService.saveUserPhone(openId, phone, parentId);
-
-        UserInfo userInfo = userInfoService.selectById(userId);
-
+        UserInfo userInfo = userInfoService.selectByOpenId(openId);
+        Assert.notNull(userInfo, "未知用户信息");
+        if (StringUtils.isNotEmpty(userInfo.getMobile())) {
+            log.info("该用户手机号不为空，跳过处理，userInfo: {} ", userInfo);
+            return;
+        }
+        if (Objects.nonNull(userInfo.getParentUserId()) && userInfo.getParentUserId() > 0) {
+            parentId = userInfo.getParentUserId();
+        }
+        userInfoService.saveUserPhone(userInfo.getId(), phone, parentId);
         UserPlateformInfo parentPlateform = null;
 
-        if (userInfo.getParentUserId() != null) {
-            parentPlateform = userPlateformInfoService.getByUserId(userInfo.getParentUserId());
-        } else {
-            if (Objects.nonNull(parentId) && parentId > 0) {
-                parentPlateform = userPlateformInfoService.getByUserId(parentId);
-            }
+        if (Objects.nonNull(parentId) && parentId > 0) {
+            parentPlateform = userPlateformInfoService.getByUserId(parentId);
         }
 
         MemberInfoParam memberInfoParam = new MemberInfoParam();
@@ -75,9 +78,9 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
         if (Objects.isNull(data)) {
             return;
         }
-        userPlateformInfoService.save(userId, data);
+        userPlateformInfoService.save(userInfo.getId(), data);
         // 钱包开户
-        walletInfoService.addWallet(userId);
+        walletInfoService.addWallet(userInfo.getId());
     }
 
     @Override
