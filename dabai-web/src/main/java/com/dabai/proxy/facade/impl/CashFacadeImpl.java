@@ -285,7 +285,7 @@ public class CashFacadeImpl implements CashFacade {
         Assert.isTrue(Validator.isMobile(userSignReq.getMobile()), "手机号格式不正确");
         Assert.isTrue(Validator.isCitizenId(userSignReq.getIdCard()), "无效身份证号");
         ValidateCardInfoResp validateCardInfoResp = alipayHttpClient.validateAndCacheCardInfo(userSignReq.getBankCard(), true);
-        Assert.isTrue(validateCardInfoResp.getValidated(), "无效银行卡号");
+        Assert.isTrue(validateCardInfoResp != null && validateCardInfoResp.getValidated(), "无效银行卡号");
 
         Assert.isTrue(Objects.equals(userInfo.getId(), userSignReq.getUserId()), "用户信息不匹配，请重新登录");
         Assert.isTrue(Objects.equals(userInfo.getMobile(), userSignReq.getMobile()), "手机号跟微信账号不一致，签约失败");
