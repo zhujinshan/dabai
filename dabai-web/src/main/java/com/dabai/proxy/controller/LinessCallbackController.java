@@ -71,6 +71,7 @@ public class LinessCallbackController {
         }
         if ("S".equals(signNotifyParam.getRetCode())) {
             userSignInfo.setSignStatus(UserSignStatusEnum.SUCCESS.getCode());
+            userSignInfo.setRemark(StringUtils.EMPTY);
         } else {
             userSignInfo.setSignStatus(UserSignStatusEnum.FAILED.getCode());
             userSignInfo.setRemark(JsonUtils.toJson(signNotifyParam));
