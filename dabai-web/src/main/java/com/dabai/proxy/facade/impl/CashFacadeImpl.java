@@ -1,5 +1,6 @@
 package com.dabai.proxy.facade.impl;
 
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.DesensitizedUtil;
 import com.dabai.proxy.cache.LocalCache;
 import com.dabai.proxy.config.UserSessionContext;
@@ -10,6 +11,8 @@ import com.dabai.proxy.enums.CashStatusEnum;
 import com.dabai.proxy.enums.UserSignStatusEnum;
 import com.dabai.proxy.exception.HttpClientBusinessException;
 import com.dabai.proxy.facade.CashFacade;
+import com.dabai.proxy.httpclient.alipay.AlipayHttpClient;
+import com.dabai.proxy.httpclient.alipay.resp.ValidateCardInfoResp;
 import com.dabai.proxy.httpclient.huanong.HuanongHttpClient;
 import com.dabai.proxy.httpclient.huanong.param.MemberInfoParam;
 import com.dabai.proxy.httpclient.huanong.resp.HuanongResult;
@@ -75,7 +78,8 @@ public class CashFacadeImpl implements CashFacade {
     private CashSnapshotService cashSnapshotService;
     @Resource
     private HuanongHttpClient huanongHttpClient;
-
+    @Resource
+    private AlipayHttpClient alipayHttpClient;
     @Value("${domain}")
     private String domain;
 
@@ -278,6 +282,10 @@ public class CashFacadeImpl implements CashFacade {
         Assert.isTrue(StringUtils.isNotEmpty(userSignReq.getIdCard()), "身份证信息缺失");
         Assert.isTrue(StringUtils.isNotEmpty(userSignReq.getMobile()), "手机号缺失");
         Assert.isTrue(StringUtils.isNotEmpty(userSignReq.getName()), "用户名缺失");
+        Assert.isTrue(Validator.isMobile(userSignReq.getMobile()), "手机号格式不正确");
+        Assert.isTrue(Validator.isCitizenId(userSignReq.getIdCard()), "无效身份证号");
+        ValidateCardInfoResp validateCardInfoResp = alipayHttpClient.validateAndCacheCardInfo(userSignReq.getBankCard(), true);
+        Assert.isTrue(validateCardInfoResp.getValidated(), "无效银行卡号");
 
         Assert.isTrue(Objects.equals(userInfo.getId(), userSignReq.getUserId()), "用户信息不匹配，请重新登录");
         Assert.isTrue(Objects.equals(userInfo.getMobile(), userSignReq.getMobile()), "手机号跟微信账号不一致，签约失败");
