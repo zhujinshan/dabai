@@ -1,10 +1,10 @@
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://bj-cdb-867r0ta8.sql.tencentcdb.com:60697/dabai-test?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://bj-cdb-3d8uhqoc.sql.tencentcdb.com:59846/dabai-test?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: nanquan2021
+    password: dabai2022
     hikari:
       minimum-idle: 10
       maximum-pool-size: 100
@@ -18,7 +18,7 @@ spring:
 server:
   port: 8080
 
-domain: http://82.156.242.173:8080
+domain: http://101.42.154.4:8080
 
 http:
   liness:
