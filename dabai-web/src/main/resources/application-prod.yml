@@ -1,10 +1,10 @@
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://ip:port/*?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://bj-cdb-3d8uhqoc.sql.tencentcdb.com:59846/dabai?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: root
+    password: dabai2022
     hikari:
       minimum-idle: 10
       maximum-pool-size: 100
@@ -16,18 +16,38 @@ spring:
 
 # 配置启动端口
 server:
-  port: 8080
+  port: 443
+  ssl: # ssl相关配置
+    enabled: true
+    key-store: classpath:dabai-tech.com.jks
+    key-store-password: dabai2022
+    key-store-type: JKS
+
+http-port: 80
+domain: https://dabai-tech.com
+
+http:
+  liness:
+    host: https://b.liness.cn
+    zxMerchantId: w472U3W134751n032R3U
+    partnerId: JRMF
+    zxRasKey: 319f2712e575437ea0c1ecf680095d66
+    transferCorpId: 10175019
+    agreementType: 10175019
+  huanong:
+    host: https://apollo.chinahuanong.com.cn
+    appid: MINI_DB
+    appkey: 0741978a1f7aa842
+    publicKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCWp8Kk+iu61XRP/TB/41KbD/R/RVrenXEX7GUAuf2f0CTa1zfIKYveoINMHC6WWJzOmkMLwHZxXe+mufJAUb5P3SjfOLcqbrnYlVajd8gFXiGyJSX94WlG7v9tfQAwFAAdV0LxstHjFKj8hu40CSj/7pk0o0Vmqj0plJy1wCN8tQIDAQAB
+    privateKey: MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJanwqT6K7rVdE/9MH/jUpsP9H9FWt6dcRfsZQC5/Z/QJNrXN8gpi96gg0wcLpZYnM6aQwvAdnFd76a58kBRvk/dKN84typuudiVVqN3yAVeIbIlJf3haUbu/219ADAUAB1XQvGy0eMUqPyG7jQJKP/umTSjRWaqPSmUnLXAI3y1AgMBAAECgYBQwGscctutsWw+07+DTR2h79NlxI8Ic+uCnzskQI0pdC/M/T7xExPdqLu3uANgou6p7xWw3uCds3QZMeIfh7Ex2IzXVBNh/0xxQZYkVO4dpB1dB8H2T8f6eQAOTDYgd2vS2gU7vmccSoOxNQXBWATi1RstloGY+GTVyn1tsRTeoQJBAOVrokBQMxKgw0Toi5NrifXl6X3luiqlEmVCC2b0gJRuYlgvs9/47asx3T6xEp2BXEiJbnsGeSqc98SsHhTzFfMCQQCoHAleAE/mSGtwcRT0YE+qREmT9fHYtcnXB1BjyXrP4HqH9ygb760qRF+GVkUs4KMNGBdqqBtPBMbzic5snQS3AkEAhlGoIwNRg5x/9v43ic4ybbd4Ju+zOXh/9qzeRB7ukPi3t23mYEE71TlSkXvWrESqpQVhm8HEewB/x7QFwLo5pQJAJ1vpFYkdK91oyjqvnUevXz39vBapOQPW7fFYcQSLLIByL8M+MMw8ztiTRPCN4aP2iOpLET2qpyWHLx3kpqlcoQJALTRaF70e+KPdongbGz6jQRfpUcSjXVfTMHQFsie15gyJCHcbihndj5Ay5gFlQszxWvv3aRmlax/IKfuJWik2LA==
 
 tencentcloud:
-  secretId: AKIDSny1wgEgJrDaorlV6WkmeLSNFya4UtCK
-  secretKey: 2sW0Rn13reEbliSyGKCqKfniQuABxVpv
-  submitCodeTemplateId: 1040127
-  loginTemplateId: 1040125
-  registerTemplateId: 1040122
-  rePasswordTemplateId: 1049348
+  secretId: AKIDBD0Zu0rTqyrUt64mFTRAeuvhEVXKsCI8
+  secretKey: d0B6mCNJ0RdbLq79wUotkLhohMmxud7N
+  submitCodeTemplateId: 1417815
   notifyTemplateId: 1066246
-  sdkAppId: 1400548038
-  signName: 大白科技
+  sdkAppId: 1400685449
+  signName: 众信健康
 
 wx:
   miniapp:

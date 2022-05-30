@@ -14,11 +14,22 @@ spring:
       connection-timeout: 30000
       connection-test-query: SELECT 1
 
-# 配置启动端口
-server:
-  port: 8080
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+# http重定向https配置
+http-port: 8080
 
 domain: http://101.42.154.4:8080
+
+server:
+  port: 8443
+  ssl: # ssl相关配置
+    enabled: true
+    key-store: classpath:dabai-tech.com.jks
+    key-store-password: dabai2022
+    key-store-type: JKS
 
 http:
   liness:
@@ -39,9 +50,6 @@ tencentcloud:
   secretId: AKIDBD0Zu0rTqyrUt64mFTRAeuvhEVXKsCI8
   secretKey: d0B6mCNJ0RdbLq79wUotkLhohMmxud7N
   submitCodeTemplateId: 1417815
-#  loginTemplateId: 1040125
-#  registerTemplateId: 1040122
-#  rePasswordTemplateId: 1049348
   notifyTemplateId: 1066246
   sdkAppId: 1400685449
   signName: 众信健康

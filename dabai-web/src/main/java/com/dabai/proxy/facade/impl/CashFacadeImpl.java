@@ -222,7 +222,7 @@ public class CashFacadeImpl implements CashFacade {
     public CashInfoPageResult pageQuery(CashInfoPageReq cashInfoPageReq) {
         UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
         UserInfo userInfo = userInfoService.selectByOpenId(sessionInfo.getOpenId());
-        tk.mybatis.mapper.util.Assert.notNull(userInfo, "用户无效，请重新登录");
+        Assert.notNull(userInfo, "用户无效，请重新登录");
 
         Page<CashSnapshot> pageResult = PageHelper.offsetPage(cashInfoPageReq.getPaging().getOffset(), cashInfoPageReq.getPaging().getLimit())
                 .doSelectPage(() -> cashSnapshotService.pageQuery(userInfo.getId(), cashInfoPageReq.getCashInfoId()));

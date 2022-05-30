@@ -24,7 +24,6 @@ mybatis:
   mapper-locations: classpath*:mappers/*.xml
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 
 mapper:
   identity: MYSQL
