@@ -8,14 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * http -> https跳转
  * @author: jinshan.zhu
  * @date: 2022/5/30 21:44
  */
-@Configuration
+//@Configuration
 public class HttpsConfiguration {
 
     @Value("${http-port}")

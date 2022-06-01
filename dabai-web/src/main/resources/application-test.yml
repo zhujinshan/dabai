@@ -21,7 +21,7 @@ mybatis:
 # http重定向https配置
 http-port: 8080
 
-domain: http://101.42.154.4:8080
+domain: https://dabai-tech.com:8443
 
 server:
   port: 8443
