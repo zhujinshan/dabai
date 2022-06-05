@@ -35,7 +35,6 @@ public class ProductInfoController {
     private ProductInfoFacade productInfoFacade;
 
     @GetMapping("/pageQuery")
-    @CheckToken
     @ApiOperation(value = "产品列表", httpMethod = "GET")
     public Result<List<ProductInfo>> pageQuery() {
         return Result.success(productInfoFacade.pageQuery());
