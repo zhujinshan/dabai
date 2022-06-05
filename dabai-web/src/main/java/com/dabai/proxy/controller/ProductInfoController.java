@@ -1,22 +1,14 @@
 package com.dabai.proxy.controller;
 
 import com.dabai.proxy.config.result.Result;
-import com.dabai.proxy.config.token.CheckToken;
-import com.dabai.proxy.dao.ProductInfoMapper;
 import com.dabai.proxy.facade.ProductInfoFacade;
-import com.dabai.proxy.po.CashSnapshot;
 import com.dabai.proxy.po.ProductInfo;
-import com.dabai.proxy.req.Paging;
-import com.dabai.proxy.req.PolicyInfoPageReq;
-import com.dabai.proxy.resp.PolicyInfoResp;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.RowBounds;
-import org.springframework.web.bind.annotation.*;
-import tk.mybatis.mapper.entity.Example;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -35,7 +27,6 @@ public class ProductInfoController {
     private ProductInfoFacade productInfoFacade;
 
     @GetMapping("/pageQuery")
-    @CheckToken
     @ApiOperation(value = "产品列表", httpMethod = "GET")
     public Result<List<ProductInfo>> pageQuery() {
         return Result.success(productInfoFacade.pageQuery());
