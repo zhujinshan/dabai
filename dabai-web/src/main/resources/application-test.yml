@@ -18,18 +18,16 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 
-# http重定向https配置
-http-port: 8080
 
-domain: https://dabai-tech.com:8443
+domain: http://dabai-tech.com:8080
 
 server:
-  port: 8443
-  ssl: # ssl相关配置
-    enabled: true
-    key-store: classpath:dabai-tech.com.jks
-    key-store-password: dabai2022
-    key-store-type: JKS
+  port: 8080
+#  ssl: # ssl相关配置
+#    enabled: true
+#    key-store: classpath:dabai-tech.com.jks
+#    key-store-password: dabai2022
+#    key-store-type: JKS
 
 http:
   liness:
