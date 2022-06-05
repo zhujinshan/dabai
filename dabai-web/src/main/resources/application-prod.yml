@@ -24,7 +24,7 @@ server:
     key-store-type: JKS
 
 http-port: 80
-domain: https://dabai-tech.com
+domain: https://dabai-tech.nanquan.online
 
 http:
   liness:
