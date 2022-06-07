@@ -8,11 +8,11 @@ import com.dabai.proxy.cache.LocalCache;
 import com.dabai.proxy.config.UserSessionContext;
 import com.dabai.proxy.config.UserSessionInfo;
 import com.dabai.proxy.config.result.Result;
+import com.dabai.proxy.config.result.ResultCode;
 import com.dabai.proxy.config.token.CheckToken;
 import com.dabai.proxy.config.token.JwtTools;
 import com.dabai.proxy.config.wx.WxMaConfiguration;
 import com.dabai.proxy.config.wx.WxMaProperties;
-import com.dabai.proxy.exception.HttpClientBusinessException;
 import com.dabai.proxy.facade.UserInfoFacade;
 import com.dabai.proxy.httpclient.huanong.HuanongHttpClient;
 import com.dabai.proxy.httpclient.huanong.param.MemberInfoParam;
@@ -166,9 +166,14 @@ public class UserController {
         memberInfoParam.setPhone(userInfo.getMobile());
 
         HuanongResult<MemberForwardStarResp> result = huanongHttpClient.forwardStarMini(memberInfoParam);
-        if (result == null || !Objects.equals(result.getState(), "200")) {
+        if (result == null) {
+            log.error("华农banner交互异常, result is null");
+            return Result.genResult(ResultCode.FAILURE.getValue(), "系统异常，请重试", null);
+        }
+
+        if (!Objects.equals(result.getState(), "200")) {
             log.error("华农banner交互异常, result:{}", result);
-            throw new HttpClientBusinessException("华农banner接口交互异常");
+            return Result.genResult(ResultCode.FAILURE.getValue(), result.getMessage(), null);
         }
 
         return Result.success(result.getData());
