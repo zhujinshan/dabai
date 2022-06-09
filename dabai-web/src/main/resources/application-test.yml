@@ -19,7 +19,7 @@ mybatis:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 
 
-domain: http://dabai-tech.com:8080
+domain: http://82.156.242.173:8080
 
 server:
   port: 8080
