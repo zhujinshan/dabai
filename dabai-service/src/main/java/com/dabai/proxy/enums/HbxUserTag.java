@@ -8,8 +8,8 @@ import lombok.Getter;
  */
 @Getter
 public enum HbxUserTag {
-    MEMBER(1, "会员"),
-    AGENT(2, "代理人");
+    MEMBER(0, "会员"),
+    AGENT(1, "代理人");
 
     private final Integer code;
 
