@@ -67,12 +67,13 @@ public class CashController {
     @CheckToken
     @ApiOperation(value = "打款提现", httpMethod = "POST")
     public Result<String> submit(@ApiParam(value = "打款提现", required = true) @RequestBody UserCashSubmitReq cashSubmitReq) {
-        UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
-        Assert.notNull(cashSubmitReq.getCode(), "验证码不能为空");
-        Assert.notNull(cashSubmitReq.getMobile(), "手机号不能为空");
-        Assert.isTrue(LocalCache.checkCode(cashSubmitReq.getMobile(), cashSubmitReq.getCode()), "验证码无效，请重新获取");
-
-        return cashFacade.cashSubmit(sessionInfo.getOpenId(), cashSubmitReq);
+        throw new IllegalArgumentException("暂不可提现");
+//        UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
+//        Assert.notNull(cashSubmitReq.getCode(), "验证码不能为空");
+//        Assert.notNull(cashSubmitReq.getMobile(), "手机号不能为空");
+//        Assert.isTrue(LocalCache.checkCode(cashSubmitReq.getMobile(), cashSubmitReq.getCode()), "验证码无效，请重新获取");
+//
+//        return cashFacade.cashSubmit(sessionInfo.getOpenId(), cashSubmitReq);
     }
 
     @PostMapping("/pageQuery")
