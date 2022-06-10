@@ -95,7 +95,7 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
         UserPlateformInfo plateformInfo = userPlateformInfoService.getByUserId(userInfo.getId());
         if (plateformInfo != null) {
             userInfoResp.setMemberNo(plateformInfo.getCode());
-            userInfoResp.setIdentityTag(plateformInfo.getIdentityTag() != null ? plateformInfo.getIdentityTag().intValue() : 1);
+            userInfoResp.setIdentityTag(plateformInfo.getIdentityTag() != null ? plateformInfo.getIdentityTag().intValue() : 0);
         }
         WalletInfo walletInfo = walletInfoService.getWallet(userInfo.getId());
         if (walletInfo != null){

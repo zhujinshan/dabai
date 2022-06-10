@@ -1,6 +1,5 @@
 package com.dabai.proxy.httpclient.huanong.resp;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -14,7 +13,6 @@ public class MemberInfoResp {
 
     private String memberNo;
 
-    @JsonProperty("IsAgent")
     //1：是 0否
     private String isAgent;
 
