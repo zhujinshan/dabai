@@ -1,35 +1,27 @@
 package com.dabai.proxy.controller;
 
-import com.dabai.proxy.cache.LocalCache;
 import com.dabai.proxy.config.UserSessionContext;
 import com.dabai.proxy.config.UserSessionInfo;
 import com.dabai.proxy.config.result.Result;
 import com.dabai.proxy.config.token.CheckToken;
 import com.dabai.proxy.facade.CashFacade;
-import com.dabai.proxy.po.PolicyInfo;
-import com.dabai.proxy.po.UserInfo;
-import com.dabai.proxy.req.*;
+import com.dabai.proxy.req.CashInfoPageReq;
+import com.dabai.proxy.req.Paging;
+import com.dabai.proxy.req.UserCashSubmitReq;
+import com.dabai.proxy.req.UserSignReq;
 import com.dabai.proxy.resp.CashInfoPageResult;
-import com.dabai.proxy.resp.PolicyInfoPageResult;
-import com.dabai.proxy.resp.PolicyInfoResp;
 import com.dabai.proxy.resp.UserCashSignInfoResp;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tk.mybatis.mapper.util.Assert;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 提现接口
@@ -67,13 +59,13 @@ public class CashController {
     @CheckToken
     @ApiOperation(value = "打款提现", httpMethod = "POST")
     public Result<String> submit(@ApiParam(value = "打款提现", required = true) @RequestBody UserCashSubmitReq cashSubmitReq) {
-        throw new IllegalArgumentException("暂不可提现");
-//        UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
-//        Assert.notNull(cashSubmitReq.getCode(), "验证码不能为空");
-//        Assert.notNull(cashSubmitReq.getMobile(), "手机号不能为空");
-//        Assert.isTrue(LocalCache.checkCode(cashSubmitReq.getMobile(), cashSubmitReq.getCode()), "验证码无效，请重新获取");
-//
-//        return cashFacade.cashSubmit(sessionInfo.getOpenId(), cashSubmitReq);
+        return Result.genResult(-1 , "暂不可提现", null);
+        /*UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
+        Assert.notNull(cashSubmitReq.getCode(), "验证码不能为空");
+        Assert.notNull(cashSubmitReq.getMobile(), "手机号不能为空");
+        Assert.isTrue(LocalCache.checkCode(cashSubmitReq.getMobile(), cashSubmitReq.getCode()), "验证码无效，请重新获取");
+
+        return cashFacade.cashSubmit(sessionInfo.getOpenId(), cashSubmitReq);*/
     }
 
     @PostMapping("/pageQuery")

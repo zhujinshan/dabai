@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -72,6 +71,9 @@ public class UserInfoResp {
 
     @ApiModelProperty(value = "三方会员编号")
     private String memberNo;
+
+    @ApiModelProperty(value = "华保星身份标签：1：会员 2：代理人")
+    private Integer identityTag;
 
     @ApiModelProperty(value = "可用金额")
     private BigDecimal availableAmount;
