@@ -1,5 +1,6 @@
 package com.dabai.proxy.controller;
 
+import com.dabai.proxy.cache.LocalCache;
 import com.dabai.proxy.config.UserSessionContext;
 import com.dabai.proxy.config.UserSessionInfo;
 import com.dabai.proxy.config.result.Result;
@@ -15,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,13 +61,12 @@ public class CashController {
     @CheckToken
     @ApiOperation(value = "打款提现", httpMethod = "POST")
     public Result<String> submit(@ApiParam(value = "打款提现", required = true) @RequestBody UserCashSubmitReq cashSubmitReq) {
-        return Result.genResult(-1 , "暂不可提现", null);
-        /*UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
+        //Result.genResult(-1 , "暂不可提现", null);
+        UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
         Assert.notNull(cashSubmitReq.getCode(), "验证码不能为空");
         Assert.notNull(cashSubmitReq.getMobile(), "手机号不能为空");
         Assert.isTrue(LocalCache.checkCode(cashSubmitReq.getMobile(), cashSubmitReq.getCode()), "验证码无效，请重新获取");
-
-        return cashFacade.cashSubmit(sessionInfo.getOpenId(), cashSubmitReq);*/
+        return cashFacade.cashSubmit(sessionInfo.getOpenId(), cashSubmitReq);
     }
 
     @PostMapping("/pageQuery")
