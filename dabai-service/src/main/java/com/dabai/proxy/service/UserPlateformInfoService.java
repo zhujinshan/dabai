@@ -14,4 +14,6 @@ public interface UserPlateformInfoService {
     UserPlateformInfo getByHbxMemberNo(String memberNo);
 
     UserPlateformInfo getByUserId(Long userId);
+
+    void updateUserPalteformInfo(UserPlateformInfo userPlateformInfo);
 }

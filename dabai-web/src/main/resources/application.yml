@@ -49,3 +49,12 @@ http:
     json:
       date-format: yyyy-MM-dd HH:mm:ss
 
+api-encrypt:
+  debug: false
+  enable-aes: false
+  list:
+    - appid: HBX
+      appsecret: 4ad7b457319c8e870a73ca251eacd721
+      check-time: false
+      effective-period: 60
+

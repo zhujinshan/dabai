@@ -26,7 +26,7 @@ public class UserPlateformInfo {
     private String plateform;
 
     /**
-     * 华保星身份标签：1：会员 2：代理人
+     * 华保星身份标签：0：会员 1：代理人
      */
     @Column(name = "identity_tag")
     private Byte identityTag;

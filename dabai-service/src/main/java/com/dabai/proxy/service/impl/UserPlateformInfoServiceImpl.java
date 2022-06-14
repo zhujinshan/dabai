@@ -64,4 +64,10 @@ public class UserPlateformInfoServiceImpl implements UserPlateformInfoService {
         example.createCriteria().andEqualTo("userId", userId);
         return userPlateformInfoMapper.selectOneByExample(example);
     }
+
+    @Override
+    public void updateUserPalteformInfo(UserPlateformInfo userPlateformInfo) {
+        Assert.notNull(userPlateformInfo, "userPlateformInfo");
+        userPlateformInfoMapper.updateByPrimaryKeySelective(userPlateformInfo);
+    }
 }

@@ -1,5 +1,6 @@
 package com.dabai.proxy.facade;
 
+import com.dabai.proxy.req.UserPlateformReq;
 import com.dabai.proxy.resp.UserInfoResp;
 
 /**
@@ -23,4 +24,10 @@ public interface UserInfoFacade {
      * @return 全部信息
      */
     UserInfoResp getUserInfo(String openId);
+
+    /**
+     * 更新华保星会员身份信息
+     * @param userPlateformReq
+     */
+    void updateUserPlateformInfo(UserPlateformReq userPlateformReq);
 }

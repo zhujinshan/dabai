@@ -9,6 +9,7 @@ import com.dabai.proxy.httpclient.huanong.resp.MemberInfoResp;
 import com.dabai.proxy.po.UserInfo;
 import com.dabai.proxy.po.UserPlateformInfo;
 import com.dabai.proxy.po.WalletInfo;
+import com.dabai.proxy.req.UserPlateformReq;
 import com.dabai.proxy.resp.UserInfoResp;
 import com.dabai.proxy.service.UserInfoService;
 import com.dabai.proxy.service.UserPlateformInfoService;
@@ -98,11 +99,23 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
             userInfoResp.setIdentityTag(plateformInfo.getIdentityTag() != null ? plateformInfo.getIdentityTag().intValue() : 0);
         }
         WalletInfo walletInfo = walletInfoService.getWallet(userInfo.getId());
-        if (walletInfo != null){
+        if (walletInfo != null) {
             userInfoResp.setAvailableAmount(walletInfo.getAvailableAmount());
             userInfoResp.setCashedAmount(walletInfo.getCashedAmount());
             userInfoResp.setTotalAmount(walletInfo.getTotalAmount());
         }
         return userInfoResp;
+    }
+
+    @Override
+    public void updateUserPlateformInfo(UserPlateformReq userPlateformReq) {
+        UserPlateformInfo userPlateformInfo = userPlateformInfoService.getByHbxMemberNo(userPlateformReq.getCode());
+        Assert.notNull(userPlateformInfo, "华保星编码不存在");
+
+        userPlateformInfo.setCode(userPlateformReq.getCode());
+        userPlateformInfo.setIdentityTag(Byte.valueOf(userPlateformReq.getIdentityTag()));
+        userPlateformInfo.setOrganizationCode(userPlateformReq.getOrganizationCode());
+        userPlateformInfoService.updateUserPalteformInfo(userPlateformInfo);
+
     }
 }

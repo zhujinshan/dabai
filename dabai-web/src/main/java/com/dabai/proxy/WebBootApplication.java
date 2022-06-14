@@ -1,5 +1,6 @@
 package com.dabai.proxy;
 
+import com.dabai.proxy.encypt.annontation.EnableApiEncrypt;
 import com.dabai.proxy.httpclient.spring.EnableHttpClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +15,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @MapperScan(basePackages = "com.dabai.proxy.dao")
 @EnableHttpClient(basePackages = "com.dabai.proxy.httpclient")
 @EnableAspectJAutoProxy(exposeProxy = true, proxyTargetClass = true)
+@EnableApiEncrypt
 public class WebBootApplication {
 
     public static void main(String[] args) {
