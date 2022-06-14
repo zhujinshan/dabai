@@ -67,7 +67,8 @@ public class UserPlateformInfoServiceImpl implements UserPlateformInfoService {
 
     @Override
     public void updateUserPalteformInfo(UserPlateformInfo userPlateformInfo) {
-        Assert.notNull(userPlateformInfo, "userPlateformInfo");
+        Assert.notNull(userPlateformInfo, "userPlateformInfo is required");
+        userPlateformInfo.setUtime(new Date());
         userPlateformInfoMapper.updateByPrimaryKeySelective(userPlateformInfo);
     }
 }
