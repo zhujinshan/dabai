@@ -19,12 +19,15 @@ server:
   port: 443
   ssl: # ssl相关配置
     enabled: true
-    key-store: classpath:dabai-tech.nanquan.online.jks
-    key-store-password: x930u6vg48c3
+    key-store: classpath:dabai-tech.com.jks
+    key-store-password: dabai2022
+    #key-store: classpath:dabai-tech.nanquan.online.jks
+    #key-store-password: x930u6vg48c3
     key-store-type: JKS
 
 http-port: 80
-domain: https://dabai-tech.nanquan.online
+#domain: https://dabai-tech.nanquan.online
+domain: https://dabai-tech.com
 
 http:
   liness:
