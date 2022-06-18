@@ -55,6 +55,6 @@ api-encrypt:
   list:
     - appid: HBX
       appsecret: 4ad7b457319c8e870a73ca251eacd721
-      check-time: false
+      check-time: true
       effective-period: 60
 
