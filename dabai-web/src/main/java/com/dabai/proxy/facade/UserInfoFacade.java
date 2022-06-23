@@ -1,7 +1,10 @@
 package com.dabai.proxy.facade;
 
 import com.dabai.proxy.req.UserPlateformReq;
+import com.dabai.proxy.resp.MemberInfoExport;
 import com.dabai.proxy.resp.UserInfoResp;
+
+import java.util.List;
 
 /**
  * @author: jinshan.zhu
@@ -30,4 +33,10 @@ public interface UserInfoFacade {
      * @param userPlateformReq
      */
     void updateUserPlateformInfo(UserPlateformReq userPlateformReq);
+
+    /**
+     * 导出全部数据
+     * @return
+     */
+    List<MemberInfoExport> getAllUserInfo();
 }

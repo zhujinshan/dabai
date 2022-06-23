@@ -4,6 +4,7 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.alibaba.excel.EasyExcel;
 import com.dabai.proxy.cache.LocalCache;
 import com.dabai.proxy.config.UserSessionContext;
 import com.dabai.proxy.config.UserSessionInfo;
@@ -22,6 +23,7 @@ import com.dabai.proxy.httpclient.tencentcloud.TencentSmsClient;
 import com.dabai.proxy.po.UserInfo;
 import com.dabai.proxy.req.WxPhoneInfoReq;
 import com.dabai.proxy.req.WxUserInfoReq;
+import com.dabai.proxy.resp.MemberInfoExport;
 import com.dabai.proxy.resp.UserInfoResp;
 import com.dabai.proxy.service.UserInfoService;
 import io.swagger.annotations.Api;
@@ -40,6 +42,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -177,6 +182,18 @@ public class UserController {
         }
 
         return Result.success(result.getData());
+    }
+
+    @GetMapping(value = "/export/zwzzwx666")
+    public void export(HttpServletResponse response) {
+        response.addHeader("Content-Disposition", "attachment;filename=" + "member-" + System.currentTimeMillis() + ".xlsx");
+        response.setContentType("application/vnd.ms-excel;charset=gb2312");
+        try (ServletOutputStream outputStream = response.getOutputStream()) {
+            List<MemberInfoExport> memberInfoExports = userInfoFacade.getAllUserInfo();
+            EasyExcel.write(outputStream, MemberInfoExport.class).sheet("会员信息").doWrite(memberInfoExports);
+        } catch (Exception e) {
+            log.error("export error", e);
+        }
     }
 
 }
