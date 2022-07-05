@@ -6,6 +6,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.Base64;
 
 
 public class EncryptUtils {
@@ -89,4 +90,17 @@ public class EncryptUtils {
         }
         return result;
     }
+
+    public static void main(String[] args) throws Exception {
+        String ask = "eqeqAwdsE!@#ERRR";
+        String s = "{\"data\":[{\"assuredName\":\"刘鹏飞\",\"channelNo\":\",0000064\",\"elePolicyAddr\":\"https://hn-imgs.oss-cn-shanghai-finance-1-pub.aliyuncs.com/7bb445eaabe41ea164b0263e39d14dd6.pdf\",\"endDate\":\"2023-06-07\",\"ensureTime\":\"1\",\"ensureTimeUnit\":\"1\",\"insureName\":\"刘鹏飞\",\"insureNum\":1,\"orderId\":\"HL0026362022060719863634\",\"policyNo\":\"X0027263622900000404\",\"premium\":99.00,\"productCode\":\"SC1647402258605\",\"productName\":\"药健康（互联网版）\",\"startDate\":\"2022-06-08\",\"status\":\"1\"}],\"timeStamp\":\"2022-06-07 22:43:24\",\"uid\":\"e5c71d468f714b479c0559657ffe49b1\"}";
+
+        byte[] encrypt = encrypt(s, ask);
+
+        byte[] encode = Base64.getUrlEncoder().encode(encrypt);
+        String s1 = new String(encode, StandardCharsets.UTF_8);
+        System.out.println(s1);
+
+    }
+
 }

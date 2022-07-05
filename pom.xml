@@ -18,6 +18,7 @@
         <module>dabai-service</module>
         <module>dabai-web</module>
         <module>dabai-support</module>
+        <module>dabai-admin</module>
     </modules>
 
     <properties>

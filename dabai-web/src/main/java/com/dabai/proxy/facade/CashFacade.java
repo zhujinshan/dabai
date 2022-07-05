@@ -2,7 +2,6 @@ package com.dabai.proxy.facade;
 
 import com.dabai.proxy.config.result.Result;
 import com.dabai.proxy.req.CashInfoPageReq;
-import com.dabai.proxy.req.Paging;
 import com.dabai.proxy.req.UserCashSubmitReq;
 import com.dabai.proxy.req.UserSignReq;
 import com.dabai.proxy.resp.CashInfoPageResult;
