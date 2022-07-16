@@ -3,6 +3,8 @@ package com.dabai.proxy.service;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.dabai.proxy.po.UserInfo;
 
+import java.util.List;
+
 /**
  * @author: jinshan.zhu
  * @date: 2022/5/13 23:44
@@ -52,4 +54,7 @@ public interface UserInfoService {
      * @param mobile   手机号
      */
     long saveSignInfo(Long id, String bankName, String bankCard, String idCard, String name, String mobile);
+
+
+    List<UserInfo> getUsersPyMobiles(List<String> mobiles);
 }

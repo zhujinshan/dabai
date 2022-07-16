@@ -15,6 +15,7 @@ public enum WalletFlowTypeEnum {
     ADD(1, "收入"),
     WITHDRAWAL(2, "提现"),
     REFUND(3, "退款"),
+    MANUAL(4, "人工充值"),
     ;
     private final Integer code;
     private final String desc;

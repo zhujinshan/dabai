@@ -4,6 +4,7 @@ import com.dabai.proxy.dao.CashSnapshotMapper;
 import com.dabai.proxy.dao.WalletFlowMapper;
 import com.dabai.proxy.dao.WalletInfoMapper;
 import com.dabai.proxy.enums.CashStatusEnum;
+import com.dabai.proxy.enums.MannualChargeTypeEnum;
 import com.dabai.proxy.enums.WalletFlowTypeEnum;
 import com.dabai.proxy.lock.JdkLockFunction;
 import com.dabai.proxy.lock.LockObject;
@@ -290,5 +291,39 @@ public class WalletInfoServiceImpl implements WalletInfoService {
                 walletInfoMapper.updateByPrimaryKeySelective(walletInfo2);
             });
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void mannualCharge(Long userId, BigDecimal amount, MannualChargeTypeEnum chargeType) {
+        Assert.notNull(userId, "userId缺失");
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) == 0) {
+            return;
+        }
+
+        jdkLockFunction.execute(LockObject.of(LOCK_KEY, userId), () -> {
+            WalletInfo walletInfo = getWallet(userId);
+            if (Objects.nonNull(walletInfo)) {
+                WalletInfo walletInfo2 = new WalletInfo();
+                walletInfo2.setId(walletInfo.getId());
+                walletInfo2.setTotalAmount(walletInfo.getTotalAmount().add(amount));
+                walletInfo2.setAvailableAmount(walletInfo.getAvailableAmount().add(amount));
+                walletInfo2.setUtime(new Date());
+                walletInfoMapper.updateByPrimaryKeySelective(walletInfo2);
+
+
+                WalletFlow walletFlowNew = new WalletFlow();
+                walletFlowNew.setWalletId(walletInfo.getId());
+                walletFlowNew.setAmount(amount);
+                walletFlowNew.setFlowType(WalletFlowTypeEnum.MANUAL.getCode());
+                walletFlowNew.setCtime(new Date());
+                walletFlowNew.setUserId(userId);
+                walletFlowNew.setUtime(new Date());
+                if (chargeType != null) {
+                    walletFlowNew.setManualChargeType(chargeType.name());
+                }
+                walletFlowMapper.insertSelective(walletFlowNew);
+            }
+        });
     }
 }

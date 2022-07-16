@@ -32,7 +32,7 @@ public class WalletFlow {
     private BigDecimal amount;
 
     /**
-     * 类型：1：收入 2：提现 3: 退款
+     * 类型：1：收入 2：提现 3: 退款 4：人工充值
      */
     @Column(name = "flow_type")
     private Integer flowType;
@@ -52,6 +52,12 @@ public class WalletFlow {
     private Date ctime;
 
     private Date utime;
+
+    /**
+     * 人工充值类型：A 为展业费，B 为运营激励费，C 为基本法费
+     */
+    @Column(name = "manual_charge_type")
+    private String manualChargeType;
 
     /**
      * @return id
@@ -122,18 +128,18 @@ public class WalletFlow {
     }
 
     /**
-     * 获取类型：1：收入 2：提现 3: 退款
+     * 获取类型：1：收入 2：提现 3: 退款 4：人工充值
      *
-     * @return flow_type - 类型：1：收入 2：提现 3: 退款
+     * @return flow_type - 类型：1：收入 2：提现 3: 退款 4：人工充值
      */
     public Integer getFlowType() {
         return flowType;
     }
 
     /**
-     * 设置类型：1：收入 2：提现 3: 退款
+     * 设置类型：1：收入 2：提现 3: 退款 4：人工充值
      *
-     * @param flowType 类型：1：收入 2：提现 3: 退款
+     * @param flowType 类型：1：收入 2：提现 3: 退款 4：人工充值
      */
     public void setFlowType(Integer flowType) {
         this.flowType = flowType;
@@ -201,5 +207,23 @@ public class WalletFlow {
      */
     public void setUtime(Date utime) {
         this.utime = utime;
+    }
+
+    /**
+     * 获取人工充值类型：A 为展业费，B 为运营激励费，C 为基本法费
+     *
+     * @return manual_charge_type - 人工充值类型：A 为展业费，B 为运营激励费，C 为基本法费
+     */
+    public String getManualChargeType() {
+        return manualChargeType;
+    }
+
+    /**
+     * 设置人工充值类型：A 为展业费，B 为运营激励费，C 为基本法费
+     *
+     * @param manualChargeType 人工充值类型：A 为展业费，B 为运营激励费，C 为基本法费
+     */
+    public void setManualChargeType(String manualChargeType) {
+        this.manualChargeType = manualChargeType == null ? null : manualChargeType.trim();
     }
 }

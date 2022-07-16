@@ -1,8 +1,12 @@
 package com.dabai.proxy.config.security;
 
+import com.dabai.proxy.config.AdminUserSessionInfo;
 import com.dabai.proxy.config.result.Result;
 import com.dabai.proxy.config.result.ResultCode;
-import com.dabai.proxy.enums.UserRole;
+import com.dabai.proxy.dao.SysAdminMapper;
+import com.dabai.proxy.enums.SysAdminRole;
+import com.dabai.proxy.enums.SysAdminStatus;
+import com.dabai.proxy.po.SysAdmin;
 import com.dabai.proxy.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,6 +31,9 @@ public class UserSecurityInterceptor extends HandlerInterceptorAdapter {
 
     private static final String TOKEN_KEY = "access_token";
 
+    @Resource
+    private SysAdminMapper sysAdminMapper;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!(handler instanceof HandlerMethod)) {
@@ -35,7 +43,7 @@ public class UserSecurityInterceptor extends HandlerInterceptorAdapter {
         Method method = handlerMethod.getMethod();
         PathRole pathRole = method.getAnnotation(PathRole.class);
         boolean needLogin = false;
-        UserRole userRole = UserRole.NORMAL;
+        SysAdminRole userRole = SysAdminRole.NORMAL_USER;
         if (Objects.nonNull(pathRole)) {
             needLogin = pathRole.needLogin();
             userRole = pathRole.role();
@@ -57,16 +65,35 @@ public class UserSecurityInterceptor extends HandlerInterceptorAdapter {
         }
 
         // todo:checkToken 是否过期
-
-        // todo: check角色 是否匹配userRole
-        UserRole currentUserRole = UserRole.SUPER_ADMIN;
-        if(currentUserRole.getWeight() < userRole.getWeight()) {
-            unAuth(response);
+        String userId = JwtTools.getUserId(token);
+        AdminUserSessionInfo admin = getAdmin(Long.parseLong(userId));
+        if (Objects.isNull(admin)) {
+            unLogin(response);
             return false;
         }
 
+        SysAdminRole currentUserRole = admin.getRole();
+        if (Objects.isNull(currentUserRole) || currentUserRole.getWeight() < userRole.getWeight()) {
+            unAuth(response);
+            return false;
+        }
         return true;
     }
+
+    private AdminUserSessionInfo getAdmin(Long userId) {
+        SysAdmin sysAdmin = sysAdminMapper.selectByPrimaryKey(userId);
+        if (Objects.isNull(sysAdmin) || sysAdmin.getStatus().equals(SysAdminStatus.DISABLE.getCode())) {
+            return null;
+        }
+        AdminUserSessionInfo adminUserSessionInfo = new AdminUserSessionInfo();
+        adminUserSessionInfo.setUserId(sysAdmin.getId());
+        adminUserSessionInfo.setMobile(sysAdmin.getMobile());
+        adminUserSessionInfo.setRole(SysAdminRole.getRoleByCode(sysAdmin.getRole()));
+        adminUserSessionInfo.setOrganizationCode(sysAdmin.getOrganizationCode());
+        adminUserSessionInfo.setCharge(sysAdmin.getCanCharge() == 1);
+        return adminUserSessionInfo;
+    }
+
 
     private void unAuth(HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");

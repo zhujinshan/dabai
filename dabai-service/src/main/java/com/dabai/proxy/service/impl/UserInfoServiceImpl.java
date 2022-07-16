@@ -4,16 +4,19 @@ import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.dabai.proxy.dao.UserInfoMapper;
 import com.dabai.proxy.po.UserInfo;
 import com.dabai.proxy.service.UserInfoService;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -82,6 +85,16 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setIdCard(idCard);
         userInfo.setMobile(mobile);
         return userInfoMapper.updateByPrimaryKeySelective(userInfo);
+    }
+
+    @Override
+    public List<UserInfo> getUsersPyMobiles(List<String> mobiles) {
+        if (CollectionUtils.isEmpty(mobiles)) {
+            return Lists.newArrayList();
+        }
+        Example example = new Example(UserInfo.class);
+        example.createCriteria().andIn("mobile", mobiles);
+        return userInfoMapper.selectByExample(example);
     }
 
 

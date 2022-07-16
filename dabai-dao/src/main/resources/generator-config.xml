@@ -16,9 +16,9 @@
         </plugin>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://bj-cdb-867r0ta8.sql.tencentcdb.com:60697/dabai-test?tinyInt1isBit=false"
+                        connectionURL="jdbc:mysql://bj-cdb-3d8uhqoc.sql.tencentcdb.com:59846/dabai-test?tinyInt1isBit=false"
                         userId="root"
-                        password="nanquan2021">
+                        password="dabai2022">
         </jdbcConnection>
 
         <javaTypeResolver>
@@ -77,12 +77,7 @@
             <columnOverride column="sign_status" javaType="Integer"/>
         </table>-->
 
-        <!--<table tableName="wallet_flow" enableSelectByExample="false" enableDeleteByExample="false"
-               enableDeleteByPrimaryKey="false"
-               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="WalletFlow">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="flow_type" javaType="Integer"/>
-        </table>-->
+        <!---->
 
         <!--<table tableName="user_sign_info" enableSelectByExample="false" enableDeleteByExample="false"
                enableDeleteByPrimaryKey="false"
@@ -97,11 +92,19 @@
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>-->
 
-        <table tableName="product_info" enableSelectByExample="false" enableDeleteByExample="false"
+        <table tableName="sys_admin" enableSelectByExample="false" enableDeleteByExample="false"
                enableDeleteByPrimaryKey="false"
-               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="ProductInfo">
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="SysAdmin">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-            <columnOverride column="valid" javaType="Integer"/>
+            <columnOverride column="status" javaType="Integer"/>
+            <columnOverride column="role" javaType="Integer"/>
+            <columnOverride column="can_charge" javaType="Integer"/>
+        </table>
+        <table tableName="wallet_flow" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="WalletFlow">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="flow_type" javaType="Integer"/>
         </table>
 
     </context>

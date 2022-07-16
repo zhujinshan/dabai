@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dabai.proxy.dao.SysAdminMapper">
+  <resultMap id="BaseResultMap" type="com.dabai.proxy.po.SysAdmin">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="role" jdbcType="TINYINT" property="role" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="can_charge" jdbcType="TINYINT" property="canCharge" />
+    <result column="organization_code" jdbcType="VARCHAR" property="organizationCode" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+    <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, mobile, status, role, last_login_time, can_charge, organization_code, ctime, 
+    utime
+  </sql>
+</mapper>

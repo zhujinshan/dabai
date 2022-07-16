@@ -1,6 +1,6 @@
 package com.dabai.proxy.config.security;
 
-import com.dabai.proxy.enums.UserRole;
+import com.dabai.proxy.enums.SysAdminRole;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Documented
 public @interface PathRole {
 
-    UserRole role() default UserRole.NORMAL;
+    SysAdminRole role() default SysAdminRole.NORMAL_USER;
 
     boolean needLogin() default true;
 }

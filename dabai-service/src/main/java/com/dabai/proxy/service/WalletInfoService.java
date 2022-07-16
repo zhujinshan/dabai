@@ -1,5 +1,6 @@
 package com.dabai.proxy.service;
 
+import com.dabai.proxy.enums.MannualChargeTypeEnum;
 import com.dabai.proxy.po.CashSnapshot;
 import com.dabai.proxy.po.WalletInfo;
 
@@ -59,4 +60,6 @@ public interface WalletInfoService {
      * @param cashSnapshot
      */
     void cashFailed(Long userId, CashSnapshot cashSnapshot);
+
+    void mannualCharge(Long userId, BigDecimal amount, MannualChargeTypeEnum chargeType);
 }

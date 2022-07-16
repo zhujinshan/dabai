@@ -14,11 +14,13 @@
     <result column="cash_request_no" jdbcType="VARCHAR" property="cashRequestNo" />
     <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
     <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+    <result column="manual_charge_type" jdbcType="VARCHAR" property="manualChargeType" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
-    id, user_id, wallet_id, amount, flow_type, policy_no, cash_request_no, ctime, utime
+    id, user_id, wallet_id, amount, flow_type, policy_no, cash_request_no, ctime, utime, 
+    manual_charge_type
   </sql>
 </mapper>
