@@ -13,11 +13,12 @@
     <result column="organization_code" jdbcType="VARCHAR" property="organizationCode" />
     <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
     <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+    <result column="original_identity_tag" jdbcType="TINYINT" property="originalIdentityTag" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
-    id, user_id, code, plateform, identity_tag, organization_code, ctime, utime
+    id, user_id, code, plateform, identity_tag, organization_code, ctime, utime, original_identity_tag
   </sql>
 </mapper>

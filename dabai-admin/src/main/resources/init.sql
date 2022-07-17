@@ -12,3 +12,20 @@ CREATE TABLE IF NOT EXISTS `sys_admin`
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_mobile` (`mobile`) USING BTREE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='后台用户';
+
+
+CREATE TABLE `user_tag_change` (
+                                   `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+                                   `user_id` bigint NOT NULL,
+                                   `original_identity_tag` tinyint(1) NOT NULL COMMENT '原身份标签',
+                                   `current_identity_tag` tinyint(1) NOT NULL COMMENT '当前身份标签',
+                                   `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                   `utime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                   PRIMARY KEY (`id`),
+                                   UNIQUE KEY `idx_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='会员身份标签变更';
+
+
+
+ALTER TABLE `user_plateform_info` ADD COLUMN `original_identity_tag` tinyint NULL COMMENT '首次身份标签';
+

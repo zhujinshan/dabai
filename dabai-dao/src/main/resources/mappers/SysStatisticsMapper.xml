@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dabai.proxy.dao.SysStatisticsMapper">
+
+    <select id="policyMemeberCount" resultType="java.lang.Long">
+        select count(distinct p.user_id)
+        from policy_info p
+        LEFT JOIN user_plateform_info a ON p.user_id = a.user_id
+        WHERE p.policy_status = 1
+        <if test="organizationCode != null and organizationCode != ''">
+            and a.organization_code = #{organizationCode}
+        </if>
+        <if test="startTime != null and endTime != null">
+            and p.ctime BETWEEN #{startTime} AND #{endTime}
+        </if>
+    </select>
+    <select id="policyAmount" resultType="java.math.BigDecimal">
+        select sum(p.premium)
+        from policy_info p
+        LEFT JOIN user_plateform_info a ON p.user_id = a.user_id
+        WHERE p.policy_status = 1
+        <if test="organizationCode != null and organizationCode != ''">
+            and a.organization_code = #{organizationCode}
+        </if>
+        <if test="startTime != null and endTime != null">
+            and p.ctime BETWEEN #{startTime} AND #{endTime}
+        </if>
+    </select>
+    <select id="cashMemberAmount" resultType="java.lang.Long">
+        SELECT COUNT(DISTINCT f.user_id)
+        FROM wallet_flow f
+        LEFT JOIN user_plateform_info a ON f.user_id = a.user_id
+        WHERE f.flow_type = 2
+        <if test="organizationCode != null and organizationCode != ''">
+            and a.organization_code = #{organizationCode}
+        </if>
+        <if test="startTime != null and endTime != null">
+            and f.ctime BETWEEN #{startTime} AND #{endTime}
+        </if>
+    </select>
+    <select id="cashAmount" resultType="java.math.BigDecimal">
+        SELECT SUM(f.amount)
+        FROM wallet_flow f
+        LEFT JOIN user_plateform_info a ON f.user_id = a.user_id
+        WHERE f.flow_type = 2
+        <if test="organizationCode != null and organizationCode != ''">
+            and a.organization_code = #{organizationCode}
+        </if>
+        <if test="startTime != null and endTime != null">
+            and f.ctime BETWEEN #{startTime} AND #{endTime}
+        </if>
+    </select>
+
+    <select id="agentChangeAmount" resultType="java.lang.Long">
+        SELECT COUNT(p.user_id)
+        FROM user_tag_change p
+        LEFT JOIN user_plateform_info a ON p.user_id = a.user_id
+        WHERE p.current_identity_tag = 1
+        <if test="organizationCode != null and organizationCode != ''">
+            and a.organization_code = #{organizationCode}
+        </if>
+        <if test="startTime != null and endTime != null">
+            and p.ctime BETWEEN #{startTime} AND #{endTime}
+        </if>
+    </select>
+</mapper>

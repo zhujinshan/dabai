@@ -26,7 +26,7 @@ public class UserPlateformInfo {
     private String plateform;
 
     /**
-     * 华保星身份标签：0：会员 1：代理人
+     * 华保星身份标签：1：会员 2：代理人
      */
     @Column(name = "identity_tag")
     private Byte identityTag;
@@ -40,6 +40,12 @@ public class UserPlateformInfo {
     private Date ctime;
 
     private Date utime;
+
+    /**
+     * 首次身份标签
+     */
+    @Column(name = "original_identity_tag")
+    private Byte originalIdentityTag;
 
     /**
      * @return id
@@ -171,5 +177,23 @@ public class UserPlateformInfo {
      */
     public void setUtime(Date utime) {
         this.utime = utime;
+    }
+
+    /**
+     * 获取首次身份标签
+     *
+     * @return original_identity_tag - 首次身份标签
+     */
+    public Byte getOriginalIdentityTag() {
+        return originalIdentityTag;
+    }
+
+    /**
+     * 设置首次身份标签
+     *
+     * @param originalIdentityTag 首次身份标签
+     */
+    public void setOriginalIdentityTag(Byte originalIdentityTag) {
+        this.originalIdentityTag = originalIdentityTag;
     }
 }

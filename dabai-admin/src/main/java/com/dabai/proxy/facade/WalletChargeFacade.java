@@ -85,6 +85,7 @@ public class WalletChargeFacade {
             }
         }).sheet().doRead();
         Assert.notNull(batchChargeReq, "请求入参不能为空");
+        Assert.isTrue(chargeExcelModels.size() <= 200, "单次最多充值200个会员");
         List<String> mobiles = chargeExcelModels.stream().filter(e -> StringUtils.isEmpty(e.getCode()) && StringUtils.isNotEmpty(e.getPhone()))
                 .map(ChargeExcelModel::getPhone).collect(Collectors.toList());
         List<UserInfo> usersPyMobiles = userInfoService.getUsersPyMobiles(mobiles);
