@@ -46,10 +46,10 @@ public class SwaggerConfig {
      */
     public ApiInfo apiInfo() {
 
-        Contact contact = new Contact("wenzheyyds", "http://dabai.com", "wenzhe@dabai.com");
+        Contact contact = new Contact("xxxx", "http://dabai.com", "xxx@dabai.com");
 
         return new ApiInfoBuilder()
-                .title("dabai-web") //网站标题
+                .title("dabai-admin") //网站标题
                 .description("dabai admin RESTful APIs") //网站描述
                 .version("v1.0") //版本
                 .contact(contact) //联系人
