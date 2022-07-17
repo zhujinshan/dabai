@@ -36,7 +36,7 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/statistics")
-@Api(tags = "会员充值")
+@Api(tags = "统计概览")
 @Slf4j
 public class StatisticsController {
 
