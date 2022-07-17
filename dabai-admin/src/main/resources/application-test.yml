@@ -51,6 +51,10 @@ tencentcloud:
   notifyTemplateId: 1066246
   sdkAppId: 1400685449
   signName: 众信健康
+  cos:
+    secretId: AKIDBD0Zu0rTqyrUt64mFTRAeuvhEVXKsCI8
+    secretKey: d0B6mCNJ0RdbLq79wUotkLhohMmxud7N
+    bucket: huiyuan-1312091486
 
 wx:
   miniapp:
