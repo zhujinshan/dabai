@@ -10,6 +10,7 @@ import com.dabai.proxy.facade.WalletChargeFacade;
 import com.dabai.proxy.req.BatchChargeReq;
 import com.dabai.proxy.req.ChargeExcelModel;
 import com.dabai.proxy.req.ChargeReq;
+import com.dabai.proxy.resp.BatchChargeResp;
 import com.dabai.proxy.utils.JsonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,10 +50,10 @@ public class ChargeController {
         return Result.success(walletChargeFacade.charge(chargeReq));
     }
 
-    @PostMapping(value = "/batchCharge")
-    @ApiOperation(value = "批量会员充值", httpMethod = "POST")
+    @PostMapping(value = "/batchCharge1")
+    @ApiOperation(value = "批量会员充值-方式1", httpMethod = "POST")
     @PathRole(role = SysAdminRole.SUPPER_ADMIN)
-    public void batchCharge(@ApiParam(value = "充值入参", required = true) @RequestBody BatchChargeReq batchChargeReq,
+    public void batchCharge1(@ApiParam(value = "充值入参", required = true) @RequestBody BatchChargeReq batchChargeReq,
                                        HttpServletResponse response) throws IOException {
         AdminUserSessionInfo adminUserSessionInfo = AdminUserSessionContext.getAdminUserSessionInfo();
         Assert.isTrue(adminUserSessionInfo != null && adminUserSessionInfo.getCharge(), "无权限操作充值功能");
@@ -70,5 +71,19 @@ public class ChargeController {
             Result<Boolean> result = Result.genResult(-1, "下载失败：" + e.getMessage(), null);
             response.getWriter().println(JsonUtils.toJson(result));
         }
+    }
+
+    @PostMapping(value = "/batchCharge")
+    @ApiOperation(value = "批量会员充值", httpMethod = "POST")
+    @PathRole(role = SysAdminRole.SUPPER_ADMIN)
+    public Result<BatchChargeResp> batchCharge(@ApiParam(value = "充值入参", required = true) @RequestBody BatchChargeReq batchChargeReq,
+                                               HttpServletResponse response) throws IOException {
+        AdminUserSessionInfo adminUserSessionInfo = AdminUserSessionContext.getAdminUserSessionInfo();
+        Assert.isTrue(adminUserSessionInfo != null && adminUserSessionInfo.getCharge(), "无权限操作充值功能");
+        List<ChargeExcelModel> chargeExcelModels = walletChargeFacade.batchCharge(batchChargeReq.getChargeList());
+
+        BatchChargeResp resp = new BatchChargeResp();
+        resp.setChargeList(chargeExcelModels);
+        return Result.success(resp);
     }
 }

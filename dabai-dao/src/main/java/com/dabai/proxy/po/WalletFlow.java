@@ -59,6 +59,8 @@ public class WalletFlow {
     @Column(name = "manual_charge_type")
     private String manualChargeType;
 
+    private String cname;
+
     /**
      * @return id
      */
@@ -225,5 +227,19 @@ public class WalletFlow {
      */
     public void setManualChargeType(String manualChargeType) {
         this.manualChargeType = manualChargeType == null ? null : manualChargeType.trim();
+    }
+
+    /**
+     * @return cname
+     */
+    public String getCname() {
+        return cname;
+    }
+
+    /**
+     * @param cname
+     */
+    public void setCname(String cname) {
+        this.cname = cname == null ? null : cname.trim();
     }
 }

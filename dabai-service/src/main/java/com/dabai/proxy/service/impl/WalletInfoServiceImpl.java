@@ -1,5 +1,7 @@
 package com.dabai.proxy.service.impl;
 
+import com.dabai.proxy.config.AdminUserSessionContext;
+import com.dabai.proxy.config.AdminUserSessionInfo;
 import com.dabai.proxy.dao.CashSnapshotMapper;
 import com.dabai.proxy.dao.WalletFlowMapper;
 import com.dabai.proxy.dao.WalletInfoMapper;
@@ -300,7 +302,7 @@ public class WalletInfoServiceImpl implements WalletInfoService {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) == 0) {
             return;
         }
-
+        AdminUserSessionInfo adminUserSessionInfo = AdminUserSessionContext.getAdminUserSessionInfo();
         jdkLockFunction.execute(LockObject.of(LOCK_KEY, userId), () -> {
             WalletInfo walletInfo = getWallet(userId);
             if (Objects.nonNull(walletInfo)) {
@@ -319,6 +321,9 @@ public class WalletInfoServiceImpl implements WalletInfoService {
                 walletFlowNew.setCtime(new Date());
                 walletFlowNew.setUserId(userId);
                 walletFlowNew.setUtime(new Date());
+                if (Objects.nonNull(adminUserSessionInfo)) {
+                    walletFlowNew.setCname(adminUserSessionInfo.getMobile());
+                }
                 if (chargeType != null) {
                     walletFlowNew.setManualChargeType(chargeType.name());
                 }

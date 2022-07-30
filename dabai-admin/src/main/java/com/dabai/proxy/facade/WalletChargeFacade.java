@@ -112,4 +112,34 @@ public class WalletChargeFacade {
         }
         return chargeExcelModels;
     }
+
+    public List<ChargeExcelModel> batchCharge(List<ChargeExcelModel> chargeExcelModels) {
+        Assert.notNull(chargeExcelModels, "请求入参不能为空");
+        Assert.isTrue(chargeExcelModels.size() <= 200, "单次最多充值200个会员");
+        List<String> mobiles = chargeExcelModels.stream().filter(e -> StringUtils.isEmpty(e.getCode()) && StringUtils.isNotEmpty(e.getPhone()))
+                .map(ChargeExcelModel::getPhone).collect(Collectors.toList());
+        List<UserInfo> usersPyMobiles = userInfoService.getUsersPyMobiles(mobiles);
+        Map<String, Long> mobileUserIdMap = usersPyMobiles.stream().collect(Collectors.toMap(UserInfo::getMobile, UserInfo::getId));
+        for (ChargeExcelModel chargeExcelModel : chargeExcelModels) {
+            try {
+                ChargeReq chargeReq = new ChargeReq();
+                chargeReq.setChargeType(chargeExcelModel.getChargeType());
+                chargeReq.setAmount(chargeExcelModel.getAmount());
+                if (StringUtils.isNotEmpty(chargeExcelModel.getCode())) {
+                    chargeReq.setCode(chargeExcelModel.getCode());
+                } else {
+                    String phone = chargeExcelModel.getPhone();
+                    if (StringUtils.isNotEmpty(phone) && mobileUserIdMap.containsKey(phone)) {
+                        chargeReq.setUserId(mobileUserIdMap.get(phone));
+                    }
+                }
+                charge(chargeReq);
+                chargeExcelModel.setResult("充值成功");
+            } catch (Exception e) {
+                log.error("充值异常，chargeExcelModel：{}", chargeExcelModel, e);
+                chargeExcelModel.setResult("充值失败：" + e.getMessage());
+            }
+        }
+        return chargeExcelModels;
+    }
 }

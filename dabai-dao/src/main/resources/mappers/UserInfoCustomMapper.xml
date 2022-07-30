@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dabai.proxy.dao.UserInfoCustomMapper">
+
+
+    <select id="queryUserInfo" resultType="com.dabai.proxy.po.UserInfoQueryResult">
+        SELECT a.id,
+               a.parent_user_id,
+               a.`name`,
+               a.id_card,
+               a.mobile,
+               a.bank_card,
+               b.`code`,
+               b.organization_code,
+               c.sign_status,
+               f.`code`                as parentCode,
+               e.`name`                as parentName,
+               e.mobile                as parentMobile,
+               a.ctime,
+               c.utime                 as signUtime,
+               d.original_identity_tag,
+               d.current_identity_tag,
+               d.utime                 as identityChangeTime,
+               b.original_identity_tag as registerIdentityTag
+        FROM user_info a
+                 LEFT JOIN user_plateform_info b ON a.id = b.user_id
+                 LEFT JOIN user_sign_info c ON a.id = c.user_id
+                 LEFT JOIN user_tag_change d ON a.id = d.user_id
+                 LEFT JOIN user_info e ON a.parent_user_id = e.id
+                 LEFT JOIN user_plateform_info f ON a.parent_user_id = f.user_id
+        WHERE 1 = 1
+        <if test="organizationCode != null and organizationCode != ''">
+            AND b.organization_code = #{organizationCode}
+        </if>
+        <if test="name != null and name != ''">
+            AND a.`name` = #{name}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            AND a.mobile = #{mobile}
+        </if>
+        <if test="code != null and code != ''">
+            AND b.`code` = #{code}
+        </if>
+        <if test="status != null and status == 0">
+            AND (a.id_card = '' OR c.sign_status != 1)
+        </if>
+        <if test="status != null and status == 1">
+            AND c.sign_status = 1
+        </if>
+        <if test="parentCode != null and parentCode != ''">
+            AND f.`code` = #{parentCode}
+        </if>
+        <if test="parentName != null and parentName != ''">
+            AND e.`name` = #{parentName}
+        </if>
+        <if test="parentMobile != null and parentMobile != ''">
+            AND e.mobile = #{parentMobile}
+        </if>
+        <if test="registerStartTime != null and redisterEndtime != null">
+            AND a.ctime BETWEEN #{registerStartTime} AND #{redisterEndtime}
+        </if>
+        <if test="idCard != null and idCard != ''">
+            AND a.id_card = #{idCard}
+        </if>
+        <if test="changeAgent != null and changeAgent == 1">
+            AND d.original_identity_tag = 0 AND d.current_identity_tag = 1 AND b.identity_tag = 1
+            <if test="changeAgentStartTime != null and changeAgentStartTime != null">
+                AND d.utime BETWEEN #{changeAgentStartTime} AND #{changeAgentStartTime}
+            </if>
+        </if>
+        <if test="changeAgent != null and changeAgent == 0">
+            AND (b.identity_tag = b.original_identity_tag OR b.identity_tag = 0)
+        </if>
+
+        <if test="originalIdentityTag != null">
+            AND b.original_identity_tag = #{originalIdentityTag}
+        </if>
+        <if test="realNameStartTime != null and realNameEndTime != null">
+            AND c.sign_status = 1
+            AND c.ctime BETWEEN #{registerStartTime} AND #{redisterEndtime}
+        </if>
+    </select>
+</mapper>
