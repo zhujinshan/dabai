@@ -5,29 +5,29 @@
 
     <select id="queryUserInfo" resultType="com.dabai.proxy.po.UserInfoQueryResult">
         SELECT a.id,
-               a.parent_user_id,
-               a.`name`,
-               a.id_card,
-               a.mobile,
-               a.bank_card,
-               b.`code`,
-               b.organization_code,
-               c.sign_status,
-               f.`code`                as parentCode,
-               e.`name`                as parentName,
-               e.mobile                as parentMobile,
-               a.ctime,
-               c.utime                 as signUtime,
-               d.original_identity_tag,
-               d.current_identity_tag,
-               d.utime                 as identityChangeTime,
-               b.original_identity_tag as registerIdentityTag
+        a.parent_user_id,
+        a.`name`,
+        a.id_card,
+        a.mobile,
+        a.bank_card,
+        b.`code`,
+        b.organization_code,
+        c.sign_status,
+        f.`code` as parentCode,
+        e.`name` as parentName,
+        e.mobile as parentMobile,
+        a.ctime,
+        c.utime as signUtime,
+        d.original_identity_tag,
+        d.current_identity_tag,
+        d.utime as identityChangeTime,
+        b.original_identity_tag as registerIdentityTag
         FROM user_info a
-                 LEFT JOIN user_plateform_info b ON a.id = b.user_id
-                 LEFT JOIN user_sign_info c ON a.id = c.user_id
-                 LEFT JOIN user_tag_change d ON a.id = d.user_id
-                 LEFT JOIN user_info e ON a.parent_user_id = e.id
-                 LEFT JOIN user_plateform_info f ON a.parent_user_id = f.user_id
+        LEFT JOIN user_plateform_info b ON a.id = b.user_id
+        LEFT JOIN user_sign_info c ON a.id = c.user_id
+        LEFT JOIN user_tag_change d ON a.id = d.user_id
+        LEFT JOIN user_info e ON a.parent_user_id = e.id
+        LEFT JOIN user_plateform_info f ON a.parent_user_id = f.user_id
         WHERE 1 = 1
         <if test="organizationCode != null and organizationCode != ''">
             AND b.organization_code = #{organizationCode}
@@ -77,7 +77,8 @@
         </if>
         <if test="realNameStartTime != null and realNameEndTime != null">
             AND c.sign_status = 1
-            AND c.ctime BETWEEN #{registerStartTime} AND #{redisterEndtime}
+            AND c.ctime BETWEEN #{realNameStartTime} AND #{realNameEndTime}
         </if>
+        order by a.id desc
     </select>
 </mapper>
