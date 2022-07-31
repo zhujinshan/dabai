@@ -19,7 +19,7 @@ public class JwtTools {
     public static String generateToken(Long userId) {
         Algorithm algorithm = Algorithm.HMAC256(ADMIN_JWT);
         return JWT.create().withAudience(HMAC_KEY)
-                .withClaim("userId", userId)
+                .withClaim("userId", userId.toString())
                 .sign(algorithm);
     }
 
@@ -39,6 +39,11 @@ public class JwtTools {
             log.info("token check failed. token:{}", token);
             return false;
         }
+    }
 
+    public static void main(String[] args) {
+        System.out.println(generateToken(1L));
+        System.out.println(getUserId("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJEYUJhaUFkbWluV2l0aEpXVCIsInVzZXJJZCI6IjEifQ.trWIC7LCIT4KAv_GvjBbzvBla9qDFg-NTzPPoAbZG4M"));
+        System.out.println(checkToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJEYUJhaUFkbWluV2l0aEpXVCIsInVzZXJJZCI6IjEifQ.trWIC7LCIT4KAv_GvjBbzvBla9qDFg-NTzPPoAbZG4M"));
     }
 }

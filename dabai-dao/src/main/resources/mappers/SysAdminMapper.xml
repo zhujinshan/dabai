@@ -14,12 +14,14 @@
     <result column="organization_code" jdbcType="VARCHAR" property="organizationCode" />
     <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
     <result column="utime" jdbcType="TIMESTAMP" property="utime" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
     id, mobile, status, role, last_login_time, can_charge, organization_code, ctime, 
-    utime
+    utime, create_user_id, update_user_id
   </sql>
 </mapper>

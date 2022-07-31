@@ -1,6 +1,9 @@
 package com.dabai.proxy.service;
 
 import com.dabai.proxy.po.SysAdmin;
+import com.dabai.proxy.query.SysAdminQuery;
+
+import java.util.List;
 
 /**
  * @author: jinshan.zhu
@@ -8,5 +11,13 @@ import com.dabai.proxy.po.SysAdmin;
  */
 public interface SysAdminService {
 
+    SysAdmin getById(Long userId);
+
     SysAdmin getByMobile(String mobile);
+
+    int add(SysAdmin sysAdmin);
+
+    void disabled(Long userId, Long updateUser);
+
+    List<SysAdmin> query(SysAdminQuery sysAdminQuery);
 }

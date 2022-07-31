@@ -1,7 +1,11 @@
 package com.dabai.proxy.po;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "sys_admin")
 public class SysAdmin {
@@ -51,6 +55,18 @@ public class SysAdmin {
      * 更新时间
      */
     private Date utime;
+
+    /**
+     * 创建人
+     */
+    @Column(name = "create_user_id")
+    private Long createUserId;
+
+    /**
+     * 更新人
+     */
+    @Column(name = "update_user_id")
+    private Long updateUserId;
 
     /**
      * @return id
@@ -208,5 +224,41 @@ public class SysAdmin {
      */
     public void setUtime(Date utime) {
         this.utime = utime;
+    }
+
+    /**
+     * 获取创建人
+     *
+     * @return create_user_id - 创建人
+     */
+    public Long getCreateUserId() {
+        return createUserId;
+    }
+
+    /**
+     * 设置创建人
+     *
+     * @param createUserId 创建人
+     */
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    /**
+     * 获取更新人
+     *
+     * @return update_user_id - 更新人
+     */
+    public Long getUpdateUserId() {
+        return updateUserId;
+    }
+
+    /**
+     * 设置更新人
+     *
+     * @param updateUserId 更新人
+     */
+    public void setUpdateUserId(Long updateUserId) {
+        this.updateUserId = updateUserId;
     }
 }
