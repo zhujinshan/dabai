@@ -59,7 +59,7 @@ public class WalletChargeFacade {
         Long userId = chargeReq.getUserId();
         if (userId == null) {
             UserPlateformInfo userPlateformInfo = userPlateformInfoService.getByHbxMemberNo(chargeReq.getCode());
-            Assert.notNull(chargeType, "未找到会员信息");
+            Assert.notNull(userPlateformInfo, "未找到会员信息");
             userId = userPlateformInfo.getUserId();
         }
         walletInfoService.mannualCharge(userId, chargeReq.getAmount(), chargeType);
