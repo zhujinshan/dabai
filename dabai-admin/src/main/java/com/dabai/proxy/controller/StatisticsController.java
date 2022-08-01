@@ -52,7 +52,10 @@ public class StatisticsController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<StatisticsRegisterResp> register() {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = userSession.getOrganizationCode();
+        String organizationCode = null;
+        if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
+            organizationCode = userSession.getOrganizationCode();
+        }
 
         Example example = new Example(UserPlateformInfo.class);
         if(StringUtils.isNotEmpty(organizationCode)) {
@@ -89,7 +92,10 @@ public class StatisticsController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<StatisticsRealNameResp> realName() {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = userSession.getOrganizationCode();
+        String organizationCode = null;
+        if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
+            organizationCode = userSession.getOrganizationCode();
+        }
 
         Pair<Date, Date> yesterDay = getDate(1);
         Pair<Date, Date> monthDay = getDate(31);
@@ -110,7 +116,10 @@ public class StatisticsController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<StatisticsPolicyResp> policy() {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = userSession.getOrganizationCode();
+        String organizationCode = null;
+        if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
+            organizationCode = userSession.getOrganizationCode();
+        }
 
         Pair<Date, Date> yesterDay = getDate(1);
         Pair<Date, Date> monthDay = getDate(31);
@@ -137,7 +146,10 @@ public class StatisticsController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<StatisticsCashResp> cash() {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = userSession.getOrganizationCode();
+        String organizationCode = null;
+        if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
+            organizationCode = userSession.getOrganizationCode();
+        }
 
         Pair<Date, Date> yesterDay = getDate(1);
         Pair<Date, Date> monthDay = getDate(31);
@@ -164,7 +176,10 @@ public class StatisticsController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<StatisticsAgentChangeResp> agentChange() {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = userSession.getOrganizationCode();
+        String organizationCode = null;
+        if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
+            organizationCode = userSession.getOrganizationCode();
+        }
 
         Pair<Date, Date> yesterDay = getDate(1);
         Pair<Date, Date> monthDay = getDate(31);

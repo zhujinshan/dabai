@@ -9,7 +9,6 @@ import com.dabai.proxy.enums.SysAdminRole;
 import com.dabai.proxy.enums.SysAdminStatus;
 import com.dabai.proxy.po.SysAdmin;
 import com.dabai.proxy.utils.JsonUtils;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.EnvironmentAware;
@@ -23,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -61,10 +59,10 @@ public class UserSecurityInterceptor extends HandlerInterceptorAdapter implement
         }
 
         String token = request.getHeader(TOKEN_KEY);
-        List<String> activeProfiles = Lists.newArrayList(environment.getActiveProfiles());
+        /*List<String> activeProfiles = Lists.newArrayList(environment.getActiveProfiles());
         if (StringUtils.isEmpty(token) && activeProfiles.contains("test")) {
             token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJEYUJhaUFkbWluV2l0aEpXVCIsInVzZXJJZCI6IjEifQ.trWIC7LCIT4KAv_GvjBbzvBla9qDFg-NTzPPoAbZG4M";
-        }
+        }*/
 
         if (StringUtils.isEmpty(token)) {
             unLogin(response);
