@@ -151,6 +151,7 @@ public class SysAdminController {
             SysAdminDTO sysAdminDTO = new SysAdminDTO();
             BeanUtils.copyProperties(e, sysAdminDTO);
             sysAdminDTO.setCharge(e.getCanCharge() == 1);
+            sysAdminDTO.setUserId(e.getId());
             return sysAdminDTO;
         }).collect(Collectors.toList());
         sysAdminPageResp.setList(sysAdmins);
