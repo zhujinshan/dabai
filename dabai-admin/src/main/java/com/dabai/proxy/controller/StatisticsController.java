@@ -11,6 +11,7 @@ import com.dabai.proxy.po.UserPlateformInfo;
 import com.dabai.proxy.resp.StatisticsAgentChangeResp;
 import com.dabai.proxy.resp.StatisticsCashResp;
 import com.dabai.proxy.resp.StatisticsPolicyResp;
+import com.dabai.proxy.resp.StatisticsRealNameResp;
 import com.dabai.proxy.resp.StatisticsRegisterResp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -80,6 +81,27 @@ public class StatisticsController {
         resp.setTotalAmount(total);
         resp.setYesterdayAmount(yesterDayCount);
         resp.setMonthAmount(monthCount);
+        return Result.success(resp);
+    }
+
+    @GetMapping(value = "/realName")
+    @ApiOperation(value = "实名认证概览", httpMethod = "GET")
+    @PathRole(role = SysAdminRole.NORMAL_USER)
+    public Result<StatisticsRealNameResp> realName() {
+        AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
+        String organizationCode = userSession.getOrganizationCode();
+
+        Pair<Date, Date> yesterDay = getDate(1);
+        Pair<Date, Date> monthDay = getDate(31);
+
+        long totalCount = sysStatisticsMapper.realName(organizationCode, null, null);
+        long yesterCount = sysStatisticsMapper.realName(organizationCode, yesterDay.getLeft(), yesterDay.getRight());
+        long monthAmount = sysStatisticsMapper.realName(organizationCode, monthDay.getLeft(), monthDay.getRight());
+
+        StatisticsRealNameResp resp = new StatisticsRealNameResp();
+        resp.setTotalAmount(totalCount);
+        resp.setYesterdayAmount(yesterCount);
+        resp.setMonthAmount(monthAmount);
         return Result.success(resp);
     }
 

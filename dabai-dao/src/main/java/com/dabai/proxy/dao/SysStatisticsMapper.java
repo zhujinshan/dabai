@@ -11,6 +11,8 @@ import java.util.Date;
  */
 public interface SysStatisticsMapper {
 
+    long realName(@Param("organizationCode") String organizationCode, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
     long policyMemeberCount(@Param("organizationCode") String organizationCode, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
     BigDecimal policyAmount(@Param("organizationCode") String organizationCode, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
