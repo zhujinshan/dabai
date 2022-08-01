@@ -29,7 +29,7 @@ public class MemberInfoQuery {
 
     private Date registerStartTime;
 
-    private Date redisterEndtime;
+    private Date redisterEndTime;
 
     private String idCard;
 
@@ -37,7 +37,7 @@ public class MemberInfoQuery {
 
     private Date changeAgentStartTime;
 
-    private Date changeAgentEndtime;
+    private Date changeAgentEndTime;
 
     private Integer originalIdentityTag;
 

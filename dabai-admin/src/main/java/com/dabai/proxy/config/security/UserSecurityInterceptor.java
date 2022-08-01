@@ -1,5 +1,6 @@
 package com.dabai.proxy.config.security;
 
+import com.dabai.proxy.config.AdminUserSessionContext;
 import com.dabai.proxy.config.AdminUserSessionInfo;
 import com.dabai.proxy.config.result.Result;
 import com.dabai.proxy.config.result.ResultCode;
@@ -88,7 +89,14 @@ public class UserSecurityInterceptor extends HandlerInterceptorAdapter implement
             unAuth(response);
             return false;
         }
+        log.info("current login admin:{}", admin);
+        AdminUserSessionContext.setAdminUserSessionInfo(admin);
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        AdminUserSessionContext.clear();
     }
 
     private AdminUserSessionInfo getAdmin(Long userId) {

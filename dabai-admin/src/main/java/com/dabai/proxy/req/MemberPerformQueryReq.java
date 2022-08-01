@@ -33,7 +33,7 @@ public class MemberPerformQueryReq {
     private Date startTime;
 
     @ApiModelProperty(value = "时间范围-结束时间")
-    private Date endtime;
+    private Date endTime;
 
     @ApiModelProperty(value = "是否转化代理人 0:否 1：是")
     private Integer changeAgent;

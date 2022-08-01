@@ -95,7 +95,7 @@ public class MemberInfoFacade {
     public MemberPerformQueryResp performQuery(MemberPerformQueryReq memberPerformQueryReq) {
         MemberPerformQueryResp resp = new MemberPerformQueryResp();
         if (Objects.isNull(memberPerformQueryReq) || Objects.isNull(memberPerformQueryReq.getStartTime()) ||
-                Objects.isNull(memberPerformQueryReq.getEndtime())) {
+                Objects.isNull(memberPerformQueryReq.getEndTime())) {
             resp.setTotal(0L);
             return resp;
         }

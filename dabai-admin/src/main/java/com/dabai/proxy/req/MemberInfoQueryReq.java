@@ -42,7 +42,7 @@ public class MemberInfoQueryReq {
     private Date registerStartTime;
 
     @ApiModelProperty(value = "注册结束时间")
-    private Date redisterEndtime;
+    private Date redisterEndTime;
 
     @ApiModelProperty(value = "会员身份证")
     private String idCard;
@@ -54,7 +54,7 @@ public class MemberInfoQueryReq {
     private Date changeAgentStartTime;
 
     @ApiModelProperty(value = "转化代理人开始时间")
-    private Date changeAgentEndtime;
+    private Date changeAgentEndTime;
 
     @ApiModelProperty(value = "原注册身份 0 会员 1代理人")
     private Integer originalIdentityTag;

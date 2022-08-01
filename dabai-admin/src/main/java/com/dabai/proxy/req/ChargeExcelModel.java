@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 @ContentRowHeight(20)
 @HeadRowHeight(25)
 @ColumnWidth(28)
-@ApiModel(value = "批量会员充值")
+@ApiModel(value = "批量会员对象")
 public class ChargeExcelModel {
 
     @ExcelProperty("会员编码")
