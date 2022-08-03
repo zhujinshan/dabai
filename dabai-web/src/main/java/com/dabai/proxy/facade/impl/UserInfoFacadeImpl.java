@@ -3,6 +3,7 @@ package com.dabai.proxy.facade.impl;
 import com.dabai.proxy.dao.PolicyInfoMapper;
 import com.dabai.proxy.dao.UserInfoMapper;
 import com.dabai.proxy.dao.UserPlateformInfoMapper;
+import com.dabai.proxy.dao.UserTagChangeMapper;
 import com.dabai.proxy.dao.WalletInfoMapper;
 import com.dabai.proxy.enums.PolicyStatus;
 import com.dabai.proxy.exception.HttpClientBusinessException;
@@ -14,6 +15,7 @@ import com.dabai.proxy.httpclient.huanong.resp.MemberInfoResp;
 import com.dabai.proxy.po.PolicyInfo;
 import com.dabai.proxy.po.UserInfo;
 import com.dabai.proxy.po.UserPlateformInfo;
+import com.dabai.proxy.po.UserTagChange;
 import com.dabai.proxy.po.WalletInfo;
 import com.dabai.proxy.req.UserPlateformReq;
 import com.dabai.proxy.resp.MemberInfoExport;
@@ -29,10 +31,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Assert;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -54,7 +58,8 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
     private UserPlateformInfoService userPlateformInfoService;
     @Autowired
     private WalletInfoService walletInfoService;
-
+    @Resource
+    private UserTagChangeMapper userTagChangeMapper;
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
@@ -122,6 +127,7 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
     }
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public void updateUserPlateformInfo(UserPlateformReq userPlateformReq) {
         UserPlateformInfo userPlateformInfo = userPlateformInfoService.getByHbxMemberNo(userPlateformReq.getCode());
         Assert.notNull(userPlateformInfo, "华保星编码不存在");
@@ -131,6 +137,27 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
         userPlateformInfo.setOrganizationCode(userPlateformReq.getOrganizationCode());
         userPlateformInfoService.updateUserPalteformInfo(userPlateformInfo);
 
+        Example example = new Example(UserTagChange.class);
+        example.createCriteria().andEqualTo("userId", userPlateformInfo.getUserId());
+        UserTagChange userTagChange = userTagChangeMapper.selectOneByExample(example);
+        if (Objects.nonNull(userTagChange)) {
+            if (!userTagChange.getCurrentIdentityTag().equals(Integer.valueOf(userPlateformReq.getIdentityTag()))) {
+                userTagChange.setOriginalIdentityTag(userTagChange.getCurrentIdentityTag());
+                userTagChange.setCurrentIdentityTag(Integer.valueOf(userPlateformReq.getIdentityTag()));
+                userTagChange.setUtime(new Date());
+                userTagChangeMapper.updateByPrimaryKey(userTagChange);
+            }
+        } else {
+            if (!userPlateformInfo.getIdentityTag().equals(Byte.valueOf(userPlateformReq.getIdentityTag()))) {
+                userTagChange = new UserTagChange();
+                userTagChange.setUserId(userPlateformInfo.getUserId());
+                userTagChange.setCtime(new Date());
+                userTagChange.setUtime(new Date());
+                userTagChange.setOriginalIdentityTag(userPlateformInfo.getIdentityTag().intValue());
+                userTagChange.setCurrentIdentityTag(Integer.valueOf(userPlateformReq.getIdentityTag()));
+                userTagChangeMapper.insertSelective(userTagChange);
+            }
+        }
     }
 
     @Resource

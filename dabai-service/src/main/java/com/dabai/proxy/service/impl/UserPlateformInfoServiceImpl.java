@@ -43,6 +43,7 @@ public class UserPlateformInfoServiceImpl implements UserPlateformInfoService {
             currentInfo.setId(userPlateformInfo.getId());
             userPlateformInfoMapper.updateByPrimaryKeySelective(currentInfo);
         } else {
+            currentInfo.setOriginalIdentityTag(currentInfo.getIdentityTag());
             currentInfo.setCtime(new Date());
             userPlateformInfoMapper.insertSelective(currentInfo);
         }
