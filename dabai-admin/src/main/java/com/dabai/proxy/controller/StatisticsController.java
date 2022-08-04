@@ -68,7 +68,7 @@ public class StatisticsController {
         Example example2 = new Example(UserPlateformInfo.class);
         Example.Criteria criteria2 = example2.createCriteria();
         if(StringUtils.isNotEmpty(organizationCode)) {
-            criteria2.andEqualTo("organizationCode", organizationCode);
+            criteria2.andLike("organizationCode", organizationCode + "%");
         }
         criteria2.andBetween("ctime", yesterDay.getLeft(), yesterDay.getRight());
         int yesterDayCount = userPlateformInfoMapper.selectCountByExample(example);

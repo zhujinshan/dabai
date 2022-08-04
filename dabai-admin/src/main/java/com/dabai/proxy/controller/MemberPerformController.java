@@ -1,5 +1,7 @@
 package com.dabai.proxy.controller;
 
+import com.dabai.proxy.config.AdminUserSessionContext;
+import com.dabai.proxy.config.AdminUserSessionInfo;
 import com.dabai.proxy.config.result.Result;
 import com.dabai.proxy.config.security.PathRole;
 import com.dabai.proxy.enums.SysAdminRole;
@@ -38,6 +40,12 @@ public class MemberPerformController {
     @ApiOperation(value = "列表", httpMethod = "POST")
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<MemberPerformQueryResp> pageQuery(@RequestBody @ApiParam(value = "请求入参", required = true) MemberPerformQueryReq memberPerformQueryReq) {
+        AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
+        String organizationCode = null;
+        if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
+            organizationCode = userSession.getOrganizationCode();
+        }
+        memberPerformQueryReq.setOrganizationCode(organizationCode);
         return Result.success(memberInfoFacade.performQuery(memberPerformQueryReq));
     }
 
