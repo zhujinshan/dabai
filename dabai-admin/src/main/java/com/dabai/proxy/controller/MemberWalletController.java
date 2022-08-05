@@ -1,6 +1,8 @@
 package com.dabai.proxy.controller;
 
 import com.dabai.proxy.config.result.Result;
+import com.dabai.proxy.config.security.PathRole;
+import com.dabai.proxy.enums.SysAdminRole;
 import com.dabai.proxy.facade.MemberInfoFacade;
 import com.dabai.proxy.req.MemberWalletFlowQueryReq;
 import com.dabai.proxy.req.MemberWalletInfoQueryReq;
@@ -28,22 +30,15 @@ public class MemberWalletController {
 
     @PostMapping(value = "/flow/pageQuery")
     @ApiOperation(value = "流水列表", httpMethod = "POST")
-//    @PathRole(role = SysAdminRole.NORMAL_USER)
+    @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<MemberWalletFlowQueryResp> flowPageQuery(@RequestBody @ApiParam(value = "请求入参", required = true) MemberWalletFlowQueryReq memberWalletFlowQueryReq) {
         return Result.success(memberInfoFacade.walletFlowQuery(memberWalletFlowQueryReq));
     }
 
     @PostMapping(value = "/info/pageQuery")
     @ApiOperation(value = "账户列表", httpMethod = "POST")
-//    @PathRole(role = SysAdminRole.NORMAL_USER)
+    @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<MemberWalletInfoQueryResp> infoPageQuery(@RequestBody @ApiParam(value = "请求入参", required = true) MemberWalletInfoQueryReq memberWalletInfoQueryReq) {
         return Result.success(memberInfoFacade.walletInfoQuery(memberWalletInfoQueryReq));
     }
-
-//    @GetMapping(value = "/policyList")
-//    @ApiOperation(value = "业绩详情", httpMethod = "GET")
-//    @PathRole(role = SysAdminRole.NORMAL_USER)
-//    public Result<List<MemberPolicyDTO>> detail(@RequestParam @ApiParam(value = "请求入参", required = true) Long userId) {
-//        return Result.success(memberInfoFacade.policyList(userId));
-//    }
 }
