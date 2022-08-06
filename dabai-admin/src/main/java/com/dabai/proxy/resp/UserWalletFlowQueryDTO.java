@@ -50,7 +50,7 @@ public class UserWalletFlowQueryDTO {
     private Integer registerIdentityTag;
 
     @ApiModelProperty(value = "钱包流水时间")
-    private Date wctime;
+    private Date walletCtime;
 
     @ApiModelProperty(value = "金额")
     private BigDecimal amount;

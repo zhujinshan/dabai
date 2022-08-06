@@ -241,7 +241,7 @@ public class MemberInfoFacade {
                 userWalletFlowQueryDTO.setAmount(walletFlow.getAmount());
                 userWalletFlowQueryDTO.setFlowType(walletFlow.getFlowType());
                 userWalletFlowQueryDTO.setManualChargeType(walletFlow.getManualChargeType());
-                userWalletFlowQueryDTO.setWctime(walletFlow.getCtime());
+                userWalletFlowQueryDTO.setWalletCtime(walletFlow.getCtime());
 
                 userWalletFlowQueryDTO.setChangeAgent(false);
                 if (Objects.nonNull(userInfoQueryResult.getOriginalIdentityTag()) && userInfoQueryResult.getOriginalIdentityTag() == 0
