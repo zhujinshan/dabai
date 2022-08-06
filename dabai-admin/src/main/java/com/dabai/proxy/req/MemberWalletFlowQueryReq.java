@@ -30,17 +30,23 @@ public class MemberWalletFlowQueryReq {
     @ApiModelProperty(value = "邀请人会员编码")
     private String parentCode;
 
-    @ApiModelProperty(value = "时间范围-开始时间")
-    private Date startTime;
+    @ApiModelProperty(value = "流水时间范围-开始时间")
+    private Date walletStartTime;
 
-    @ApiModelProperty(value = "时间范围-结束时间")
-    private Date endTime;
+    @ApiModelProperty(value = "流水时间范围-结束时间")
+    private Date walletEndTime;
 
     @ApiModelProperty(value = "是否转化代理人 0:否 1：是")
     private Integer changeAgent;
 
     @ApiModelProperty(value = "原注册身份 0 会员 1代理人")
     private Integer originalIdentityTag;
+
+    @ApiModelProperty(value = "收支类型：1：收入 2：提现 3: 退款 4：人工充值")
+    private Integer flowType;
+
+    @ApiModelProperty(value = "充值类型：A 为展业费，B 为运营激励费，C 为基本法费")
+    private String manualChargeType;
 
     @ApiModelProperty(value = "费用min")
     private BigDecimal minAmount;

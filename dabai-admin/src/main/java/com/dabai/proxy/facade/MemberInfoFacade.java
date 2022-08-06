@@ -222,6 +222,18 @@ public class MemberInfoFacade {
             if (Objects.nonNull(memberWalletFlowQueryReq.getMaxAmount())){
                 criteria.andLessThanOrEqualTo("amount",memberWalletFlowQueryReq.getMaxAmount());
             }
+            if (Objects.nonNull(memberWalletFlowQueryReq.getFlowType())){
+                criteria.andEqualTo("flowType",memberWalletFlowQueryReq.getFlowType());
+            }
+            if (Objects.nonNull(memberWalletFlowQueryReq.getManualChargeType())){
+                criteria.andEqualTo("manualChargeType",memberWalletFlowQueryReq.getManualChargeType());
+            }
+            if (Objects.nonNull(memberWalletFlowQueryReq.getWalletStartTime())){
+                criteria.andGreaterThanOrEqualTo("ctime",memberWalletFlowQueryReq.getWalletStartTime());
+            }
+            if (Objects.nonNull(memberWalletFlowQueryReq.getWalletEndTime())){
+                criteria.andLessThanOrEqualTo("ctime",memberWalletFlowQueryReq.getWalletEndTime());
+            }
             List<WalletFlow> walletFlows = walletFlowMapper.selectByExample(example);
             for (WalletFlow walletFlow : walletFlows) {
                 UserWalletFlowQueryDTO userWalletFlowQueryDTO = new UserWalletFlowQueryDTO();
