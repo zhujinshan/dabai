@@ -47,7 +47,7 @@ http:
 tencentcloud:
   secretId: AKIDBD0Zu0rTqyrUt64mFTRAeuvhEVXKsCI8
   secretKey: d0B6mCNJ0RdbLq79wUotkLhohMmxud7N
-  submitCodeTemplateId: 1417815
+  submitCodeTemplateId: 1501920
   notifyTemplateId: 1066246
   sdkAppId: 1400685449
   signName: 众信健康
