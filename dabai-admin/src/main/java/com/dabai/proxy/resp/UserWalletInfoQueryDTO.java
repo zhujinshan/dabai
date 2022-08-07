@@ -47,7 +47,7 @@ public class UserWalletInfoQueryDTO {
     private Boolean changeAgent;
 
     @ApiModelProperty(value = "原注册身份")
-    private Integer originalIdentityTag;
+    private Integer registerIdentityTag;
 
     @ApiModelProperty(value = "推广费总收入")
     private BigDecimal commisionAmount;
