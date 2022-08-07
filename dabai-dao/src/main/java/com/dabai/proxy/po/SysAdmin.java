@@ -69,6 +69,11 @@ public class SysAdmin {
     private Long updateUserId;
 
     /**
+     * 所有的模块权限
+     */
+    private String modules;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -260,5 +265,23 @@ public class SysAdmin {
      */
     public void setUpdateUserId(Long updateUserId) {
         this.updateUserId = updateUserId;
+    }
+
+    /**
+     * 获取所有的模块权限
+     *
+     * @return modules - 所有的模块权限
+     */
+    public String getModules() {
+        return modules;
+    }
+
+    /**
+     * 设置所有的模块权限
+     *
+     * @param modules 所有的模块权限
+     */
+    public void setModules(String modules) {
+        this.modules = modules == null ? null : modules.trim();
     }
 }

@@ -80,4 +80,12 @@ public class SysAdminServiceImpl implements SysAdminService {
         }
         return sysAdminMapper.selectByExample(example);
     }
+
+    @Override
+    public void update(SysAdmin currentAdmin) {
+        Assert.notNull(currentAdmin, "未知用户");
+        Assert.notNull(currentAdmin.getId(), "id is required");
+        currentAdmin.setUtime(new Date());
+        sysAdminMapper.updateByPrimaryKeySelective(currentAdmin);
+    }
 }

@@ -22,7 +22,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author: jinshan.zhu
@@ -108,6 +111,11 @@ public class UserSecurityInterceptor extends HandlerInterceptorAdapter implement
         adminUserSessionInfo.setRole(SysAdminRole.getRoleByCode(sysAdmin.getRole()));
         adminUserSessionInfo.setOrganizationCode(sysAdmin.getOrganizationCode());
         adminUserSessionInfo.setCharge(sysAdmin.getCanCharge() == 1);
+        String modules = sysAdmin.getModules();
+        if (StringUtils.isNotEmpty(modules)) {
+            List<Integer> moduleList = Arrays.stream(modules.split(",")).filter(StringUtils::isNotEmpty).map(Integer::parseInt).collect(Collectors.toList());
+            adminUserSessionInfo.setModules(moduleList);
+        }
         return adminUserSessionInfo;
     }
 

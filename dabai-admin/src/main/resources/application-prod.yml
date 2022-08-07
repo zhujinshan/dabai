@@ -16,18 +16,15 @@ spring:
 
 # 配置启动端口
 server:
-  port: 443
-  ssl: # ssl相关配置
-    enabled: true
-    key-store: classpath:dabai-tech.com.jks
-    key-store-password: dabai2022
-    #key-store: classpath:dabai-tech.nanquan.online.jks
-    #key-store-password: x930u6vg48c3
-    key-store-type: JKS
+  port: 8080
+#  ssl: # ssl相关配置
+#    enabled: true
+#    key-store: classpath:data.dabai-tech.com.jks
+#    key-store-password: 70c808eq38900
+#    key-store-type: JKS
 
-http-port: 80
-#domain: https://dabai-tech.nanquan.online
-domain: https://dabai-tech.com
+http-port: 8080
+domain: https://data.dabai-tech.com
 
 http:
   liness:
@@ -47,7 +44,7 @@ http:
 tencentcloud:
   secretId: AKIDBD0Zu0rTqyrUt64mFTRAeuvhEVXKsCI8
   secretKey: d0B6mCNJ0RdbLq79wUotkLhohMmxud7N
-  submitCodeTemplateId: 1417815
+  submitCodeTemplateId: 1501920
   notifyTemplateId: 1066246
   sdkAppId: 1400685449
   signName: 众信健康
