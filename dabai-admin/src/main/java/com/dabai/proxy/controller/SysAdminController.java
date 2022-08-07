@@ -7,6 +7,7 @@ import com.dabai.proxy.config.AdminUserSessionInfo;
 import com.dabai.proxy.config.result.Result;
 import com.dabai.proxy.config.security.JwtTools;
 import com.dabai.proxy.config.security.PathRole;
+import com.dabai.proxy.enums.ModuleEnum;
 import com.dabai.proxy.enums.SysAdminRole;
 import com.dabai.proxy.enums.SysAdminStatus;
 import com.dabai.proxy.httpclient.tencentcloud.TencentSmsClient;
@@ -27,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +36,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -88,6 +92,7 @@ public class SysAdminController {
         BeanUtils.copyProperties(userSession, sysAdminDTO);
         sysAdminDTO.setRole(userSession.getRole().getCode());
         sysAdminDTO.setStatus(SysAdminStatus.NORMAL.getCode());
+        sysAdminDTO.setModules(userSession.getModules());
         return Result.success(sysAdminDTO);
     }
 
@@ -113,7 +118,45 @@ public class SysAdminController {
         sysAdmin.setRole(sysAdminRole.getCode());
         sysAdmin.setCreateUserId(userSession.getUserId());
         sysAdmin.setUpdateUserId(userSession.getUserId());
+        if(!CollectionUtils.isEmpty(sysAdminDTO.getModules())) {
+            String modules = sysAdminDTO.getModules().stream().filter(e -> Objects.nonNull(ModuleEnum.getByCode(e))).map(String::valueOf)
+                    .collect(Collectors.joining(","));
+            sysAdmin.setModules(modules);
+        }
         sysAdminService.add(sysAdmin);
+        return Result.success(true);
+    }
+
+    @PostMapping(value = "/update")
+    @ApiOperation(value = "更新", httpMethod = "POST")
+    @PathRole(role = SysAdminRole.NORMAL_USER)
+    public Result<Boolean> update(@RequestBody SysAdminDTO sysAdminDTO) {
+        AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
+        Assert.isTrue(StringUtils.isNotEmpty(sysAdminDTO.getMobile()), "手机号不能为空");
+        Assert.isTrue(PhoneUtil.isMobile(sysAdminDTO.getMobile()), "无效手机号");
+        Assert.isTrue(Objects.nonNull(sysAdminDTO.getUserId()) && sysAdminDTO.getUserId() > 0, "userId is required");
+        SysAdminRole sysAdminRole = SysAdminRole.getRoleByCode(sysAdminDTO.getRole());
+        Assert.notNull(sysAdminRole, "无效角色");
+        Assert.isTrue(userSession.getRole().getWeight() >= sysAdminRole.getWeight(), "无权限创建该角色账号");
+        Assert.isTrue(StringUtils.isNotEmpty(sysAdminDTO.getOrganizationCode()), "组织机构不能为空");
+
+        SysAdmin existAdmin = sysAdminService.getByMobile(sysAdminDTO.getMobile());
+        Assert.isTrue((existAdmin == null || existAdmin.getId().equals(sysAdminDTO.getUserId())), "该手机已经存在账号，请更换手机号");
+
+        SysAdmin currentAdmin = sysAdminService.getById(sysAdminDTO.getUserId());
+        Assert.notNull(currentAdmin, "未知用户");
+
+        currentAdmin.setCanCharge(sysAdminDTO.getCharge() == null ? 0 : (sysAdminDTO.getCharge() ? 1 : 0));
+        currentAdmin.setMobile(sysAdminDTO.getMobile());
+        currentAdmin.setOrganizationCode(sysAdminDTO.getOrganizationCode());
+        currentAdmin.setRole(sysAdminRole.getCode());
+        currentAdmin.setUpdateUserId(userSession.getUserId());
+        if(!CollectionUtils.isEmpty(sysAdminDTO.getModules())) {
+            String modules = sysAdminDTO.getModules().stream().filter(e -> Objects.nonNull(ModuleEnum.getByCode(e))).map(String::valueOf)
+                    .collect(Collectors.joining(","));
+            currentAdmin.setModules(modules);
+        }
+        sysAdminService.update(currentAdmin);
         return Result.success(true);
     }
 
@@ -152,6 +195,11 @@ public class SysAdminController {
             BeanUtils.copyProperties(e, sysAdminDTO);
             sysAdminDTO.setCharge(e.getCanCharge() == 1);
             sysAdminDTO.setUserId(e.getId());
+            String modules = e.getModules();
+            if (StringUtils.isNotEmpty(modules)) {
+                List<Integer> moduleList = Arrays.stream(modules.split(",")).filter(StringUtils::isNotEmpty).map(Integer::parseInt).collect(Collectors.toList());
+                sysAdminDTO.setModules(moduleList);
+            }
             return sysAdminDTO;
         }).collect(Collectors.toList());
         sysAdminPageResp.setList(sysAdmins);

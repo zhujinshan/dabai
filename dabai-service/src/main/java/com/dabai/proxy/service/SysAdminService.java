@@ -20,4 +20,6 @@ public interface SysAdminService {
     void disabled(Long userId, Long updateUser);
 
     List<SysAdmin> query(SysAdminQuery sysAdminQuery);
+
+    void update(SysAdmin currentAdmin);
 }
