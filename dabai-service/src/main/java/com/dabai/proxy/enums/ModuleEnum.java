@@ -21,6 +21,7 @@ public enum ModuleEnum {
 
     WATER_LIST(5, "流水清单"),
 
+    SYS_ADMIN(6, "用户管理"),
     ;
 
     private final Integer code;
