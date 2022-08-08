@@ -297,7 +297,7 @@ public class MemberInfoFacade {
             userWalletInfoQueryDTO.setAvailableAmount(walletInfo.getAvailableAmount());
             userWalletInfoQueryDTO.setCashedAmount(walletInfo.getCashedAmount());
             BigDecimal manualFee = BigDecimal.ZERO;
-            if (walletFlowMap.containsKey(walletInfo.getUserId())){
+            if (walletFlowMap.containsKey(walletInfo.getUserId())) {
                 for (WalletFlow walletFlow : walletFlowMap.get(walletInfo.getUserId())) {
                     //充值费
                     if (walletFlow.getFlowType() == WalletFlowTypeEnum.MANUAL.getCode()) {
