@@ -231,19 +231,12 @@ public class MemberInfoFacade {
                 });
 
         List<UserInfoQueryResult> userInfoQueryResults = userInfoCustomMapper.queryUserInfo(memberInfoQuery);
-//        Page<UserInfoQueryResult> pageResult1 = PageHelper.offsetPage(paging.getOffset(), paging.getLimit())
-//                .doSelectPage(() -> userInfoCustomMapper.queryUserInfo(memberInfoQuery));
-
         resp.setTotal(pageResult.getTotal());
 
         List<WalletFlow> result = pageResult.getResult();
         if (CollectionUtils.isEmpty(result)) {
             return resp;
         }
-//        List<UserInfoQueryResult> userInfoResult = pageResult1.getResult();
-//        if (CollectionUtils.isEmpty(userInfoResult)) {
-//            return resp;
-//        }
         Map<Long, UserInfoQueryResult> userWalletFlowMap = userInfoQueryResults.stream().collect(Collectors.toMap(UserInfoQueryResult::getId, UserInfoQueryResult -> UserInfoQueryResult));
 
         for (WalletFlow walletFlow : result) {
@@ -262,27 +255,6 @@ public class MemberInfoFacade {
                 }
                 userWalletList.add(userWalletFlowQueryDTO);
             }
-//            Example example = new Example(WalletFlow.class);
-//            Example.Criteria criteria = example.createCriteria();
-//            if (Objects.nonNull(memberWalletFlowQueryReq.getMinAmount())){
-//                criteria.andGreaterThanOrEqualTo("amount",memberWalletFlowQueryReq.getMinAmount());
-//            }
-//            if (Objects.nonNull(memberWalletFlowQueryReq.getMaxAmount())){
-//                criteria.andLessThanOrEqualTo("amount",memberWalletFlowQueryReq.getMaxAmount());
-//            }
-//            if (Objects.nonNull(memberWalletFlowQueryReq.getFlowType())){
-//                criteria.andEqualTo("flowType",memberWalletFlowQueryReq.getFlowType());
-//            }
-//            if (Objects.nonNull(memberWalletFlowQueryReq.getManualChargeType())){
-//                criteria.andEqualTo("manualChargeType",memberWalletFlowQueryReq.getManualChargeType());
-//            }
-//            if (Objects.nonNull(memberWalletFlowQueryReq.getWalletStartTime())){
-//                criteria.andGreaterThanOrEqualTo("ctime",memberWalletFlowQueryReq.getWalletStartTime());
-//            }
-//            if (Objects.nonNull(memberWalletFlowQueryReq.getWalletEndTime())){
-//                criteria.andLessThanOrEqualTo("ctime",memberWalletFlowQueryReq.getWalletEndTime());
-//            }
-//            List<WalletFlow> walletFlows = walletFlowMapper.selectByExample(example);
         }
 //        for (UserInfoQueryResult userInfoQueryResult : result) {
 //            Example example = new Example(WalletFlow.class);
@@ -339,12 +311,14 @@ public class MemberInfoFacade {
         Page<UserInfoQueryResult> pageResult = PageHelper.offsetPage(paging.getOffset(), paging.getLimit())
                 .doSelectPage(() -> userInfoCustomMapper.queryUserInfo(memberInfoQuery));
 
+        resp.setTotal(pageResult.getTotal());
+
         List<UserInfoQueryResult> result = pageResult.getResult();
         if (CollectionUtils.isEmpty(result)) {
             return resp;
         }
         List<UserWalletInfoQueryDTO> userWalletInfoList = new ArrayList<>();
-        for (UserInfoQueryResult userInfoQueryResult : pageResult) {
+        for (UserInfoQueryResult userInfoQueryResult : result) {
             UserWalletInfoQueryDTO userWalletInfoQueryDTO = new UserWalletInfoQueryDTO();
             BeanUtils.copyProperties(userInfoQueryResult, userWalletInfoQueryDTO);
 
@@ -424,7 +398,7 @@ public class MemberInfoFacade {
             userWalletInfoList.add(userWalletInfoQueryDTO);
         }
 
-        resp.setTotal((long) userWalletInfoList.size());
+
         resp.setUserWalletInfoList(userWalletInfoList);
 
         return resp;

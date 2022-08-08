@@ -47,6 +47,12 @@ public class MemberWalletController {
     @ApiOperation(value = "账户列表", httpMethod = "POST")
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<MemberWalletInfoQueryResp> infoPageQuery(@RequestBody @ApiParam(value = "请求入参", required = true) MemberWalletInfoQueryReq memberWalletInfoQueryReq) {
+        AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
+        String organizationCode = null;
+        if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
+            organizationCode = userSession.getOrganizationCode();
+        }
+        memberWalletInfoQueryReq.setOrganizationCode(organizationCode);
         return Result.success(memberInfoFacade.walletInfoQuery(memberWalletInfoQueryReq));
     }
 }
