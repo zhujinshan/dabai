@@ -95,9 +95,11 @@ public class MemberInfoFacade {
             resp.setTotal(0L);
             return resp;
         }
-
         MemberInfoQuery memberInfoQuery = new MemberInfoQuery();
         BeanUtils.copyProperties(memberPerformQueryReq, memberInfoQuery);
+        memberInfoQuery.setRegisterStartTime(memberPerformQueryReq.getStartTime());
+        memberInfoQuery.setRegisterEndTime(memberPerformQueryReq.getEndTime());
+
         Paging paging = memberPerformQueryReq.getPaging();
         if (paging == null) {
             paging = new Paging();
@@ -278,6 +280,12 @@ public class MemberInfoFacade {
         if (Objects.nonNull(memberWalletInfoQueryReq.getMaxAvailableAmount())) {
             criteriaInfo.andLessThanOrEqualTo("availableAmount", memberWalletInfoQueryReq.getMaxAvailableAmount());
         }
+        if (Objects.nonNull(memberWalletInfoQueryReq.getStartTime())) {
+            criteriaInfo.andGreaterThanOrEqualTo("ctime", memberWalletInfoQueryReq.getStartTime());
+        }
+        if (Objects.nonNull(memberWalletInfoQueryReq.getStartTime())) {
+            criteriaInfo.andLessThanOrEqualTo("ctime", memberWalletInfoQueryReq.getEndTime());
+        }
         List<WalletInfo> walletInfos = walletInfoMapper.selectByExample(exampleInfo);
 
         Example exampleFlow = new Example(WalletFlow.class);
@@ -290,6 +298,7 @@ public class MemberInfoFacade {
             userWalletInfoQueryDTO.setId(walletInfo.getUserId());
             userWalletInfoQueryDTO.setAvailableAmount(walletInfo.getAvailableAmount());
             userWalletInfoQueryDTO.setCashedAmount(walletInfo.getCashedAmount());
+            userWalletInfoQueryDTO.setCtime(walletInfo.getCtime());
             BigDecimal manualFee = BigDecimal.ZERO;
             if (walletFlowMap.containsKey(walletInfo.getUserId())) {
                 for (WalletFlow walletFlow : walletFlowMap.get(walletInfo.getUserId())) {

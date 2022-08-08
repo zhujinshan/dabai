@@ -43,7 +43,7 @@ public class UserWalletInfoQueryDTO {
 //    @ApiModelProperty(value = "邀请人手机号")
 //    private String parentMobile;
 
-    @ApiModelProperty(value = "注册时间")
+    @ApiModelProperty(value = "开户时间")
     private Date ctime;
 
     @ApiModelProperty(value = "是否转化代理人")
