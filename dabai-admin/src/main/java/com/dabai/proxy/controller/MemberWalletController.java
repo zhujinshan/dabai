@@ -45,7 +45,7 @@ public class MemberWalletController {
 
     @PostMapping(value = "/info/pageQuery")
     @ApiOperation(value = "账户列表", httpMethod = "POST")
-    //@PathRole(role = SysAdminRole.NORMAL_USER)
+    @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<MemberWalletInfoQueryResp> infoPageQuery(@RequestBody @ApiParam(value = "请求入参", required = true) MemberWalletInfoQueryReq memberWalletInfoQueryReq) {
         return Result.success(memberInfoFacade.walletInfoQuery(memberWalletInfoQueryReq));
     }
