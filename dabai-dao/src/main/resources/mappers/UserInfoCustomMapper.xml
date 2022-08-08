@@ -56,8 +56,8 @@
         <if test="parentMobile != null and parentMobile != ''">
             AND e.mobile = #{parentMobile}
         </if>
-        <if test="registerStartTime != null and redisterEndTime != null">
-            AND a.ctime BETWEEN #{registerStartTime} AND #{redisterEndTime}
+        <if test="registerStartTime != null and registerEndTime != null">
+            AND a.ctime BETWEEN #{registerStartTime} AND #{registerEndTime}
         </if>
         <if test="idCard != null and idCard != ''">
             AND a.id_card = #{idCard}

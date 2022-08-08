@@ -29,7 +29,7 @@ public class MemberInfoQuery {
 
     private Date registerStartTime;
 
-    private Date redisterEndTime;
+    private Date registerEndTime;
 
     private String idCard;
 

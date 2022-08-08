@@ -42,7 +42,7 @@ public class MemberInfoQueryReq {
     private Date registerStartTime;
 
     @ApiModelProperty(value = "注册结束时间")
-    private Date redisterEndTime;
+    private Date registerEndTime;
 
     @ApiModelProperty(value = "会员身份证")
     private String idCard;

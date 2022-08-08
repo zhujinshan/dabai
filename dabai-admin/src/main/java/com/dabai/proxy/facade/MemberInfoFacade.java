@@ -10,6 +10,7 @@ import com.dabai.proxy.req.*;
 import com.dabai.proxy.resp.*;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -19,10 +20,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -97,7 +95,6 @@ public class MemberInfoFacade {
             resp.setTotal(0L);
             return resp;
         }
-
         MemberInfoQuery memberInfoQuery = new MemberInfoQuery();
         BeanUtils.copyProperties(memberPerformQueryReq, memberInfoQuery);
         memberInfoQuery.setHasPolicy(1);
@@ -209,44 +206,42 @@ public class MemberInfoFacade {
         if (paging == null) {
             paging = new Paging();
         }
-        Page<UserInfoQueryResult> pageResult = PageHelper.offsetPage(paging.getOffset(), paging.getLimit())
-                .doSelectPage(() -> userInfoCustomMapper.queryUserInfo(memberInfoQuery));
-
-        List<UserInfoQueryResult> result = pageResult.getResult();
+        Example example = new Example(WalletFlow.class);
+        Example.Criteria criteria = example.createCriteria();
+        if (Objects.nonNull(memberWalletFlowQueryReq.getMinAmount())) {
+            criteria.andGreaterThanOrEqualTo("amount", memberWalletFlowQueryReq.getMinAmount());
+        }
+        if (Objects.nonNull(memberWalletFlowQueryReq.getMaxAmount())) {
+            criteria.andLessThanOrEqualTo("amount", memberWalletFlowQueryReq.getMaxAmount());
+        }
+        if (Objects.nonNull(memberWalletFlowQueryReq.getFlowType())) {
+            criteria.andEqualTo("flowType", memberWalletFlowQueryReq.getFlowType());
+        }
+        if (Objects.nonNull(memberWalletFlowQueryReq.getManualChargeType())) {
+            criteria.andEqualTo("manualChargeType", memberWalletFlowQueryReq.getManualChargeType());
+        }
+        if (Objects.nonNull(memberWalletFlowQueryReq.getWalletStartTime())) {
+            criteria.andGreaterThanOrEqualTo("ctime", memberWalletFlowQueryReq.getWalletStartTime());
+        }
+        if (Objects.nonNull(memberWalletFlowQueryReq.getWalletEndTime())) {
+            criteria.andLessThanOrEqualTo("ctime", memberWalletFlowQueryReq.getWalletEndTime());
+        }
+        List<WalletFlow> result = walletFlowMapper.selectByExample(example);
+        List<UserInfoQueryResult> userInfoQueryResults = userInfoCustomMapper.queryUserInfo(memberInfoQuery);
         if (CollectionUtils.isEmpty(result)) {
             return resp;
         }
-        for (UserInfoQueryResult userInfoQueryResult : pageResult) {
-            Example example = new Example(WalletFlow.class);
-            Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("userId", userInfoQueryResult.getId());
-            if (Objects.nonNull(memberWalletFlowQueryReq.getMinAmount())){
-                criteria.andGreaterThanOrEqualTo("amount",memberWalletFlowQueryReq.getMinAmount());
-            }
-            if (Objects.nonNull(memberWalletFlowQueryReq.getMaxAmount())){
-                criteria.andLessThanOrEqualTo("amount",memberWalletFlowQueryReq.getMaxAmount());
-            }
-            if (Objects.nonNull(memberWalletFlowQueryReq.getFlowType())){
-                criteria.andEqualTo("flowType",memberWalletFlowQueryReq.getFlowType());
-            }
-            if (Objects.nonNull(memberWalletFlowQueryReq.getManualChargeType())){
-                criteria.andEqualTo("manualChargeType",memberWalletFlowQueryReq.getManualChargeType());
-            }
-            if (Objects.nonNull(memberWalletFlowQueryReq.getWalletStartTime())){
-                criteria.andGreaterThanOrEqualTo("ctime",memberWalletFlowQueryReq.getWalletStartTime());
-            }
-            if (Objects.nonNull(memberWalletFlowQueryReq.getWalletEndTime())){
-                criteria.andLessThanOrEqualTo("ctime",memberWalletFlowQueryReq.getWalletEndTime());
-            }
-            List<WalletFlow> walletFlows = walletFlowMapper.selectByExample(example);
-            for (WalletFlow walletFlow : walletFlows) {
+        Map<Long, UserInfoQueryResult> userWalletFlowMap = userInfoQueryResults.stream().collect(Collectors.toMap(UserInfoQueryResult::getId, UserInfoQueryResult -> UserInfoQueryResult));
+
+        for (WalletFlow walletFlow : result) {
+            if (userWalletFlowMap.containsKey(walletFlow.getUserId())) {
                 UserWalletFlowQueryDTO userWalletFlowQueryDTO = new UserWalletFlowQueryDTO();
+                UserInfoQueryResult userInfoQueryResult = userWalletFlowMap.get(walletFlow.getUserId());
                 BeanUtils.copyProperties(userInfoQueryResult, userWalletFlowQueryDTO);
                 userWalletFlowQueryDTO.setAmount(walletFlow.getAmount());
                 userWalletFlowQueryDTO.setFlowType(walletFlow.getFlowType());
                 userWalletFlowQueryDTO.setManualChargeType(walletFlow.getManualChargeType());
                 userWalletFlowQueryDTO.setWalletCtime(walletFlow.getCtime());
-
                 userWalletFlowQueryDTO.setChangeAgent(false);
                 if (Objects.nonNull(userInfoQueryResult.getOriginalIdentityTag()) && userInfoQueryResult.getOriginalIdentityTag() == 0
                         && Objects.nonNull(userInfoQueryResult.getCurrentIdentityTag()) && userInfoQueryResult.getCurrentIdentityTag() == 1) {
@@ -255,7 +250,10 @@ public class MemberInfoFacade {
                 userWalletList.add(userWalletFlowQueryDTO);
             }
         }
-        resp.setTotal((long) userWalletList.size());
+        userWalletList.sort((t1, t2) -> t2.getWalletCtime().compareTo(t1.getWalletCtime()));
+        PageHelper.startPage(paging.getOffset(), paging.getLimit());
+        PageInfo<UserWalletFlowQueryDTO> pageInfo = new PageInfo<>(userWalletList);
+        resp.setTotal(pageInfo.getTotal());
         resp.setUserWalletList(userWalletList);
         return resp;
     }
@@ -268,96 +266,114 @@ public class MemberInfoFacade {
         if (paging == null) {
             paging = new Paging();
         }
-        Page<UserInfoQueryResult> pageResult = PageHelper.offsetPage(paging.getOffset(), paging.getLimit())
-                .doSelectPage(() -> userInfoCustomMapper.queryUserInfo(memberInfoQuery));
 
-        List<UserInfoQueryResult> result = pageResult.getResult();
-        if (CollectionUtils.isEmpty(result)) {
-            return resp;
+        Example exampleInfo = new Example(WalletInfo.class);
+        Example.Criteria criteriaInfo = exampleInfo.createCriteria();
+        if (Objects.nonNull(memberWalletInfoQueryReq.getMinCashedAmount())) {
+            criteriaInfo.andGreaterThanOrEqualTo("cashedAmount", memberWalletInfoQueryReq.getMinCashedAmount());
         }
+        if (Objects.nonNull(memberWalletInfoQueryReq.getMaxCashedAmount())) {
+            criteriaInfo.andLessThanOrEqualTo("cashedAmount", memberWalletInfoQueryReq.getMaxCashedAmount());
+        }
+        if (Objects.nonNull(memberWalletInfoQueryReq.getMinAvailableAmount())) {
+            criteriaInfo.andGreaterThanOrEqualTo("availableAmount", memberWalletInfoQueryReq.getMinAvailableAmount());
+        }
+        if (Objects.nonNull(memberWalletInfoQueryReq.getMaxAvailableAmount())) {
+            criteriaInfo.andLessThanOrEqualTo("availableAmount", memberWalletInfoQueryReq.getMaxAvailableAmount());
+        }
+        if (Objects.nonNull(memberWalletInfoQueryReq.getStartTime())) {
+            criteriaInfo.andGreaterThanOrEqualTo("ctime", memberWalletInfoQueryReq.getStartTime());
+        }
+        if (Objects.nonNull(memberWalletInfoQueryReq.getStartTime())) {
+            criteriaInfo.andLessThanOrEqualTo("ctime", memberWalletInfoQueryReq.getEndTime());
+        }
+        List<WalletInfo> walletInfos = walletInfoMapper.selectByExample(exampleInfo);
+
+        Example exampleFlow = new Example(WalletFlow.class);
+        List<WalletFlow> walletFlows = walletFlowMapper.selectByExample(exampleFlow);
+        Map<Long, List<WalletFlow>> walletFlowMap = walletFlows.stream().collect(Collectors.groupingBy(WalletFlow::getUserId));
+
         List<UserWalletInfoQueryDTO> userWalletInfoList = new ArrayList<>();
-        for (UserInfoQueryResult userInfoQueryResult : pageResult) {
+        for (WalletInfo walletInfo : walletInfos) {
             UserWalletInfoQueryDTO userWalletInfoQueryDTO = new UserWalletInfoQueryDTO();
-            BeanUtils.copyProperties(userInfoQueryResult, userWalletInfoQueryDTO);
-
-            Example exampleInfo = new Example(WalletInfo.class);
-            Example.Criteria criteriaInfo = exampleInfo.createCriteria();
-            criteriaInfo.andEqualTo("userId", userInfoQueryResult.getId());
-
-            if (Objects.nonNull(memberWalletInfoQueryReq.getMinCashedAmount())){
-                criteriaInfo.andGreaterThanOrEqualTo("cashedAmount",memberWalletInfoQueryReq.getMinCashedAmount());
-            }
-            if (Objects.nonNull(memberWalletInfoQueryReq.getMaxCashedAmount())){
-                criteriaInfo.andLessThanOrEqualTo("cashedAmount",memberWalletInfoQueryReq.getMaxCashedAmount());
-            }
-            if (Objects.nonNull(memberWalletInfoQueryReq.getMinAvailableAmount())){
-                criteriaInfo.andGreaterThanOrEqualTo("availableAmount",memberWalletInfoQueryReq.getMinAvailableAmount());
-            }
-            if (Objects.nonNull(memberWalletInfoQueryReq.getMaxAvailableAmount())){
-                criteriaInfo.andLessThanOrEqualTo("availableAmount",memberWalletInfoQueryReq.getMaxAvailableAmount());
-            }
-            WalletInfo walletInfo = walletInfoMapper.selectOneByExample(exampleInfo);
-            if (Objects.isNull(walletInfo))
-                continue;
-
-            Example exampleFlow = new Example(WalletFlow.class);
-            exampleFlow.createCriteria().andEqualTo("userId", userInfoQueryResult.getId());
-            List<WalletFlow> walletFlows = walletFlowMapper.selectByExample(exampleFlow);
-            BigDecimal manualFee = BigDecimal.ZERO;
-            for (WalletFlow walletFlow : walletFlows) {
-                //充值费
-                if (walletFlow.getFlowType() == WalletFlowTypeEnum.MANUAL.getCode()) {
-                    manualFee = manualFee.add(walletFlow.getAmount());
-                }
-            }
-            BigDecimal commissionFee = walletInfo.getTotalAmount().subtract(manualFee);
-
-            if (Objects.nonNull(memberWalletInfoQueryReq.getMinCommisionAmount())){
-                int minCommisionRes = commissionFee.compareTo(memberWalletInfoQueryReq.getMinCommisionAmount());
-                if (minCommisionRes == -1){
-                    //总提现小于入参1，或者总提现大于入参2，不符合要求
-                    continue;
-                }
-            }
-
-            if (Objects.nonNull(memberWalletInfoQueryReq.getMaxCommisionAmount())){
-                int maxCommisionRes = commissionFee.compareTo(memberWalletInfoQueryReq.getMaxCommisionAmount());
-                if (maxCommisionRes == 1){
-                    //总提现小于入参1，或者总提现大于入参2，不符合要求
-                    continue;
-                }
-            }
-
-            if (Objects.nonNull(memberWalletInfoQueryReq.getMinManualAmount())){
-                int minManualRes = manualFee.compareTo(memberWalletInfoQueryReq.getMinManualAmount());
-                if (minManualRes == 1){
-                    //总提现小于入参1，或者总提现大于入参2，不符合要求
-                    continue;
-                }
-            }
-
-            if (Objects.nonNull(memberWalletInfoQueryReq.getMaxManualAmount())){
-                int maxManualRes = manualFee.compareTo(memberWalletInfoQueryReq.getMaxManualAmount());
-                if (maxManualRes == 1){
-                    //总提现小于入参1，或者总提现大于入参2，不符合要求
-                    continue;
-                }
-            }
-
-            userWalletInfoQueryDTO.setCommisionAmount(commissionFee);
+            userWalletInfoQueryDTO.setId(walletInfo.getUserId());
             userWalletInfoQueryDTO.setAvailableAmount(walletInfo.getAvailableAmount());
             userWalletInfoQueryDTO.setCashedAmount(walletInfo.getCashedAmount());
+            userWalletInfoQueryDTO.setCtime(walletInfo.getCtime());
+            BigDecimal manualFee = BigDecimal.ZERO;
+            if (walletFlowMap.containsKey(walletInfo.getUserId())) {
+                for (WalletFlow walletFlow : walletFlowMap.get(walletInfo.getUserId())) {
+                    //充值费
+                    if (walletFlow.getFlowType() == WalletFlowTypeEnum.MANUAL.getCode()) {
+                        manualFee = manualFee.add(walletFlow.getAmount());
+                    }
+                }
+            }
             userWalletInfoQueryDTO.setManualAmount(manualFee);
-            userWalletInfoQueryDTO.setChangeAgent(false);
-            if (Objects.nonNull(userInfoQueryResult.getOriginalIdentityTag()) && userInfoQueryResult.getOriginalIdentityTag() == 0
-                    && Objects.nonNull(userInfoQueryResult.getCurrentIdentityTag()) && userInfoQueryResult.getCurrentIdentityTag() == 1) {
-                userWalletInfoQueryDTO.setChangeAgent(true);
+            //推广费
+            BigDecimal commissionFee = walletInfo.getTotalAmount().subtract(manualFee);
+            userWalletInfoQueryDTO.setCommisionAmount(commissionFee);
+
+            if (Objects.nonNull(memberWalletInfoQueryReq.getMinCommisionAmount())) {
+                int minCommisionRes = commissionFee.compareTo(memberWalletInfoQueryReq.getMinCommisionAmount());
+                if (minCommisionRes == -1) {
+                    //总提现小于入参1，或者总提现大于入参2，不符合要求
+                    continue;
+                }
+            }
+            if (Objects.nonNull(memberWalletInfoQueryReq.getMaxCommisionAmount())) {
+                int maxCommisionRes = commissionFee.compareTo(memberWalletInfoQueryReq.getMaxCommisionAmount());
+                if (maxCommisionRes == 1) {
+                    //总提现小于入参1，或者总提现大于入参2，不符合要求
+                    continue;
+                }
+            }
+            if (Objects.nonNull(memberWalletInfoQueryReq.getMinManualAmount())) {
+                int minManualRes = manualFee.compareTo(memberWalletInfoQueryReq.getMinManualAmount());
+                if (minManualRes == -1) {
+                    //总提现小于入参1，或者总提现大于入参2，不符合要求
+                    continue;
+                }
+            }
+            if (Objects.nonNull(memberWalletInfoQueryReq.getMaxManualAmount())) {
+                int maxManualRes = manualFee.compareTo(memberWalletInfoQueryReq.getMaxManualAmount());
+                //等于1表示大于
+                if (maxManualRes == 1) {
+                    //总提现小于入参1，或者总提现大于入参2，不符合要求
+                    continue;
+                }
             }
             userWalletInfoList.add(userWalletInfoQueryDTO);
         }
 
-        resp.setTotal((long) userWalletInfoList.size());
-        resp.setUserWalletInfoList(userWalletInfoList);
+        if (CollectionUtils.isEmpty(userWalletInfoList)) {
+            return resp;
+        }
+
+//        if (Objects.nonNull(memberWalletInfoQueryReq.getMinCommisionAmount()) || Objects.nonNull(memberWalletInfoQueryReq.getMaxCommisionAmount()) || Objects.nonNull(memberWalletInfoQueryReq.getMinManualAmount()) || Objects.nonNull(memberWalletInfoQueryReq.getMaxManualAmount())) {
+
+        List<UserInfoQueryResult> userInfoQueryResults = userInfoCustomMapper.queryUserInfo(memberInfoQuery);
+        Map<Long, UserInfoQueryResult> userWalletInfoMap = userInfoQueryResults.stream().collect(Collectors.toMap(UserInfoQueryResult::getId, UserInfoQueryResult -> UserInfoQueryResult));
+
+        List<UserWalletInfoQueryDTO> userWalletInfoResultList = new ArrayList<>();
+        for (UserWalletInfoQueryDTO userWalletInfoQueryDTO : userWalletInfoList) {
+            if (userWalletInfoMap.containsKey(userWalletInfoQueryDTO.getId())) {
+                UserInfoQueryResult userInfoQueryResult = userWalletInfoMap.get(userWalletInfoQueryDTO.getId());
+                BeanUtils.copyProperties(userInfoQueryResult, userWalletInfoQueryDTO);
+                userWalletInfoQueryDTO.setChangeAgent(false);
+                if (Objects.nonNull(userInfoQueryResult.getOriginalIdentityTag()) && userInfoQueryResult.getOriginalIdentityTag() == 0
+                        && Objects.nonNull(userInfoQueryResult.getCurrentIdentityTag()) && userInfoQueryResult.getCurrentIdentityTag() == 1) {
+                    userWalletInfoQueryDTO.setChangeAgent(true);
+                }
+                userWalletInfoResultList.add(userWalletInfoQueryDTO);
+            }
+        }
+
+        userWalletInfoResultList.sort(Comparator.comparing(UserWalletInfoQueryDTO::getId).reversed());
+        PageHelper.startPage(paging.getOffset(), paging.getLimit());
+        PageInfo<UserWalletInfoQueryDTO> pageInfo = new PageInfo<>(userWalletInfoResultList);
+        resp.setTotal(pageInfo.getTotal());
+        resp.setUserWalletInfoList(userWalletInfoResultList);
 
         return resp;
     }
