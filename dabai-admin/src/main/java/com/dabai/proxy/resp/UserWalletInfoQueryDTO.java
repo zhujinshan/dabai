@@ -16,8 +16,8 @@ public class UserWalletInfoQueryDTO {
     @ApiModelProperty(value = "id")
     private Long id;
 
-    @ApiModelProperty(value = "user_id")
-    private Long userId;
+//    @ApiModelProperty(value = "user_id")
+//    private Long userId;
 
     @ApiModelProperty(value = "推广人id")
     private Long parentId;
