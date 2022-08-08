@@ -208,6 +208,8 @@ public class MemberInfoFacade {
         Page<UserInfoQueryResult> pageResult = PageHelper.offsetPage(paging.getOffset(), paging.getLimit())
                 .doSelectPage(() -> userInfoCustomMapper.queryUserInfo(memberInfoQuery));
 
+        resp.setTotal(pageResult.getTotal());
+
         List<UserInfoQueryResult> result = pageResult.getResult();
         if (CollectionUtils.isEmpty(result)) {
             return resp;
@@ -251,7 +253,7 @@ public class MemberInfoFacade {
                 userWalletList.add(userWalletFlowQueryDTO);
             }
         }
-        resp.setTotal((long) userWalletList.size());
+//        resp.setTotal((long) userWalletList.size());
         resp.setUserWalletList(userWalletList);
         return resp;
     }
