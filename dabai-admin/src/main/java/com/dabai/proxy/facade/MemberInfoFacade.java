@@ -206,15 +206,17 @@ public class MemberInfoFacade {
             paging = new Paging();
         }
         Page<UserInfoQueryResult> pageResult = PageHelper.offsetPage(paging.getOffset(), paging.getLimit())
+                .doSelectPage(() -> walletFlowMapper.selectAll());
+        Page<UserInfoQueryResult> pageResult1 = PageHelper.offsetPage(paging.getOffset(), paging.getLimit())
                 .doSelectPage(() -> userInfoCustomMapper.queryUserInfo(memberInfoQuery));
 
         resp.setTotal(pageResult.getTotal());
 
-        List<UserInfoQueryResult> result = pageResult.getResult();
+        List<UserInfoQueryResult> result = pageResult1.getResult();
         if (CollectionUtils.isEmpty(result)) {
             return resp;
         }
-        for (UserInfoQueryResult userInfoQueryResult : pageResult) {
+        for (UserInfoQueryResult userInfoQueryResult : result) {
             Example example = new Example(WalletFlow.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("userId", userInfoQueryResult.getId());
