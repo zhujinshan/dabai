@@ -71,7 +71,7 @@ public class StatisticsController {
             criteria2.andLike("organizationCode", organizationCode + "%");
         }
         criteria2.andBetween("ctime", yesterDay.getLeft(), yesterDay.getRight());
-        int yesterDayCount = userPlateformInfoMapper.selectCountByExample(example);
+        int yesterDayCount = userPlateformInfoMapper.selectCountByExample(example2);
 
         Example example3 = new Example(UserPlateformInfo.class);
         Example.Criteria criteria3 = example3.createCriteria();
@@ -79,7 +79,7 @@ public class StatisticsController {
             criteria3.andEqualTo("organizationCode", organizationCode);
         }
         criteria3.andBetween("ctime", monthDay.getLeft(), monthDay.getRight());
-        int monthCount = userPlateformInfoMapper.selectCountByExample(example);
+        int monthCount = userPlateformInfoMapper.selectCountByExample(example3);
         StatisticsRegisterResp resp = new StatisticsRegisterResp();
         resp.setTotalAmount(total);
         resp.setYesterdayAmount(yesterDayCount);

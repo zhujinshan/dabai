@@ -79,6 +79,14 @@
             AND c.sign_status = 1
             AND c.ctime BETWEEN #{realNameStartTime} AND #{realNameEndTime}
         </if>
+        <if test="hasPolicy != null and hasPolicy == 1">
+            AND exists (select p.user_id FROM policy_info p
+            WHERE p.user_id = a.id AND p.policy_status = 1
+            <if test="policyStartTime != null and policyEndTime != null">
+                AND p.ctime BETWEEN #{policyStartTime} AND #{policyEndTime}
+            </if>
+            GROUP BY p.user_id HAVING sum(p.premium) > 0)
+        </if>
         order by a.id desc
     </select>
 </mapper>

@@ -28,4 +28,6 @@ public class AdminUserSessionInfo {
 
     private List<Integer> modules;
 
+    private String name;
+
 }

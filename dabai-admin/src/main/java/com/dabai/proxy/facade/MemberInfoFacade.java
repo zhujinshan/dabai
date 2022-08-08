@@ -100,6 +100,9 @@ public class MemberInfoFacade {
 
         MemberInfoQuery memberInfoQuery = new MemberInfoQuery();
         BeanUtils.copyProperties(memberPerformQueryReq, memberInfoQuery);
+        memberInfoQuery.setHasPolicy(1);
+        memberInfoQuery.setPolicyStartTime(memberPerformQueryReq.getStartTime());
+        memberInfoQuery.setPolicyEndTime(memberPerformQueryReq.getEndTime());
         Paging paging = memberPerformQueryReq.getPaging();
         if (paging == null) {
             paging = new Paging();
@@ -116,7 +119,8 @@ public class MemberInfoFacade {
         List<Long> userIds = result.stream().map(UserInfoQueryResult::getId).collect(Collectors.toList());
         Example example = new Example(PolicyInfo.class);
         example.createCriteria().andIn("userId", userIds)
-                .andEqualTo("policyStatus", PolicyStatus.COMPLETE.getCode());
+                .andEqualTo("policyStatus", PolicyStatus.COMPLETE.getCode())
+                .andBetween("ctime", memberPerformQueryReq.getStartTime(), memberPerformQueryReq.getEndTime());
 
         List<PolicyInfo> policyInfos = policyInfoMapper.selectByExample(example);
         Map<Long, List<PolicyInfo>> userPolicyMap = policyInfos.stream().collect(Collectors.groupingBy(PolicyInfo::getUserId));

@@ -74,6 +74,11 @@ public class SysAdmin {
     private String modules;
 
     /**
+     * 姓名
+     */
+    private String name;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -283,5 +288,23 @@ public class SysAdmin {
      */
     public void setModules(String modules) {
         this.modules = modules == null ? null : modules.trim();
+    }
+
+    /**
+     * 获取姓名
+     *
+     * @return name - 姓名
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 设置姓名
+     *
+     * @param name 姓名
+     */
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
     }
 }

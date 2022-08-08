@@ -44,4 +44,11 @@ public class MemberInfoQuery {
     private Date realNameStartTime;
 
     private Date realNameEndTime;
+
+    private Integer hasPolicy;
+
+    private Date policyStartTime;
+
+    private Date policyEndTime;
+
 }

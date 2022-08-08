@@ -116,6 +116,7 @@ public class UserSecurityInterceptor extends HandlerInterceptorAdapter implement
             List<Integer> moduleList = Arrays.stream(modules.split(",")).filter(StringUtils::isNotEmpty).map(Integer::parseInt).collect(Collectors.toList());
             adminUserSessionInfo.setModules(moduleList);
         }
+        adminUserSessionInfo.setName(sysAdmin.getName());
         return adminUserSessionInfo;
     }
 

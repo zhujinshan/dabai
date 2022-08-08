@@ -156,6 +156,7 @@ public class SysAdminController {
                     .collect(Collectors.joining(","));
             currentAdmin.setModules(modules);
         }
+        currentAdmin.setName(sysAdminDTO.getName());
         sysAdminService.update(currentAdmin);
         return Result.success(true);
     }

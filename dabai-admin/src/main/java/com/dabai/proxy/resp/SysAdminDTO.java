@@ -35,4 +35,7 @@ public class SysAdminDTO {
     @ApiModelProperty(value = "拥有权限的模块")
     private List<Integer> modules;
 
+    @ApiModelProperty(value = "姓名")
+    private String name;
+
 }
