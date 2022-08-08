@@ -20,10 +20,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -206,35 +203,28 @@ public class MemberInfoFacade {
         if (paging == null) {
             paging = new Paging();
         }
-        Page<WalletFlow> pageResult = PageHelper.offsetPage(paging.getOffset(), paging.getLimit())
-                .doSelectPage(() -> {
-                    Example example = new Example(WalletFlow.class);
-                    Example.Criteria criteria = example.createCriteria();
-                    if (Objects.nonNull(memberWalletFlowQueryReq.getMinAmount())) {
-                        criteria.andGreaterThanOrEqualTo("amount", memberWalletFlowQueryReq.getMinAmount());
-                    }
-                    if (Objects.nonNull(memberWalletFlowQueryReq.getMaxAmount())) {
-                        criteria.andLessThanOrEqualTo("amount", memberWalletFlowQueryReq.getMaxAmount());
-                    }
-                    if (Objects.nonNull(memberWalletFlowQueryReq.getFlowType())) {
-                        criteria.andEqualTo("flowType", memberWalletFlowQueryReq.getFlowType());
-                    }
-                    if (Objects.nonNull(memberWalletFlowQueryReq.getManualChargeType())) {
-                        criteria.andEqualTo("manualChargeType", memberWalletFlowQueryReq.getManualChargeType());
-                    }
-                    if (Objects.nonNull(memberWalletFlowQueryReq.getWalletStartTime())) {
-                        criteria.andGreaterThanOrEqualTo("ctime", memberWalletFlowQueryReq.getWalletStartTime());
-                    }
-                    if (Objects.nonNull(memberWalletFlowQueryReq.getWalletEndTime())) {
-                        criteria.andLessThanOrEqualTo("ctime", memberWalletFlowQueryReq.getWalletEndTime());
-                    }
-                    walletFlowMapper.selectByExample(example);
-                });
-
+        Example example = new Example(WalletFlow.class);
+        Example.Criteria criteria = example.createCriteria();
+        if (Objects.nonNull(memberWalletFlowQueryReq.getMinAmount())) {
+            criteria.andGreaterThanOrEqualTo("amount", memberWalletFlowQueryReq.getMinAmount());
+        }
+        if (Objects.nonNull(memberWalletFlowQueryReq.getMaxAmount())) {
+            criteria.andLessThanOrEqualTo("amount", memberWalletFlowQueryReq.getMaxAmount());
+        }
+        if (Objects.nonNull(memberWalletFlowQueryReq.getFlowType())) {
+            criteria.andEqualTo("flowType", memberWalletFlowQueryReq.getFlowType());
+        }
+        if (Objects.nonNull(memberWalletFlowQueryReq.getManualChargeType())) {
+            criteria.andEqualTo("manualChargeType", memberWalletFlowQueryReq.getManualChargeType());
+        }
+        if (Objects.nonNull(memberWalletFlowQueryReq.getWalletStartTime())) {
+            criteria.andGreaterThanOrEqualTo("ctime", memberWalletFlowQueryReq.getWalletStartTime());
+        }
+        if (Objects.nonNull(memberWalletFlowQueryReq.getWalletEndTime())) {
+            criteria.andLessThanOrEqualTo("ctime", memberWalletFlowQueryReq.getWalletEndTime());
+        }
+        List<WalletFlow> result = walletFlowMapper.selectByExample(example);
         List<UserInfoQueryResult> userInfoQueryResults = userInfoCustomMapper.queryUserInfo(memberInfoQuery);
-        resp.setTotal(pageResult.getTotal());
-
-        List<WalletFlow> result = pageResult.getResult();
         if (CollectionUtils.isEmpty(result)) {
             return resp;
         }
@@ -257,6 +247,10 @@ public class MemberInfoFacade {
                 userWalletList.add(userWalletFlowQueryDTO);
             }
         }
+        userWalletList.sort((t1, t2) -> t2.getWalletCtime().compareTo(t1.getWalletCtime()));
+        PageHelper.startPage(paging.getOffset(), paging.getLimit());
+        PageInfo<UserWalletFlowQueryDTO> pageInfo = new PageInfo<>(userWalletList);
+        resp.setTotal(pageInfo.getTotal());
         resp.setUserWalletList(userWalletList);
         return resp;
     }
@@ -365,6 +359,7 @@ public class MemberInfoFacade {
             }
         }
 
+        userWalletInfoResultList.sort(Comparator.comparing(UserWalletInfoQueryDTO::getId).reversed());
         PageHelper.startPage(paging.getOffset(), paging.getLimit());
         PageInfo<UserWalletInfoQueryDTO> pageInfo = new PageInfo<>(userWalletInfoResultList);
         resp.setTotal(pageInfo.getTotal());
