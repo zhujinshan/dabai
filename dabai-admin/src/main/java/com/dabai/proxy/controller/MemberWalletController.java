@@ -14,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,11 +36,12 @@ public class MemberWalletController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<MemberWalletFlowQueryResp> flowPageQuery(@RequestBody @ApiParam(value = "请求入参", required = true) MemberWalletFlowQueryReq memberWalletFlowQueryReq) {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = null;
+        String organizationCode = userSession.getOrganizationCode();
         if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
-            organizationCode = userSession.getOrganizationCode();
+            if (StringUtils.isEmpty(memberWalletFlowQueryReq.getOrganizationCode())) {
+                memberWalletFlowQueryReq.setOrganizationCode(organizationCode);
+            }
         }
-        memberWalletFlowQueryReq.setOrganizationCode(organizationCode);
         return Result.success(memberInfoFacade.walletFlowQuery(memberWalletFlowQueryReq));
     }
 
@@ -48,11 +50,12 @@ public class MemberWalletController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<MemberWalletInfoQueryResp> infoPageQuery(@RequestBody @ApiParam(value = "请求入参", required = true) MemberWalletInfoQueryReq memberWalletInfoQueryReq) {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = null;
+        String organizationCode = userSession.getOrganizationCode();
         if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
-            organizationCode = userSession.getOrganizationCode();
+            if (StringUtils.isEmpty(memberWalletInfoQueryReq.getOrganizationCode())) {
+                memberWalletInfoQueryReq.setOrganizationCode(organizationCode);
+            }
         }
-        memberWalletInfoQueryReq.setOrganizationCode(organizationCode);
         return Result.success(memberInfoFacade.walletInfoQuery(memberWalletInfoQueryReq));
     }
 }

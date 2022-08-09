@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,11 +42,12 @@ public class MemberPerformController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<MemberPerformQueryResp> pageQuery(@RequestBody @ApiParam(value = "请求入参", required = true) MemberPerformQueryReq memberPerformQueryReq) {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = null;
+        String organizationCode = userSession.getOrganizationCode();
         if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
-            organizationCode = userSession.getOrganizationCode();
+            if (StringUtils.isEmpty(memberPerformQueryReq.getOrganizationCode())) {
+                memberPerformQueryReq.setOrganizationCode(organizationCode);
+            }
         }
-        memberPerformQueryReq.setOrganizationCode(organizationCode);
         return Result.success(memberInfoFacade.performQuery(memberPerformQueryReq));
     }
 
