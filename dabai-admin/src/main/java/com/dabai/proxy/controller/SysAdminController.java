@@ -123,6 +123,7 @@ public class SysAdminController {
                     .collect(Collectors.joining(","));
             sysAdmin.setModules(modules);
         }
+        sysAdmin.setName(sysAdminDTO.getName());
         sysAdminService.add(sysAdmin);
         return Result.success(true);
     }
