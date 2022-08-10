@@ -266,7 +266,6 @@ public class MemberInfoFacade {
         if (paging == null) {
             paging = new Paging();
         }
-
         Example exampleInfo = new Example(WalletInfo.class);
         Example.Criteria criteriaInfo = exampleInfo.createCriteria();
         if (Objects.nonNull(memberWalletInfoQueryReq.getMinCashedAmount())) {
