@@ -59,7 +59,7 @@ public class StatisticsController {
 
         Example example = new Example(UserPlateformInfo.class);
         if(StringUtils.isNotEmpty(organizationCode)) {
-            example.createCriteria().andEqualTo("organizationCode", organizationCode);
+            example.createCriteria().andLike("organizationCode", organizationCode + "%");
         }
         int total = userPlateformInfoMapper.selectCountByExample(example);
 
