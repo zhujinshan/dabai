@@ -243,6 +243,7 @@ public class MemberInfoFacade {
                 userWalletFlowQueryDTO.setManualChargeType(walletFlow.getManualChargeType());
                 userWalletFlowQueryDTO.setWalletCtime(walletFlow.getCtime());
                 userWalletFlowQueryDTO.setChangeAgent(false);
+                userWalletFlowQueryDTO.setCname(walletFlow.getCname());
                 if (Objects.nonNull(userInfoQueryResult.getOriginalIdentityTag()) && userInfoQueryResult.getOriginalIdentityTag() == 0
                         && Objects.nonNull(userInfoQueryResult.getCurrentIdentityTag()) && userInfoQueryResult.getCurrentIdentityTag() == 1) {
                     userWalletFlowQueryDTO.setChangeAgent(true);

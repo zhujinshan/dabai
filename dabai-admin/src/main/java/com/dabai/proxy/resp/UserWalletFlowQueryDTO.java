@@ -61,6 +61,9 @@ public class UserWalletFlowQueryDTO {
     @ApiModelProperty(value = "充值类型")
     private String manualChargeType;
 
+    @ApiModelProperty(value = "充值人电话号")
+    private String cname;
+
 //    @ApiModelProperty(value = "财产险费用")
 //    private BigDecimal propertyInsuranceFee;
 //
