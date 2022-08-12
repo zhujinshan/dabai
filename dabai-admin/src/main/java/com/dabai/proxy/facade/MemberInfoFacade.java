@@ -175,7 +175,7 @@ public class MemberInfoFacade {
             userPerformQueryDTO.setPropertyInsuranceFee(financeFee);
             userPerformQueryDTO.setPropertyInsurancePromotionFee(financeProFee);
             userPerformQueryDTO.setTotalFee(healthFee.add(accidentFee).add(financeFee));
-            userPerformQueryDTO.setTotalPromotionFee(healthProFee.add(accidentProFee).add(accidentProFee));
+            userPerformQueryDTO.setTotalPromotionFee(healthProFee.add(financeProFee).add(accidentProFee));
             return userPerformQueryDTO;
         }).collect(Collectors.toList());
         resp.setUserPerformList(collect);
