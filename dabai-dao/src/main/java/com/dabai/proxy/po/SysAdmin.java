@@ -19,7 +19,7 @@ public class SysAdmin {
     private String mobile;
 
     /**
-     * 账号状态：1-正常 2-禁用
+     * 账号状态：1-正常 2-禁用 0-新建待审核 3-驳回 4-更新待审核
      */
     private Integer status;
 

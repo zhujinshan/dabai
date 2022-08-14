@@ -17,7 +17,15 @@ public enum SysAdminStatus {
      */
     NORMAL(1, "正常"),
 
-    DISABLE(2, "禁用");
+    DISABLE(2, "禁用"),
+
+    CREATEAUDITING(0, "新建待审核"),
+
+    NOPASS(3, "驳回"),
+
+    UPDATEAUDITING(4, "更新待审核");
+
+//    DISABLEAUDITING(5, "禁用待审核"),;
 
     private final Integer code;
 

@@ -29,12 +29,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -96,6 +91,45 @@ public class SysAdminController {
         return Result.success(sysAdminDTO);
     }
 
+    @PostMapping(value = "/submit")
+    @ApiOperation(value = "预提交用户", httpMethod = "POST")
+    @PathRole(role = SysAdminRole.NORMAL_USER)
+    public Result<Boolean> submit(@RequestBody SysAdminDTO sysAdminDTO) {
+        AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
+        Assert.isTrue(StringUtils.isNotEmpty(sysAdminDTO.getMobile()), "手机号不能为空");
+        Assert.isTrue(PhoneUtil.isMobile(sysAdminDTO.getMobile()), "无效手机号");
+        SysAdminRole sysAdminRole = SysAdminRole.getRoleByCode(sysAdminDTO.getRole());
+        Assert.notNull(sysAdminRole, "无效角色");
+        Assert.isTrue(userSession.getRole().getCode() != SysAdminRole.NORMAL_USER.getCode(), "普通用户无权限创建账号");
+        Assert.isTrue(userSession.getRole().getWeight() >= sysAdminRole.getWeight(), "无权限创建该角色账号");
+        Assert.isTrue(StringUtils.isNotEmpty(sysAdminDTO.getOrganizationCode()), "组织机构不能为空");
+
+        SysAdmin existAdmin = sysAdminService.getByMobile(sysAdminDTO.getMobile());
+        Assert.isNull(existAdmin, "该手机已经存在账号，请更换手机号");
+
+        if (userSession.getRole().getCode() == SysAdminRole.ADMIN.getCode()) {
+            //当前用户是管理员，才需要提审
+            SysAdmin sysAdmin = new SysAdmin();
+            sysAdmin.setCanCharge(sysAdminDTO.getCharge() == null ? 0 : (sysAdminDTO.getCharge() ? 1 : 0));
+            sysAdmin.setMobile(sysAdminDTO.getMobile());
+            sysAdmin.setOrganizationCode(sysAdminDTO.getOrganizationCode());
+            sysAdmin.setRole(sysAdminRole.getCode());
+            sysAdmin.setCreateUserId(userSession.getUserId());
+            sysAdmin.setUpdateUserId(userSession.getUserId());
+            if (!CollectionUtils.isEmpty(sysAdminDTO.getModules())) {
+                String modules = sysAdminDTO.getModules().stream().filter(e -> Objects.nonNull(ModuleEnum.getByCode(e))).map(String::valueOf)
+                        .collect(Collectors.joining(","));
+                sysAdmin.setModules(modules);
+            }
+            sysAdmin.setName(sysAdminDTO.getName());
+            sysAdmin.setStatus(SysAdminStatus.CREATEAUDITING.getCode());
+            sysAdminService.add(sysAdmin);
+        } else {
+            create(sysAdminDTO);
+        }
+        return Result.success(true);
+    }
+
     @PostMapping(value = "/create")
     @ApiOperation(value = "创建用户", httpMethod = "POST")
     @PathRole(role = SysAdminRole.NORMAL_USER)
@@ -105,6 +139,7 @@ public class SysAdminController {
         Assert.isTrue(PhoneUtil.isMobile(sysAdminDTO.getMobile()), "无效手机号");
         SysAdminRole sysAdminRole = SysAdminRole.getRoleByCode(sysAdminDTO.getRole());
         Assert.notNull(sysAdminRole, "无效角色");
+        Assert.isTrue(userSession.getRole().getCode() != SysAdminRole.NORMAL_USER.getCode(), "普通用户无权限创建账号");
         Assert.isTrue(userSession.getRole().getWeight() >= sysAdminRole.getWeight(), "无权限创建该角色账号");
         Assert.isTrue(StringUtils.isNotEmpty(sysAdminDTO.getOrganizationCode()), "组织机构不能为空");
 
@@ -118,12 +153,13 @@ public class SysAdminController {
         sysAdmin.setRole(sysAdminRole.getCode());
         sysAdmin.setCreateUserId(userSession.getUserId());
         sysAdmin.setUpdateUserId(userSession.getUserId());
-        if(!CollectionUtils.isEmpty(sysAdminDTO.getModules())) {
+        if (!CollectionUtils.isEmpty(sysAdminDTO.getModules())) {
             String modules = sysAdminDTO.getModules().stream().filter(e -> Objects.nonNull(ModuleEnum.getByCode(e))).map(String::valueOf)
                     .collect(Collectors.joining(","));
             sysAdmin.setModules(modules);
         }
         sysAdmin.setName(sysAdminDTO.getName());
+        sysAdmin.setStatus(SysAdminStatus.NORMAL.getCode());
         sysAdminService.add(sysAdmin);
         return Result.success(true);
     }
@@ -152,12 +188,53 @@ public class SysAdminController {
         currentAdmin.setOrganizationCode(sysAdminDTO.getOrganizationCode());
         currentAdmin.setRole(sysAdminRole.getCode());
         currentAdmin.setUpdateUserId(userSession.getUserId());
-        if(!CollectionUtils.isEmpty(sysAdminDTO.getModules())) {
+        if (!CollectionUtils.isEmpty(sysAdminDTO.getModules())) {
             String modules = sysAdminDTO.getModules().stream().filter(e -> Objects.nonNull(ModuleEnum.getByCode(e))).map(String::valueOf)
                     .collect(Collectors.joining(","));
             currentAdmin.setModules(modules);
         }
         currentAdmin.setName(sysAdminDTO.getName());
+        sysAdminService.update(currentAdmin);
+        return Result.success(true);
+    }
+
+    @PostMapping(value = "/update2")
+    @ApiOperation(value = "更新并提审", httpMethod = "POST")
+    @PathRole(role = SysAdminRole.NORMAL_USER)
+    public Result<Boolean> update2(@RequestBody SysAdminDTO sysAdminDTO) {
+        AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
+        Assert.isTrue(StringUtils.isNotEmpty(sysAdminDTO.getMobile()), "手机号不能为空");
+        Assert.isTrue(PhoneUtil.isMobile(sysAdminDTO.getMobile()), "无效手机号");
+        Assert.isTrue(Objects.nonNull(sysAdminDTO.getUserId()) && sysAdminDTO.getUserId() > 0, "userId is required");
+        SysAdminRole sysAdminRole = SysAdminRole.getRoleByCode(sysAdminDTO.getRole());
+        Assert.notNull(sysAdminRole, "无效角色");
+        Assert.isTrue(userSession.getRole().getCode() != SysAdminRole.NORMAL_USER.getCode(), "普通用户无权限修改账号");
+        Assert.isTrue(userSession.getRole().getWeight() >= sysAdminRole.getWeight(), "无权限修改该角色账号");
+        Assert.isTrue(StringUtils.isNotEmpty(sysAdminDTO.getOrganizationCode()), "组织机构不能为空");
+
+        SysAdmin existAdmin = sysAdminService.getByMobile(sysAdminDTO.getMobile());
+        Assert.isTrue((existAdmin == null || existAdmin.getId().equals(sysAdminDTO.getUserId())), "该手机已经存在账号，请更换手机号");
+
+        SysAdmin currentAdmin = sysAdminService.getById(sysAdminDTO.getUserId());
+        Assert.notNull(currentAdmin, "未知用户");
+
+        currentAdmin.setCanCharge(sysAdminDTO.getCharge() == null ? 0 : (sysAdminDTO.getCharge() ? 1 : 0));
+        currentAdmin.setMobile(sysAdminDTO.getMobile());
+        currentAdmin.setOrganizationCode(sysAdminDTO.getOrganizationCode());
+        currentAdmin.setRole(sysAdminRole.getCode());
+        currentAdmin.setUpdateUserId(userSession.getUserId());
+        if (!CollectionUtils.isEmpty(sysAdminDTO.getModules())) {
+            String modules = sysAdminDTO.getModules().stream().filter(e -> Objects.nonNull(ModuleEnum.getByCode(e))).map(String::valueOf)
+                    .collect(Collectors.joining(","));
+            currentAdmin.setModules(modules);
+        }
+        currentAdmin.setName(sysAdminDTO.getName());
+        if (userSession.getRole().getCode() == SysAdminRole.ADMIN.getCode()) {
+            //管理员更新需要提审
+            currentAdmin.setStatus(SysAdminStatus.UPDATEAUDITING.getCode());
+        } else {
+            currentAdmin.setStatus(SysAdminStatus.NORMAL.getCode());
+        }
         sysAdminService.update(currentAdmin);
         return Result.success(true);
     }
@@ -169,12 +246,35 @@ public class SysAdminController {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
         SysAdmin disAdmin = sysAdminService.getById(userId);
         Assert.notNull(disAdmin, "无效用户");
+        Assert.isTrue(userSession.getRole().getCode() != SysAdminRole.NORMAL_USER.getCode(), "普通用户无权限操作该账号");
 
         SysAdminRole disAdminRole = SysAdminRole.getRoleByCode(disAdmin.getRole());
         Assert.isTrue(userSession.getRole().getWeight() >= disAdminRole.getWeight(), "无权限操作该账号");
         sysAdminService.disabled(userId, userSession.getUserId());
         return Result.success(true);
     }
+
+    /*@GetMapping(value = "/disable2")
+    @ApiOperation(value = "禁用并审核用户", httpMethod = "GET")
+    @PathRole(role = SysAdminRole.NORMAL_USER)
+    public Result<Boolean> disable2(@RequestParam Long userId) {
+        AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
+        SysAdmin disAdmin = sysAdminService.getById(userId);
+        Assert.notNull(disAdmin, "无效用户");
+        Assert.isTrue(userSession.getRole().getCode() != SysAdminRole.NORMAL_USER.getCode(), "普通用户无权限操作该账号");
+        SysAdminRole disAdminRole = SysAdminRole.getRoleByCode(disAdmin.getRole());
+        Assert.isTrue(userSession.getRole().getWeight() >= disAdminRole.getWeight(), "无权限操作该账号");
+        if (userSession.getRole().getCode() == SysAdminRole.ADMIN.getCode()) {
+            //管理员禁用需要提审
+            disAdmin.setStatus(SysAdminStatus.DISABLEAUDITING.getCode());
+            disAdmin.setUpdateUserId(userSession.getUserId());
+            sysAdminService.update(disAdmin);
+        } else {
+            //超管可以直接禁用
+            sysAdminService.disabled(userId, userSession.getUserId());
+        }
+        return Result.success(true);
+    }*/
 
     @PostMapping(value = "/list")
     @ApiOperation(value = "用户列表", httpMethod = "POST")
@@ -206,6 +306,36 @@ public class SysAdminController {
         }).collect(Collectors.toList());
         sysAdminPageResp.setList(sysAdmins);
         return Result.success(sysAdminPageResp);
+    }
+
+    @GetMapping(value = "/approve")
+    @ApiOperation(value = "审批", httpMethod = "GET")
+    @PathRole(role = SysAdminRole.NORMAL_USER)
+    public Result<Boolean> approve(@RequestParam Long userId, Integer status) {
+        AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
+        Assert.isTrue(userSession.getRole().getCode() == SysAdminRole.SUPPER_ADMIN.getCode(), "无权限审批");
+        SysAdmin approveAdmin = sysAdminService.getById(userId);
+        Assert.notNull(approveAdmin, "无效用户");
+        approveAdmin.setStatus(status);
+        approveAdmin.setUpdateUserId(userSession.getUserId());
+
+//        SysAdmin currentAdmin = sysAdminService.getById(sysAdminDTO.getUserId());
+//        Assert.notNull(currentAdmin, "未知用户");
+//
+//        currentAdmin.setCanCharge(sysAdminDTO.getCharge() == null ? 0 : (sysAdminDTO.getCharge() ? 1 : 0));
+//        currentAdmin.setMobile(sysAdminDTO.getMobile());
+//        currentAdmin.setOrganizationCode(sysAdminDTO.getOrganizationCode());
+//        currentAdmin.setRole(sysAdminRole.getCode());
+//        currentAdmin.setUpdateUserId(userSession.getUserId());
+//        if(!CollectionUtils.isEmpty(sysAdminDTO.getModules())) {
+//            String modules = sysAdminDTO.getModules().stream().filter(e -> Objects.nonNull(ModuleEnum.getByCode(e))).map(String::valueOf)
+//                    .collect(Collectors.joining(","));
+//            currentAdmin.setModules(modules);
+//        }
+//        currentAdmin.setName(sysAdminDTO.getName());
+//        currentAdmin.setStatus(sysAdminDTO.getStatus());
+        sysAdminService.update(approveAdmin);
+        return Result.success(true);
     }
 
 }

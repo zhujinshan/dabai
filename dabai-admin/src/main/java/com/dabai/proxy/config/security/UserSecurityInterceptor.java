@@ -102,7 +102,7 @@ public class UserSecurityInterceptor extends HandlerInterceptorAdapter implement
 
     private AdminUserSessionInfo getAdmin(Long userId) {
         SysAdmin sysAdmin = sysAdminMapper.selectByPrimaryKey(userId);
-        if (Objects.isNull(sysAdmin) || sysAdmin.getStatus().equals(SysAdminStatus.DISABLE.getCode())) {
+        if (Objects.isNull(sysAdmin) || sysAdmin.getStatus().equals(SysAdminStatus.DISABLE.getCode()) || sysAdmin.getStatus().equals(SysAdminStatus.NOPASS.getCode())) {
             return null;
         }
         AdminUserSessionInfo adminUserSessionInfo = new AdminUserSessionInfo();

@@ -47,7 +47,7 @@ public class SysAdminServiceImpl implements SysAdminService {
         Assert.notNull(sysAdmin, "账号信息不能为空");
         sysAdmin.setCtime(new Date());
         sysAdmin.setUtime(new Date());
-        sysAdmin.setStatus(SysAdminStatus.NORMAL.getCode());
+//        sysAdmin.setStatus(SysAdminStatus.NORMAL.getCode());
         return sysAdminMapper.insertSelective(sysAdmin);
     }
 
