@@ -10,7 +10,7 @@
         <if test="organizationCodes != null and organizationCodes.size > 0">
             and
             <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
-                a.organization_code like concat(',', #{item}, '%')
+                a.organization_code like concat(#{item}, '%')
             </foreach>
         </if>
         <if test="startTime != null and endTime != null">
@@ -25,7 +25,7 @@
         <if test="organizationCodes != null and organizationCodes.size > 0">
             and
             <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
-                a.organization_code like concat(',', #{item}, '%')
+                a.organization_code like concat(#{item}, '%')
             </foreach>
         </if>
         <if test="startTime != null and endTime != null">
@@ -40,7 +40,7 @@
         <if test="organizationCodes != null and organizationCodes.size > 0">
             and
             <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
-                a.organization_code like concat(',', #{item}, '%')
+                a.organization_code like concat(#{item}, '%')
             </foreach>
         </if>
         <if test="startTime != null and endTime != null">
@@ -55,7 +55,7 @@
         <if test="organizationCodes != null and organizationCodes.size > 0">
             and
             <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
-                a.organization_code like concat(',', #{item}, '%')
+                a.organization_code like concat(#{item}, '%')
             </foreach>
         </if>
         <if test="startTime != null and endTime != null">
@@ -71,7 +71,7 @@
         <if test="organizationCodes != null and organizationCodes.size > 0">
             and
             <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
-                a.organization_code like concat(',', #{item}, '%')
+                a.organization_code like concat(#{item}, '%')
             </foreach>
         </if>
         <if test="startTime != null and endTime != null">
@@ -85,7 +85,7 @@
         <if test="organizationCodes != null and organizationCodes.size > 0">
             and
             <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
-                p.organization_code like concat(',', #{item}, '%')
+                p.organization_code like concat(#{item}, '%')
             </foreach>
         </if>
         <if test="startTime != null and endTime != null">
@@ -101,7 +101,7 @@
         <if test="organizationCodes != null and organizationCodes.size > 0">
             and
             <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
-                organization_code like concat(',', #{item}, '%')
+                organization_code like concat(#{item}, '%')
             </foreach>
         </if>
         <if test="startTime != null and endTime != null">

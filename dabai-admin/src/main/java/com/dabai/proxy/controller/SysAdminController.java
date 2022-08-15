@@ -113,7 +113,7 @@ public class SysAdminController {
             sysAdmin.setCanCharge(sysAdminDTO.getCharge() == null ? 0 : (sysAdminDTO.getCharge() ? 1 : 0));
             sysAdmin.setMobile(sysAdminDTO.getMobile());
             String join = String.join(",", sysAdminDTO.getOrganizationCodes());
-            sysAdmin.setOrganizationCode("," + join + ",");
+            sysAdmin.setOrganizationCode(join);
             sysAdmin.setRole(sysAdminRole.getCode());
             sysAdmin.setCreateUserId(userSession.getUserId());
             sysAdmin.setUpdateUserId(userSession.getUserId());
@@ -151,7 +151,7 @@ public class SysAdminController {
         sysAdmin.setCanCharge(sysAdminDTO.getCharge() == null ? 0 : (sysAdminDTO.getCharge() ? 1 : 0));
         sysAdmin.setMobile(sysAdminDTO.getMobile());
         String join = String.join(",", sysAdminDTO.getOrganizationCodes());
-        sysAdmin.setOrganizationCode("," + join + ",");
+        sysAdmin.setOrganizationCode(join);
         sysAdmin.setRole(sysAdminRole.getCode());
         sysAdmin.setCreateUserId(userSession.getUserId());
         sysAdmin.setUpdateUserId(userSession.getUserId());
@@ -188,7 +188,7 @@ public class SysAdminController {
         currentAdmin.setCanCharge(sysAdminDTO.getCharge() == null ? 0 : (sysAdminDTO.getCharge() ? 1 : 0));
         currentAdmin.setMobile(sysAdminDTO.getMobile());
         String join = String.join(",", sysAdminDTO.getOrganizationCodes());
-        currentAdmin.setOrganizationCode("," + join + ",");
+        currentAdmin.setOrganizationCode(join);
         currentAdmin.setRole(sysAdminRole.getCode());
         currentAdmin.setUpdateUserId(userSession.getUserId());
         if (!CollectionUtils.isEmpty(sysAdminDTO.getModules())) {
@@ -224,7 +224,7 @@ public class SysAdminController {
         currentAdmin.setCanCharge(sysAdminDTO.getCharge() == null ? 0 : (sysAdminDTO.getCharge() ? 1 : 0));
         currentAdmin.setMobile(sysAdminDTO.getMobile());
         String join = String.join(",", sysAdminDTO.getOrganizationCodes());
-        currentAdmin.setOrganizationCode("," + join + ",");
+        currentAdmin.setOrganizationCode(join);
         currentAdmin.setRole(sysAdminRole.getCode());
         currentAdmin.setUpdateUserId(userSession.getUserId());
         if (!CollectionUtils.isEmpty(sysAdminDTO.getModules())) {
