@@ -109,7 +109,11 @@ public class UserSecurityInterceptor extends HandlerInterceptorAdapter implement
         adminUserSessionInfo.setUserId(sysAdmin.getId());
         adminUserSessionInfo.setMobile(sysAdmin.getMobile());
         adminUserSessionInfo.setRole(SysAdminRole.getRoleByCode(sysAdmin.getRole()));
-        adminUserSessionInfo.setOrganizationCode(sysAdmin.getOrganizationCode());
+        String organizationCode = sysAdmin.getOrganizationCode();
+        if(StringUtils.isNotEmpty(organizationCode)) {
+            List<String> organizations = Arrays.stream(organizationCode.split(",")).filter(StringUtils::isNotEmpty).collect(Collectors.toList());
+            adminUserSessionInfo.setOrganizationCodes(organizations);
+        }
         adminUserSessionInfo.setCharge(sysAdmin.getCanCharge() == 1);
         String modules = sysAdmin.getModules();
         if (StringUtils.isNotEmpty(modules)) {

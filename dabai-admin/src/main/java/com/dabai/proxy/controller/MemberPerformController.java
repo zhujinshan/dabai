@@ -42,10 +42,9 @@ public class MemberPerformController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<MemberPerformQueryResp> pageQuery(@RequestBody @ApiParam(value = "请求入参", required = true) MemberPerformQueryReq memberPerformQueryReq) {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = userSession.getOrganizationCode();
         if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
             if (StringUtils.isEmpty(memberPerformQueryReq.getOrganizationCode())) {
-                memberPerformQueryReq.setOrganizationCode(organizationCode);
+                memberPerformQueryReq.setOrganizationCodes(userSession.getOrganizationCodes());
             }
         }
         return Result.success(memberInfoFacade.performQuery(memberPerformQueryReq));

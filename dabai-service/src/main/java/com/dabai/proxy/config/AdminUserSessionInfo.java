@@ -22,7 +22,7 @@ public class AdminUserSessionInfo {
 
     private SysAdminRole role;
 
-    private String organizationCode;
+    private List<String> organizationCodes;
 
     private Boolean charge;
 

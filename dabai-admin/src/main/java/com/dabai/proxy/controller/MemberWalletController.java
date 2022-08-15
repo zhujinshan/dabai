@@ -36,10 +36,9 @@ public class MemberWalletController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<MemberWalletFlowQueryResp> flowPageQuery(@RequestBody @ApiParam(value = "请求入参", required = true) MemberWalletFlowQueryReq memberWalletFlowQueryReq) {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = userSession.getOrganizationCode();
         if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
             if (StringUtils.isEmpty(memberWalletFlowQueryReq.getOrganizationCode())) {
-                memberWalletFlowQueryReq.setOrganizationCode(organizationCode);
+                memberWalletFlowQueryReq.setOrganizationCodes(userSession.getOrganizationCodes());
             }
         }
         return Result.success(memberInfoFacade.walletFlowQuery(memberWalletFlowQueryReq));
@@ -50,10 +49,9 @@ public class MemberWalletController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<MemberWalletInfoQueryResp> infoPageQuery(@RequestBody @ApiParam(value = "请求入参", required = true) MemberWalletInfoQueryReq memberWalletInfoQueryReq) {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = userSession.getOrganizationCode();
         if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
             if (StringUtils.isEmpty(memberWalletInfoQueryReq.getOrganizationCode())) {
-                memberWalletInfoQueryReq.setOrganizationCode(organizationCode);
+                memberWalletInfoQueryReq.setOrganizationCodes(userSession.getOrganizationCodes());
             }
         }
         return Result.success(memberInfoFacade.walletInfoQuery(memberWalletInfoQueryReq));

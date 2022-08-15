@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: jinshan.zhu
@@ -11,16 +12,17 @@ import java.util.Date;
  */
 public interface SysStatisticsMapper {
 
-    long realName(@Param("organizationCode") String organizationCode, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    long realName(@Param("organizationCodes") List<String> organizationCodes, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
-    long policyMemeberCount(@Param("organizationCode") String organizationCode, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    long policyMemeberCount(@Param("organizationCodes") List<String> organizationCodes, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
-    BigDecimal policyAmount(@Param("organizationCode") String organizationCode, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    BigDecimal policyAmount(@Param("organizationCodes") List<String> organizationCodes, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
-    long cashMemberAmount(@Param("organizationCode") String organizationCode, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    long cashMemberAmount(@Param("organizationCodes") List<String> organizationCodes, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
-    BigDecimal cashAmount(@Param("organizationCode") String organizationCode, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    BigDecimal cashAmount(@Param("organizationCodes") List<String> organizationCodes, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
-    long agentChangeAmount(@Param("organizationCode") String organizationCode, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    long agentChangeAmount(@Param("organizationCodes") List<String> organizationCodes, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
+    int registerCount(@Param("organizationCodes") List<String> organizationCodes, @Param("startTime") Date startTime,@Param("endTime") Date endTime);
 }

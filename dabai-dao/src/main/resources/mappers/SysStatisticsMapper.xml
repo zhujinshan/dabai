@@ -7,8 +7,11 @@
         from policy_info p
         LEFT JOIN user_plateform_info a ON p.user_id = a.user_id
         WHERE p.policy_status = 1
-        <if test="organizationCode != null and organizationCode != ''">
-            and a.organization_code like concat(#{organizationCode}, '%')
+        <if test="organizationCodes != null and organizationCodes.size > 0">
+            and
+            <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
+                a.organization_code like concat(',', #{item}, '%')
+            </foreach>
         </if>
         <if test="startTime != null and endTime != null">
             and p.ctime BETWEEN #{startTime} AND #{endTime}
@@ -19,8 +22,11 @@
         from policy_info p
         LEFT JOIN user_plateform_info a ON p.user_id = a.user_id
         WHERE p.policy_status = 1
-        <if test="organizationCode != null and organizationCode != ''">
-            and a.organization_code like concat(#{organizationCode}, '%')
+        <if test="organizationCodes != null and organizationCodes.size > 0">
+            and
+            <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
+                a.organization_code like concat(',', #{item}, '%')
+            </foreach>
         </if>
         <if test="startTime != null and endTime != null">
             and p.ctime BETWEEN #{startTime} AND #{endTime}
@@ -31,8 +37,11 @@
         FROM wallet_flow f
         LEFT JOIN user_plateform_info a ON f.user_id = a.user_id
         WHERE f.flow_type = 2
-        <if test="organizationCode != null and organizationCode != ''">
-            and a.organization_code like concat(#{organizationCode}, '%')
+        <if test="organizationCodes != null and organizationCodes.size > 0">
+            and
+            <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
+                a.organization_code like concat(',', #{item}, '%')
+            </foreach>
         </if>
         <if test="startTime != null and endTime != null">
             and f.ctime BETWEEN #{startTime} AND #{endTime}
@@ -43,8 +52,11 @@
         FROM wallet_flow f
         LEFT JOIN user_plateform_info a ON f.user_id = a.user_id
         WHERE f.flow_type = 2
-        <if test="organizationCode != null and organizationCode != ''">
-            and a.organization_code like concat(#{organizationCode}, '%')
+        <if test="organizationCodes != null and organizationCodes.size > 0">
+            and
+            <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
+                a.organization_code like concat(',', #{item}, '%')
+            </foreach>
         </if>
         <if test="startTime != null and endTime != null">
             and f.ctime BETWEEN #{startTime} AND #{endTime}
@@ -56,8 +68,11 @@
         FROM user_tag_change p
         LEFT JOIN user_plateform_info a ON p.user_id = a.user_id
         WHERE p.current_identity_tag = 1
-        <if test="organizationCode != null and organizationCode != ''">
-            and a.organization_code like concat(#{organizationCode}, '%')
+        <if test="organizationCodes != null and organizationCodes.size > 0">
+            and
+            <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
+                a.organization_code like concat(',', #{item}, '%')
+            </foreach>
         </if>
         <if test="startTime != null and endTime != null">
             and p.ctime BETWEEN #{startTime} AND #{endTime}
@@ -67,11 +82,30 @@
     <select id="realName" resultType="java.lang.Long">
         SELECT COUNT(s.user_id) FROM user_sign_info s LEFT JOIN user_plateform_info p ON s.user_id = p.user_id
         WHERE s.sign_status = 1
-        <if test="organizationCode != null and organizationCode != ''">
-            AND p.organization_code like concat(#{organizationCode}, '%')
+        <if test="organizationCodes != null and organizationCodes.size > 0">
+            and
+            <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
+                p.organization_code like concat(',', #{item}, '%')
+            </foreach>
         </if>
         <if test="startTime != null and endTime != null">
             and s.utime BETWEEN #{startTime} AND #{endTime}
+        </if>
+    </select>
+
+
+    <select id="registerCount" resultType="java.lang.Integer">
+        select count(id)
+        from user_plateform_info
+        where 1 = 1
+        <if test="organizationCodes != null and organizationCodes.size > 0">
+            and
+            <foreach collection="organizationCodes" item="item" open="(" separator="or" close=")">
+                organization_code like concat(',', #{item}, '%')
+            </foreach>
+        </if>
+        <if test="startTime != null and endTime != null">
+            and ctime BETWEEN #{startTime} AND #{endTime}
         </if>
     </select>
 </mapper>

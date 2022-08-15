@@ -37,10 +37,9 @@ public class MemberManageController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<MemberInfoQueryResp> pageQuery(@RequestBody @ApiParam(value = "请求入参", required = true) MemberInfoQueryReq memberInfoQueryReq) {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = userSession.getOrganizationCode();
         if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
             if (StringUtils.isEmpty(memberInfoQueryReq.getOrganizationCode())) {
-                memberInfoQueryReq.setOrganizationCode(organizationCode);
+                memberInfoQueryReq.setOrganizationCodes(userSession.getOrganizationCodes());
             }
         }
         return Result.success(memberInfoFacade.query(memberInfoQueryReq));

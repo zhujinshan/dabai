@@ -3,6 +3,7 @@ package com.dabai.proxy.query;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: jinshan.zhu
@@ -12,6 +13,8 @@ import java.util.Date;
 public class MemberInfoQuery {
 
     private String organizationCode;
+
+    private List<String> organizationCodes;
 
     private String name;
 

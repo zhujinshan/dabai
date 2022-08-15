@@ -7,7 +7,6 @@ import com.dabai.proxy.config.security.PathRole;
 import com.dabai.proxy.dao.SysStatisticsMapper;
 import com.dabai.proxy.dao.UserPlateformInfoMapper;
 import com.dabai.proxy.enums.SysAdminRole;
-import com.dabai.proxy.po.UserPlateformInfo;
 import com.dabai.proxy.resp.StatisticsAgentChangeResp;
 import com.dabai.proxy.resp.StatisticsCashResp;
 import com.dabai.proxy.resp.StatisticsPolicyResp;
@@ -16,12 +15,10 @@ import com.dabai.proxy.resp.StatisticsRegisterResp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -30,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: jinshan.zhu
@@ -52,34 +50,17 @@ public class StatisticsController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<StatisticsRegisterResp> register() {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = null;
+        List<String> organizationCodes = null;
         if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
-            organizationCode = userSession.getOrganizationCode();
+            organizationCodes = userSession.getOrganizationCodes();
         }
 
-        Example example = new Example(UserPlateformInfo.class);
-        if(StringUtils.isNotEmpty(organizationCode)) {
-            example.createCriteria().andLike("organizationCode", organizationCode + "%");
-        }
-        int total = userPlateformInfoMapper.selectCountByExample(example);
+        int total = sysStatisticsMapper.registerCount(organizationCodes, null, null);
 
         Pair<Date, Date> yesterDay = getDate(1);
         Pair<Date, Date> monthDay = getDate(31);
-        Example example2 = new Example(UserPlateformInfo.class);
-        Example.Criteria criteria2 = example2.createCriteria();
-        if(StringUtils.isNotEmpty(organizationCode)) {
-            criteria2.andLike("organizationCode", organizationCode + "%");
-        }
-        criteria2.andBetween("ctime", yesterDay.getLeft(), yesterDay.getRight());
-        int yesterDayCount = userPlateformInfoMapper.selectCountByExample(example2);
-
-        Example example3 = new Example(UserPlateformInfo.class);
-        Example.Criteria criteria3 = example3.createCriteria();
-        if(StringUtils.isNotEmpty(organizationCode)) {
-            criteria3.andEqualTo("organizationCode", organizationCode);
-        }
-        criteria3.andBetween("ctime", monthDay.getLeft(), monthDay.getRight());
-        int monthCount = userPlateformInfoMapper.selectCountByExample(example3);
+        int yesterDayCount = sysStatisticsMapper.registerCount(organizationCodes, yesterDay.getLeft(), yesterDay.getRight());
+        int monthCount = sysStatisticsMapper.registerCount(organizationCodes, monthDay.getLeft(), monthDay.getRight());
         StatisticsRegisterResp resp = new StatisticsRegisterResp();
         resp.setTotalAmount(total);
         resp.setYesterdayAmount(yesterDayCount);
@@ -92,17 +73,17 @@ public class StatisticsController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<StatisticsRealNameResp> realName() {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = null;
+        List<String> organizationCodes = null;
         if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
-            organizationCode = userSession.getOrganizationCode();
+            organizationCodes = userSession.getOrganizationCodes();
         }
 
         Pair<Date, Date> yesterDay = getDate(1);
         Pair<Date, Date> monthDay = getDate(31);
 
-        long totalCount = sysStatisticsMapper.realName(organizationCode, null, null);
-        long yesterCount = sysStatisticsMapper.realName(organizationCode, yesterDay.getLeft(), yesterDay.getRight());
-        long monthAmount = sysStatisticsMapper.realName(organizationCode, monthDay.getLeft(), monthDay.getRight());
+        long totalCount = sysStatisticsMapper.realName(organizationCodes, null, null);
+        long yesterCount = sysStatisticsMapper.realName(organizationCodes, yesterDay.getLeft(), yesterDay.getRight());
+        long monthAmount = sysStatisticsMapper.realName(organizationCodes, monthDay.getLeft(), monthDay.getRight());
 
         StatisticsRealNameResp resp = new StatisticsRealNameResp();
         resp.setTotalAmount(totalCount);
@@ -116,20 +97,20 @@ public class StatisticsController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<StatisticsPolicyResp> policy() {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = null;
+        List<String> organizationCodes = null;
         if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
-            organizationCode = userSession.getOrganizationCode();
+            organizationCodes = userSession.getOrganizationCodes();
         }
 
         Pair<Date, Date> yesterDay = getDate(1);
         Pair<Date, Date> monthDay = getDate(31);
 
-        long totalMemeberCount = sysStatisticsMapper.policyMemeberCount(organizationCode, null, null);
-        long yesterMemeberCount = sysStatisticsMapper.policyMemeberCount(organizationCode, yesterDay.getLeft(), yesterDay.getRight());
-        long monthMemeberCount = sysStatisticsMapper.policyMemeberCount(organizationCode, monthDay.getLeft(), monthDay.getRight());
-        BigDecimal totalAmount = sysStatisticsMapper.policyAmount(organizationCode, null, null);
-        BigDecimal yesterAmount = sysStatisticsMapper.policyAmount(organizationCode, yesterDay.getLeft(), yesterDay.getRight());
-        BigDecimal monthAmount = sysStatisticsMapper.policyAmount(organizationCode, monthDay.getLeft(), monthDay.getRight());
+        long totalMemeberCount = sysStatisticsMapper.policyMemeberCount(organizationCodes, null, null);
+        long yesterMemeberCount = sysStatisticsMapper.policyMemeberCount(organizationCodes, yesterDay.getLeft(), yesterDay.getRight());
+        long monthMemeberCount = sysStatisticsMapper.policyMemeberCount(organizationCodes, monthDay.getLeft(), monthDay.getRight());
+        BigDecimal totalAmount = sysStatisticsMapper.policyAmount(organizationCodes, null, null);
+        BigDecimal yesterAmount = sysStatisticsMapper.policyAmount(organizationCodes, yesterDay.getLeft(), yesterDay.getRight());
+        BigDecimal monthAmount = sysStatisticsMapper.policyAmount(organizationCodes, monthDay.getLeft(), monthDay.getRight());
 
         StatisticsPolicyResp resp = new StatisticsPolicyResp();
         resp.setTotalMemberAmount(totalMemeberCount);
@@ -146,20 +127,20 @@ public class StatisticsController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<StatisticsCashResp> cash() {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = null;
+        List<String> organizationCodes = null;
         if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
-            organizationCode = userSession.getOrganizationCode();
+            organizationCodes = userSession.getOrganizationCodes();
         }
 
         Pair<Date, Date> yesterDay = getDate(1);
         Pair<Date, Date> monthDay = getDate(31);
 
-        long totalMemeberCount = sysStatisticsMapper.cashMemberAmount(organizationCode, null, null);
-        long yesterMemeberCount = sysStatisticsMapper.cashMemberAmount(organizationCode, yesterDay.getLeft(), yesterDay.getRight());
-        long monthMemeberCount = sysStatisticsMapper.cashMemberAmount(organizationCode, monthDay.getLeft(), monthDay.getRight());
-        BigDecimal totalAmount = sysStatisticsMapper.cashAmount(organizationCode, null, null);
-        BigDecimal yesterAmount = sysStatisticsMapper.cashAmount(organizationCode, yesterDay.getLeft(), yesterDay.getRight());
-        BigDecimal monthAmount = sysStatisticsMapper.cashAmount(organizationCode, monthDay.getLeft(), monthDay.getRight());
+        long totalMemeberCount = sysStatisticsMapper.cashMemberAmount(organizationCodes, null, null);
+        long yesterMemeberCount = sysStatisticsMapper.cashMemberAmount(organizationCodes, yesterDay.getLeft(), yesterDay.getRight());
+        long monthMemeberCount = sysStatisticsMapper.cashMemberAmount(organizationCodes, monthDay.getLeft(), monthDay.getRight());
+        BigDecimal totalAmount = sysStatisticsMapper.cashAmount(organizationCodes, null, null);
+        BigDecimal yesterAmount = sysStatisticsMapper.cashAmount(organizationCodes, yesterDay.getLeft(), yesterDay.getRight());
+        BigDecimal monthAmount = sysStatisticsMapper.cashAmount(organizationCodes, monthDay.getLeft(), monthDay.getRight());
 
         StatisticsCashResp resp = new StatisticsCashResp();
         resp.setTotalMemberAmount(totalMemeberCount);
@@ -176,17 +157,17 @@ public class StatisticsController {
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<StatisticsAgentChangeResp> agentChange() {
         AdminUserSessionInfo userSession = AdminUserSessionContext.getAdminUserSessionInfo();
-        String organizationCode = null;
+        List<String> organizationCodes = null;
         if (!userSession.getRole().equals(SysAdminRole.SUPPER_ADMIN)) {
-            organizationCode = userSession.getOrganizationCode();
+            organizationCodes = userSession.getOrganizationCodes();
         }
 
         Pair<Date, Date> yesterDay = getDate(1);
         Pair<Date, Date> monthDay = getDate(31);
 
-        long totalMemeberCount = sysStatisticsMapper.agentChangeAmount(organizationCode, null, null);
-        long yesterMemeberCount = sysStatisticsMapper.agentChangeAmount(organizationCode, yesterDay.getLeft(), yesterDay.getRight());
-        long monthMemeberCount = sysStatisticsMapper.agentChangeAmount(organizationCode, monthDay.getLeft(), monthDay.getRight());
+        long totalMemeberCount = sysStatisticsMapper.agentChangeAmount(organizationCodes, null, null);
+        long yesterMemeberCount = sysStatisticsMapper.agentChangeAmount(organizationCodes, yesterDay.getLeft(), yesterDay.getRight());
+        long monthMemeberCount = sysStatisticsMapper.agentChangeAmount(organizationCodes, monthDay.getLeft(), monthDay.getRight());
 
         StatisticsAgentChangeResp resp = new StatisticsAgentChangeResp();
         resp.setTotalMemberAmount(totalMemeberCount);

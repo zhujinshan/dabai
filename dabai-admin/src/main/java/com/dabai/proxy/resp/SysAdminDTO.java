@@ -24,7 +24,7 @@ public class SysAdminDTO {
     private Integer role;
 
     @ApiModelProperty(value = "所属组织编码")
-    private String organizationCode;
+    private List<String> organizationCodes;
 
     @ApiModelProperty(value = "是否可充值")
     private Boolean charge = false;

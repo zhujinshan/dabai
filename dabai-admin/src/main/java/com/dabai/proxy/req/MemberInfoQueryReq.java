@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: jinshan.zhu
@@ -16,6 +17,9 @@ public class MemberInfoQueryReq {
 
     @ApiModelProperty(value = "所属机构")
     private String organizationCode;
+
+    @ApiModelProperty(value = "所属机构集合")
+    private List<String> organizationCodes;
 
     @ApiModelProperty(value = "会员姓名")
     private String name;
