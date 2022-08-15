@@ -25,6 +25,7 @@ public class UserPlateformChangeController {
     @PostMapping(value = "/change")
     @DecryptApi
     public Result<Boolean> change(@RequestBody UserPlateformReq userPlateformReq) throws Exception {
+        log.info("HBX会员身份变动 userPlateformReq: {}", userPlateformReq.toString());
         userInfoFacade.updateUserPlateformInfo(userPlateformReq);
         return Result.success(Boolean.TRUE);
     }
