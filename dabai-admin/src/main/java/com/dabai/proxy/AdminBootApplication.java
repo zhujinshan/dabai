@@ -4,6 +4,7 @@ import com.dabai.proxy.httpclient.spring.EnableHttpClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -14,6 +15,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @MapperScan(basePackages = "com.dabai.proxy.dao")
 @EnableHttpClient(basePackages = "com.dabai.proxy.httpclient")
 @EnableAspectJAutoProxy(exposeProxy = true, proxyTargetClass = true)
+@EnableScheduling
 public class AdminBootApplication {
 
     public static void main(String[] args) {

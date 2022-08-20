@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dabai.proxy.dao.UserActionCustomMapper">
+
+    <select id="selectByOrgAndDate" resultType="com.dabai.proxy.po.UserAction">
+        select *
+        from user_action p
+        LEFT JOIN user_plateform_info a ON p.user_id = a.user_id
+        WHERE 1 = 1
+        <if test="organizationCode != null and organizationCode != ''">
+            AND a.organization_code like concat(#{organizationCode}, '%')
+        </if>
+        <if test="startTime != null and endTime != null">
+            and p.ctime BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="action != null and action > 0">
+            and p.action = #{action}
+        </if>
+    </select>
+</mapper>

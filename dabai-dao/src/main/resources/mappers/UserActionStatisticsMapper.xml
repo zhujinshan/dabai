@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dabai.proxy.dao.UserActionStatisticsMapper">
+  <resultMap id="BaseResultMap" type="com.dabai.proxy.po.UserActionStatistics">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="action_date" jdbcType="DATE" property="actionDate" />
+    <result column="organization" jdbcType="VARCHAR" property="organization" />
+    <result column="t_register_amount" jdbcType="BIGINT" property="tRegisterAmount" />
+    <result column="t1_register_amount" jdbcType="BIGINT" property="t1RegisterAmount" />
+    <result column="t7_register_amount" jdbcType="BIGINT" property="t7RegisterAmount" />
+    <result column="t30_register_amount" jdbcType="BIGINT" property="t30RegisterAmount" />
+    <result column="month_register_amount" jdbcType="BIGINT" property="monthRegisterAmount" />
+    <result column="t1_visit_amount" jdbcType="BIGINT" property="t1VisitAmount" />
+    <result column="t7_visit_amount" jdbcType="BIGINT" property="t7VisitAmount" />
+    <result column="t30_visit_amount" jdbcType="BIGINT" property="t30VisitAmount" />
+    <result column="dau" jdbcType="BIGINT" property="dau" />
+    <result column="mau" jdbcType="BIGINT" property="mau" />
+    <result column="invite_users" jdbcType="VARCHAR" property="inviteUsers" />
+    <result column="invite_success_users" jdbcType="VARCHAR" property="inviteSuccessUsers" />
+    <result column="invite_order_users" jdbcType="VARCHAR" property="inviteOrderUsers" />
+    <result column="invite_agent_users" jdbcType="VARCHAR" property="inviteAgentUsers" />
+    <result column="invited_users" jdbcType="VARCHAR" property="invitedUsers" />
+    <result column="invited_order_users" jdbcType="VARCHAR" property="invitedOrderUsers" />
+    <result column="invited_agent_users" jdbcType="VARCHAR" property="invitedAgentUsers" />
+    <result column="t7_silent_users" jdbcType="VARCHAR" property="t7SilentUsers" />
+    <result column="t30_silent_users" jdbcType="VARCHAR" property="t30SilentUsers" />
+    <result column="old_t7_silent_users" jdbcType="VARCHAR" property="oldT7SilentUsers" />
+    <result column="ole_t30_silent_users" jdbcType="VARCHAR" property="oleT30SilentUsers" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, action_date, organization, t_register_amount, t1_register_amount, t7_register_amount, 
+    t30_register_amount, month_register_amount, t1_visit_amount, t7_visit_amount, t30_visit_amount, 
+    dau, mau, invite_users, invite_success_users, invite_order_users, invite_agent_users, 
+    invited_users, invited_order_users, invited_agent_users, t7_silent_users, t30_silent_users, 
+    old_t7_silent_users, ole_t30_silent_users, ctime
+  </sql>
+</mapper>

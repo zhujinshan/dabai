@@ -110,13 +110,24 @@
             <columnOverride column="flow_type" javaType="Integer"/>
         </table>-->
 
-        <table tableName="sys_admin" enableSelectByExample="false" enableDeleteByExample="false"
+        <!--<table tableName="sys_admin" enableSelectByExample="false" enableDeleteByExample="false"
                enableDeleteByPrimaryKey="false"
                enableCountByExample="false" enableUpdateByExample="false" domainObjectName="SysAdmin">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="status" javaType="Integer"/>
             <columnOverride column="role" javaType="Integer"/>
             <columnOverride column="can_charge" javaType="Integer"/>
+        </table>-->
+        <!--<table tableName="user_action" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="UserAction">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="action" javaType="Integer"/>
+        </table>-->
+        <table tableName="user_action_statistics" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="UserActionStatistics">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
     </context>
 </generatorConfiguration>

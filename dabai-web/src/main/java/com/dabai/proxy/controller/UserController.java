@@ -14,6 +14,8 @@ import com.dabai.proxy.config.token.CheckToken;
 import com.dabai.proxy.config.token.JwtTools;
 import com.dabai.proxy.config.wx.WxMaConfiguration;
 import com.dabai.proxy.config.wx.WxMaProperties;
+import com.dabai.proxy.enums.UserActionEnum;
+import com.dabai.proxy.event.UserActionEvent;
 import com.dabai.proxy.facade.UserInfoFacade;
 import com.dabai.proxy.httpclient.huanong.HuanongHttpClient;
 import com.dabai.proxy.httpclient.huanong.param.MemberInfoParam;
@@ -33,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,6 +70,9 @@ public class UserController {
 
     @Resource
     private HuanongHttpClient huanongHttpClient;
+
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     /**
      * 登陆接口
@@ -143,7 +149,23 @@ public class UserController {
     @ApiOperation(value = "获取用户信息", httpMethod = "GET")
     public Result<UserInfoResp> userInfo() {
         UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
-        return Result.success(userInfoFacade.getUserInfo(sessionInfo.getOpenId()));
+        UserInfoResp userInfo = userInfoFacade.getUserInfo(sessionInfo.getOpenId());
+        UserActionEvent userActionEvent = new UserActionEvent(UserActionEnum.VISIT, userInfo.getId());
+        applicationEventPublisher.publishEvent(userActionEvent);
+        return Result.success(userInfo);
+    }
+
+    @GetMapping("/invite")
+    @CheckToken
+    @ApiOperation(value = "转发邀请操作", httpMethod = "GET")
+    public Result<Boolean> invite() {
+        UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
+        UserInfo userInfo = userInfoService.selectByOpenId(sessionInfo.getOpenId());
+        if (Objects.nonNull(userInfo)) {
+            UserActionEvent userActionEvent = new UserActionEvent(UserActionEnum.INVITE, userInfo.getId());
+            applicationEventPublisher.publishEvent(userActionEvent);
+        }
+        return Result.success(true);
     }
 
 

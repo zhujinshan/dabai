@@ -9,6 +9,7 @@ import com.dabai.proxy.enums.SysAdminRole;
 import com.dabai.proxy.enums.SysAdminStatus;
 import com.dabai.proxy.po.SysAdmin;
 import com.dabai.proxy.utils.JsonUtils;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.EnvironmentAware;
@@ -62,10 +63,10 @@ public class UserSecurityInterceptor extends HandlerInterceptorAdapter implement
         }
 
         String token = request.getHeader(TOKEN_KEY);
-        /*List<String> activeProfiles = Lists.newArrayList(environment.getActiveProfiles());
+        List<String> activeProfiles = Lists.newArrayList(environment.getActiveProfiles());
         if (StringUtils.isEmpty(token) && activeProfiles.contains("test")) {
-            token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJEYUJhaUFkbWluV2l0aEpXVCIsInVzZXJJZCI6IjEifQ.trWIC7LCIT4KAv_GvjBbzvBla9qDFg-NTzPPoAbZG4M";
-        }*/
+            token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJEYUJhaUFkbWluV2l0aEpXVCIsInVzZXJJZCI6IjE4In0.9df8WF-kfG2V0DTjgxDsRhi4w5-13dXgV1GYPfwyn8E";
+        }
 
         if (StringUtils.isEmpty(token)) {
             unLogin(response);
