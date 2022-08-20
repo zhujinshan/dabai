@@ -132,11 +132,6 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
         UserPlateformInfo userPlateformInfo = userPlateformInfoService.getByHbxMemberNo(userPlateformReq.getCode());
         Assert.notNull(userPlateformInfo, "华保星编码不存在");
 
-        userPlateformInfo.setCode(userPlateformReq.getCode());
-        userPlateformInfo.setIdentityTag(Byte.valueOf(userPlateformReq.getIdentityTag()));
-        userPlateformInfo.setOrganizationCode(userPlateformReq.getOrganizationCode());
-        userPlateformInfoService.updateUserPalteformInfo(userPlateformInfo);
-
         Example example = new Example(UserTagChange.class);
         example.createCriteria().andEqualTo("userId", userPlateformInfo.getUserId());
         UserTagChange userTagChange = userTagChangeMapper.selectOneByExample(example);
@@ -158,6 +153,10 @@ public class UserInfoFacadeImpl implements UserInfoFacade {
                 userTagChangeMapper.insertSelective(userTagChange);
             }
         }
+        userPlateformInfo.setCode(userPlateformReq.getCode());
+        userPlateformInfo.setIdentityTag(Byte.valueOf(userPlateformReq.getIdentityTag()));
+        userPlateformInfo.setOrganizationCode(userPlateformReq.getOrganizationCode());
+        userPlateformInfoService.updateUserPalteformInfo(userPlateformInfo);
     }
 
     @Resource
