@@ -108,24 +108,33 @@ public class UserActionTask {
 
         Pair<Date, Date> t30Date = getDate(31);
         List<UserInfoQueryResult> t30RegisterUserInfos = registerCount(t30Date.getLeft(), t30Date.getRight(), org);
-        userActionStatistics.setT7RegisterAmount((long) t30RegisterUserInfos.size());
+        userActionStatistics.setT30RegisterAmount((long) t30RegisterUserInfos.size());
 
         LocalDateTime st = LocalDateTime.of(LocalDate.of(2022, 1, 1), LocalTime.MIN);
         Date from = Date.from(st.atZone(ZoneId.systemDefault()).toInstant());
         List<UserInfoQueryResult> m30RegisterUserInfos = registerCount(from, tDate.getRight(), org);
         userActionStatistics.setMonthRegisterAmount((long) m30RegisterUserInfos.size());
 
-        List<Long> t1UserIds = t1RegisterUserInfos.stream().map(UserInfoQueryResult::getId).collect(Collectors.toList());
-        Long t1Visit = visitCount(t1UserIds, t1Date.getLeft(), t1Date.getRight());
-        userActionStatistics.setT1VisitAmount(t1Visit);
+        userActionStatistics.setT1VisitAmount(0L);
+        if (!CollectionUtils.isEmpty(t1RegisterUserInfos)) {
+            List<Long> t1UserIds = t1RegisterUserInfos.stream().map(UserInfoQueryResult::getId).collect(Collectors.toList());
+            Long t1Visit = visitCount(t1UserIds, tDate.getLeft(), tDate.getRight());
+            userActionStatistics.setT1VisitAmount(t1Visit);
+        }
 
-        List<Long> t7UserIds = t7RegisterUserInfos.stream().map(UserInfoQueryResult::getId).collect(Collectors.toList());
-        Long t7Visit = visitCount(t7UserIds, t7Date.getLeft(), t7Date.getRight());
-        userActionStatistics.setT7VisitAmount(t7Visit);
+        userActionStatistics.setT7VisitAmount(0L);
+        if (!CollectionUtils.isEmpty(t7RegisterUserInfos)) {
+            List<Long> t7UserIds = t7RegisterUserInfos.stream().map(UserInfoQueryResult::getId).collect(Collectors.toList());
+            Long t7Visit = visitCount(t7UserIds, tDate.getLeft(), tDate.getRight());
+            userActionStatistics.setT7VisitAmount(t7Visit);
+        }
 
-        List<Long> t30UserIds = t30RegisterUserInfos.stream().map(UserInfoQueryResult::getId).collect(Collectors.toList());
-        Long t30Visit = visitCount(t30UserIds, t30Date.getLeft(), t30Date.getRight());
-        userActionStatistics.setT30VisitAmount(t30Visit);
+        userActionStatistics.setT30VisitAmount(0L);
+        if (!CollectionUtils.isEmpty(t30RegisterUserInfos)) {
+            List<Long> t30UserIds = t30RegisterUserInfos.stream().map(UserInfoQueryResult::getId).collect(Collectors.toList());
+            Long t30Visit = visitCount(t30UserIds, tDate.getLeft(), tDate.getRight());
+            userActionStatistics.setT30VisitAmount(t30Visit);
+        }
 
         Long dau = actionCount(org, tDate.getLeft(), tDate.getRight(), UserActionEnum.VISIT);
         userActionStatistics.setDau(dau);

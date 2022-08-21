@@ -71,4 +71,7 @@ public class MemberInfoQueryReq {
 
     @ApiModelProperty(value = "分页信息")
     private Paging paging;
+
+    @ApiModelProperty(value = "userId集合")
+    private List<Long> userIds;
 }

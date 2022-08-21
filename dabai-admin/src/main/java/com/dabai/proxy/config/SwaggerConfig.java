@@ -30,7 +30,7 @@ public class SwaggerConfig {
     @Bean
     public Docket docket(Environment environment) {
         //Profiles直接获取环
-        Profiles profiles = Profiles.of("test");
+        Profiles profiles = Profiles.of("test", "prod");
         boolean enable = environment.acceptsProfiles(profiles);
         return new Docket(DocumentationType.SWAGGER_2)
                 //配置swagger信息

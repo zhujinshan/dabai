@@ -54,4 +54,6 @@ public class MemberInfoQuery {
 
     private Date policyEndTime;
 
+    private List<Long> userIds;
+
 }
