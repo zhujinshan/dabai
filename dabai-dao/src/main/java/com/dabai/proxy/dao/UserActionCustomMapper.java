@@ -10,5 +10,5 @@ public interface UserActionCustomMapper {
 
     List<UserAction> selectByOrgAndDate(@Param("organizationCode") String organizationCode, @Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("action") Integer action);
 
-
+    List<Long> selectLoginUser(@Param("organizationCode") String organizationCode, @Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("userIds") List<Long> userIds);
 }

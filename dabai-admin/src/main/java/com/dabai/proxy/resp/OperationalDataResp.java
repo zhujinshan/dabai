@@ -116,5 +116,26 @@ public class OperationalDataResp {
     @ApiModelProperty(value = "被邀请代理用户")
     private List<Long> invitedAgentUsers;
 
+    @ApiModelProperty(value = "注册沉默7天用户")
+    private List<Long> t7SilentUsers;
+
+    /**
+     * 30日沉默用户
+     */
+    @ApiModelProperty(value = "注册沉默30天用户")
+    private List<Long> t30SilentUsers;
+
+    /**
+     * 历史7天沉默用户
+     */
+    @ApiModelProperty(value = "活跃沉默7天用户")
+    private List<Long> oldT7SilentUsers;
+
+    /**
+     * 历史30天沉默用户
+     */
+    @ApiModelProperty(value = "活跃沉默30天用户")
+    private List<Long> oleT30SilentUsers;
+
     private Date ctime;
 }

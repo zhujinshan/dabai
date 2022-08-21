@@ -7,14 +7,17 @@ import com.dabai.proxy.dao.UserActionStatisticsMapper;
 import com.dabai.proxy.dao.UserInfoCustomMapper;
 import com.dabai.proxy.dao.UserInfoMapper;
 import com.dabai.proxy.dao.UserPlateformInfoMapper;
+import com.dabai.proxy.dao.WalletFlowMapper;
 import com.dabai.proxy.enums.HbxUserTag;
 import com.dabai.proxy.enums.UserActionEnum;
+import com.dabai.proxy.enums.WalletFlowTypeEnum;
 import com.dabai.proxy.po.PolicyInfo;
 import com.dabai.proxy.po.UserAction;
 import com.dabai.proxy.po.UserActionStatistics;
 import com.dabai.proxy.po.UserInfo;
 import com.dabai.proxy.po.UserInfoQueryResult;
 import com.dabai.proxy.po.UserPlateformInfo;
+import com.dabai.proxy.po.WalletFlow;
 import com.dabai.proxy.query.MemberInfoQuery;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -33,6 +36,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -79,10 +83,16 @@ public class UserActionTask {
     @Resource
     private UserPlateformInfoMapper userPlateformInfoMapper;
 
+    @Resource
+    private WalletFlowMapper walletFlowMapper;
+
     @Scheduled(cron = "0 10 0 * * ?")
     @Transactional(rollbackFor = Throwable.class)
     public void userActionTask() {
         Date t = getDateInfo(1);
+        Example example = new Example(UserActionStatistics.class);
+        example.createCriteria().andEqualTo("actionDate", t);
+        userActionStatisticsMapper.deleteByExample(example);
         for (String org : ORG_MAP.keySet()) {
             orgAction(t, org);
         }
@@ -123,17 +133,31 @@ public class UserActionTask {
         }
 
         userActionStatistics.setT7VisitAmount(0L);
+        userActionStatistics.setT7SilentUsers("");
         if (!CollectionUtils.isEmpty(t7RegisterUserInfos)) {
             List<Long> t7UserIds = t7RegisterUserInfos.stream().map(UserInfoQueryResult::getId).collect(Collectors.toList());
             Long t7Visit = visitCount(t7UserIds, tDate.getLeft(), tDate.getRight());
             userActionStatistics.setT7VisitAmount(t7Visit);
+
+            Pair<Date, Date> t7TDate = getTDate(7);
+            List<UserAction> userActions = visitList(t7UserIds, t7TDate.getLeft(), t7TDate.getRight());
+            Set<Long> existedUsers = userActions.stream().map(UserAction::getUserId).collect(Collectors.toSet());
+            List<Long> notExistUsers = userActions.stream().map(UserAction::getUserId).filter(userId -> !existedUsers.contains(userId)).collect(Collectors.toList());
+            userActionStatistics.setT7SilentUsers(notExistUsers.stream().map(String::valueOf).collect(Collectors.joining(",")));
         }
 
         userActionStatistics.setT30VisitAmount(0L);
+        userActionStatistics.setT30SilentUsers("");
         if (!CollectionUtils.isEmpty(t30RegisterUserInfos)) {
             List<Long> t30UserIds = t30RegisterUserInfos.stream().map(UserInfoQueryResult::getId).collect(Collectors.toList());
             Long t30Visit = visitCount(t30UserIds, tDate.getLeft(), tDate.getRight());
             userActionStatistics.setT30VisitAmount(t30Visit);
+
+            Pair<Date, Date> t30TDate = getTDate(30);
+            List<UserAction> userActions = visitList(t30UserIds, t30TDate.getLeft(), t30TDate.getRight());
+            Set<Long> existedUsers = userActions.stream().map(UserAction::getUserId).collect(Collectors.toSet());
+            List<Long> notExistUsers = userActions.stream().map(UserAction::getUserId).filter(userId -> !existedUsers.contains(userId)).collect(Collectors.toList());
+            userActionStatistics.setT30SilentUsers(notExistUsers.stream().map(String::valueOf).collect(Collectors.joining(",")));
         }
 
         Long dau = actionCount(org, tDate.getLeft(), tDate.getRight(), UserActionEnum.VISIT);
@@ -175,7 +199,46 @@ public class UserActionTask {
                 }
             }
         }
+
+        List<Long> t7LoginUsers = userActionCustomMapper.selectLoginUser(org, t7Date.getLeft(), t7Date.getRight(), null);
+        userActionStatistics.setOldT7SilentUsers("");
+        if (!CollectionUtils.isEmpty(t7LoginUsers)) {
+            List<Long> t7OrderOrWithdrawUsers = historyOrderOrWithdrawalUsers(t7LoginUsers, t7Date.getRight());
+            List<Long> t7ExistLoginUsers = userActionCustomMapper.selectLoginUser(org, t7Date.getRight(), tDate.getRight(), t7OrderOrWithdrawUsers);
+            List<Long> t7NoLoginUsers = t7OrderOrWithdrawUsers.stream().filter(e -> !t7ExistLoginUsers.contains(e)).collect(Collectors.toList());
+            userActionStatistics.setOldT7SilentUsers(t7NoLoginUsers.stream().map(String::valueOf).collect(Collectors.joining(",")));
+        }
+
+        List<Long> t30LoginUsers = userActionCustomMapper.selectLoginUser(org, t30Date.getLeft(), t30Date.getRight(), null);
+        userActionStatistics.setOleT30SilentUsers("");
+        if (!CollectionUtils.isEmpty(t30LoginUsers)) {
+            List<Long> t30OrderOrWithdrawUsers = historyOrderOrWithdrawalUsers(t30LoginUsers, t30Date.getRight());
+            List<Long> t30ExistLoginUsers = userActionCustomMapper.selectLoginUser(org, t30Date.getRight(), tDate.getRight(), t30OrderOrWithdrawUsers);
+            List<Long> t30NoLoginUsers = t30OrderOrWithdrawUsers.stream().filter(e -> !t30ExistLoginUsers.contains(e)).collect(Collectors.toList());
+            userActionStatistics.setOleT30SilentUsers(t30NoLoginUsers.stream().map(String::valueOf).collect(Collectors.joining(",")));
+        }
+
         userActionStatisticsMapper.insertSelective(userActionStatistics);
+    }
+
+
+    public List<Long> historyOrderOrWithdrawalUsers(List<Long> userIds, Date endTime) {
+        Example example = new Example(PolicyInfo.class);
+        example.createCriteria().andIn("userId", userIds)
+                .andLessThan("ctime", endTime);
+        List<PolicyInfo> policyInfos = policyInfoMapper.selectByExample(example);
+        Set<Long> policyedUsers = policyInfos.stream().map(PolicyInfo::getUserId).collect(Collectors.toSet());
+
+        Example example2 = new Example(WalletFlow.class);
+        example2.createCriteria().andIn("userId", userIds)
+                .andEqualTo("flowType", WalletFlowTypeEnum.WITHDRAWAL.getCode())
+                .andLessThan("ctime", endTime);
+
+        List<WalletFlow> walletFlows = walletFlowMapper.selectByExample(example2);
+        Set<Long> withdrawalUsers = walletFlows.stream().map(WalletFlow::getUserId).collect(Collectors.toSet());
+
+        policyedUsers.addAll(withdrawalUsers);
+        return Lists.newArrayList(policyedUsers);
     }
 
 
@@ -221,6 +284,15 @@ public class UserActionTask {
         return userActions.stream().map(UserAction::getUserId).distinct().count();
     }
 
+    private List<UserAction> visitList(List<Long> userIds, Date startTime, Date endTime) {
+        Example example = new Example(UserAction.class);
+        example.createCriteria().andBetween("ctime", startTime, endTime)
+                .andEqualTo("action", UserActionEnum.VISIT.getCode())
+                .andIn("userId", userIds);
+
+        return userActionMapper.selectByExample(example);
+    }
+
     private Long actionCount(String org, Date startTime, Date endTime, UserActionEnum userAction) {
         List<UserAction> userActions = userActionCustomMapper.selectByOrgAndDate(org, startTime, endTime, userAction.getCode());
         return userActions.stream().map(UserAction::getUserId).distinct().count();
@@ -238,18 +310,18 @@ public class UserActionTask {
         return userInfoCustomMapper.queryUserInfo(memberInfoQuery);
     }
 
-    private List<UserInfoQueryResult> agentUserInfo(Date startTime, Date endTime, String org) {
-        MemberInfoQuery memberInfoQuery = new MemberInfoQuery();
-        memberInfoQuery.setRegisterStartTime(startTime);
-        memberInfoQuery.setRegisterEndTime(endTime);
-        memberInfoQuery.setOrganizationCode(org);
-        return userInfoCustomMapper.queryUserInfo(memberInfoQuery);
-    }
-
 
     private Pair<Date, Date> getDate(Integer days) {
         LocalDateTime yesterDayBegin = LocalDateTime.of(LocalDate.now().minusDays(days), LocalTime.MIN);
         LocalDateTime yesterDayEnd = LocalDateTime.of(LocalDate.now().minusDays(days), LocalTime.MAX);
+        Date startDate = Date.from(yesterDayBegin.atZone(ZoneId.systemDefault()).toInstant());
+        Date endDate = Date.from(yesterDayEnd.atZone(ZoneId.systemDefault()).toInstant());
+        return Pair.of(startDate, endDate);
+    }
+
+    private Pair<Date, Date> getTDate(Integer days) {
+        LocalDateTime yesterDayBegin = LocalDateTime.of(LocalDate.now().minusDays(days), LocalTime.MIN);
+        LocalDateTime yesterDayEnd = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.MAX);
         Date startDate = Date.from(yesterDayBegin.atZone(ZoneId.systemDefault()).toInstant());
         Date endDate = Date.from(yesterDayEnd.atZone(ZoneId.systemDefault()).toInstant());
         return Pair.of(startDate, endDate);

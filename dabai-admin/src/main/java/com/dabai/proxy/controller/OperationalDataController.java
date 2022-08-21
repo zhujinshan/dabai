@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,14 +45,14 @@ public class OperationalDataController {
     @ApiOperation(value = "运营数据查询", httpMethod = "POST")
     @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<List<OperationalDataResp>> query(@RequestBody OperationalDataReq operationalDataReq) {
-        if (StringUtils.isEmpty(operationalDataReq.getOrganizationCode()) || operationalDataReq.getStartTime() == null || operationalDataReq.getEndTime() == null) {
+        if (CollectionUtils.isEmpty(operationalDataReq.getOrganizationCode()) || operationalDataReq.getStartTime() == null || operationalDataReq.getEndTime() == null) {
             return Result.success(Lists.newArrayList());
         }
 
         Example example = new Example(UserActionStatistics.class);
-        example.createCriteria().andEqualTo("organization", operationalDataReq.getOrganizationCode())
+        example.createCriteria().andIn("organization", operationalDataReq.getOrganizationCode())
                 .andBetween("actionDate", operationalDataReq.getStartTime(), operationalDataReq.getEndTime());
-
+        example.setOrderByClause("action_date desc");
         List<UserActionStatistics> userActionStatistics = userActionStatisticsMapper.selectByExample(example);
         List<OperationalDataResp> resps = userActionStatistics.stream().map(e -> {
             OperationalDataResp resp = new OperationalDataResp();
@@ -95,6 +96,10 @@ public class OperationalDataController {
             resp.setInviteUsers(convertToList(e.getInviteUsers()));
             resp.setInviteOrderUsers(convertToList(e.getInviteOrderUsers()));
             resp.setInviteSuccessUsers(convertToList(e.getInviteSuccessUsers()));
+            resp.setT7SilentUsers(convertToList(e.getT7SilentUsers()));
+            resp.setT30SilentUsers(convertToList(e.getT30SilentUsers()));
+            resp.setOldT7SilentUsers(convertToList(e.getOldT7SilentUsers()));
+            resp.setOleT30SilentUsers(convertToList(e.getOleT30SilentUsers()));
             return resp;
         }).collect(Collectors.toList());
         return Result.success(resps);

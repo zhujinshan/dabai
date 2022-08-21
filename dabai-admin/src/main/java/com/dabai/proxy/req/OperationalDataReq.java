@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: jinshan.zhu
@@ -13,7 +14,7 @@ import java.util.Date;
 public class OperationalDataReq {
 
     @ApiModelProperty(value = "所属机构")
-    private String organizationCode;
+    private List<String> organizationCode;
 
     @ApiModelProperty(value = "开始时间")
     private Date startTime;

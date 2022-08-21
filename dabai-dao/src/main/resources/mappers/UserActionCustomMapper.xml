@@ -17,4 +17,21 @@
             and p.action = #{action}
         </if>
     </select>
+    <select id="selectLoginUser" resultType="java.lang.Long">
+        select distinct a.user_id from user_action a
+        left join user_plateform_info p ON a.user_id = p.user_id
+        where a.action = 1
+        <if test="organizationCode != null and organizationCode != ''">
+            AND p.organization_code like concat(#{organizationCode}, '%')
+        </if>
+        <if test="startTime != null and endTime != null">
+            and a.ctime BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="userIds != null and userIds.size() > 0">
+            and a.user_id in
+            <foreach collection="userIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
 </mapper>
