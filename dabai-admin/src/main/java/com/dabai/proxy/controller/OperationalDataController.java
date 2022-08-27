@@ -43,7 +43,7 @@ public class OperationalDataController {
 
     @PostMapping(value = "/query")
     @ApiOperation(value = "运营数据查询", httpMethod = "POST")
-//    @PathRole(role = SysAdminRole.NORMAL_USER)
+    @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<List<OperationalDataResp>> query(@RequestBody OperationalDataReq operationalDataReq) {
         if (CollectionUtils.isEmpty(operationalDataReq.getOrganizationCode()) || operationalDataReq.getStartTime() == null || operationalDataReq.getEndTime() == null) {
             return Result.success(Lists.newArrayList());
