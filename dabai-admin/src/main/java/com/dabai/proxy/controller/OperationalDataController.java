@@ -43,7 +43,7 @@ public class OperationalDataController {
 
     @PostMapping(value = "/query")
     @ApiOperation(value = "运营数据查询", httpMethod = "POST")
-    @PathRole(role = SysAdminRole.NORMAL_USER)
+//    @PathRole(role = SysAdminRole.NORMAL_USER)
     public Result<List<OperationalDataResp>> query(@RequestBody OperationalDataReq operationalDataReq) {
         if (CollectionUtils.isEmpty(operationalDataReq.getOrganizationCode()) || operationalDataReq.getStartTime() == null || operationalDataReq.getEndTime() == null) {
             return Result.success(Lists.newArrayList());
@@ -74,7 +74,7 @@ public class OperationalDataController {
             Long t30VisitAmount = e.getT30VisitAmount();
             Long t30RegisterAmount = e.getT30RegisterAmount();
             resp.setT30VisitRate(BigDecimal.ZERO);
-            if (t7RegisterAmount != null && t7RegisterAmount > 0) {
+            if (t30RegisterAmount != null && t30RegisterAmount > 0) {
                 BigDecimal t30RegisterRate = BigDecimal.valueOf(t30VisitAmount).divide(BigDecimal.valueOf(t30RegisterAmount), 2, RoundingMode.HALF_UP);
                 resp.setT30VisitRate(t30RegisterRate);
             }
