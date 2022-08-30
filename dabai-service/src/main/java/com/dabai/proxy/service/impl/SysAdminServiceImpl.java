@@ -68,6 +68,7 @@ public class SysAdminServiceImpl implements SysAdminService {
             sysAdminQuery = new SysAdminQuery();
         }
         Example example = new Example(SysAdmin.class);
+        example.setOrderByClause("status IN (0, 4) DESC");
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotEmpty(sysAdminQuery.getMobile())) {
             criteria.andEqualTo("mobile", sysAdminQuery.getMobile());
