@@ -42,7 +42,7 @@ public class UserSignInfoServiceImpl implements UserSignInfoService {
         newUserSignInfo.setUserId(userId);
         newUserSignInfo.setUtime(new Date());
         newUserSignInfo.setSignStatus(UserSignStatusEnum.SIGNING.getCode());
-        newUserSignInfo.setSignSource(UserSignSourceEnum.FC.name());
+        newUserSignInfo.setSignSource(UserSignSourceEnum.ZX.name());
         newUserSignInfo.setBusinessSource(SignBusinessSourceEnum.RFT.name());
         newUserSignInfo.setSignDealNo(signDealNo);
         if (userSignInfo != null) {
