@@ -11,7 +11,9 @@ public enum UserSignSourceEnum {
 
     FC("风驰"),
 
-    ZX("众信");
+    ZX("众信"),
+
+    ZXJK("众信健康");
 
     private final String desc;
 

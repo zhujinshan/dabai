@@ -29,6 +29,13 @@ domain: https://data.dabai-tech.com
 http:
   liness:
     host: https://b.liness.cn
+    partnerId: JRMF
+    transferCorpId: 10175019
+    agreementType: 10175019
+    zxMerchantId: hq46J3LMy0k4lN38LI4D
+    zxRasKey: cdd87e703a374223892bd5dffeefbdb7
+  zxliness:
+    host: https://b.liness.cn
     zxMerchantId: w472U3W134751n032R3U
     partnerId: JRMF
     zxRasKey: 319f2712e575437ea0c1ecf680095d66
