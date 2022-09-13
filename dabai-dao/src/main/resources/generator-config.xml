@@ -124,9 +124,14 @@
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnOverride column="action" javaType="Integer"/>
         </table>-->
-        <table tableName="user_action_statistics" enableSelectByExample="false" enableDeleteByExample="false"
+        <!--<table tableName="user_action_statistics" enableSelectByExample="false" enableDeleteByExample="false"
                enableDeleteByPrimaryKey="false"
                enableCountByExample="false" enableUpdateByExample="false" domainObjectName="UserActionStatistics">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>-->
+        <table tableName="wx_audit_status" enableSelectByExample="false" enableDeleteByExample="false"
+               enableDeleteByPrimaryKey="false"
+               enableCountByExample="false" enableUpdateByExample="false" domainObjectName="WxAuditStatus">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
     </context>
