@@ -150,8 +150,10 @@ public class UserController {
     public Result<UserInfoResp> userInfo() {
         UserSessionInfo sessionInfo = UserSessionContext.getSessionInfo();
         UserInfoResp userInfo = userInfoFacade.getUserInfo(sessionInfo.getOpenId());
-        UserActionEvent userActionEvent = new UserActionEvent(UserActionEnum.VISIT, userInfo.getId());
-        applicationEventPublisher.publishEvent(userActionEvent);
+        if (Objects.nonNull(userInfo)){
+            UserActionEvent userActionEvent = new UserActionEvent(UserActionEnum.VISIT, userInfo.getId());
+            applicationEventPublisher.publishEvent(userActionEvent);
+        }
         return Result.success(userInfo);
     }
 
